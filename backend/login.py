@@ -9,6 +9,8 @@ import urllib.parse as urlparse
 from urllib.parse import parse_qs
 from db import db
 
+
+
 class Userdata(db.Model):
     id = db.Column(db.Integer, primary_key = True) # primary_key makes it so that this value is unique and can be used to identify this record.
     username = db.Column(db.String(24), unique=True)
@@ -44,9 +46,10 @@ def login():
     token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey=3b41006f342e166d2320b82059c35784")
     token_string = token.text
 
-    session["userdata"] = "before"
 
     return jsonify(token_string)
+
+    
     
 def userRegistred(username):
     users = Userdata.query.all()
@@ -71,9 +74,9 @@ def stuff():
 
 
 
-    session["userdata"] = "test"
+    session["userdata"] = userdata_dict
 
-    print("added to session:", session["userdata"])
+    print("added to session:")
     
 
     response = redirect("http://localhost:3000/home/")
@@ -86,33 +89,32 @@ def stuff():
 @loginCallRoute.route("/api/login/callback")
 def login_callback():
 
-    print(session.get('userdata', None))
 
 
     if session.get("userdata"):
-        print("getting from session:", session["userdata"])
 
         
-        # userdata = session["userdata"]
-        # username = userdata["username"]
-        # email = userdata["name"]
-        # name = userdata["email"]
+        userdata = session["userdata"]
+        username = userdata["username"]
+        email = userdata["email"]
+        name = userdata["name"]
 
-        # print(username, email, name)
+        print(username, email, name)
 
-        # if not userRegistred(username):
-        #     addUser(username, email, name)
+        if not userRegistred(username):
+            addUser(username, email, name)
         
-        # user = list(filter(lambda x: x["email"] == email and x["username"] == username, getUsers()))
-        # if (len(user) == 1):   
-        #     token = create_access_token(identity=user[0]["id"])        
-        #     print("token:", token)
-        # else:
-        #     print("multiple users exists. Error")
+        user = list(filter(lambda x: x["email"] == email and x["username"] == username, getUsers()))
+        if (len(user) == 1):   
+            token = create_access_token(identity=user[0]["id"])        
+            print("token yes:", token)
+            return jsonify(token)
+        else:
+            print("multiple users exists. Error")
+            return jsonify("nah")
 
 
 
-        return jsonify("my man")
     
     else:
         return jsonify("error, user not valid")

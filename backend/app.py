@@ -9,7 +9,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 # db = SQLAlchemy()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True) # Support credentials to allow sessions in blueprints
 JWTManager(app)
 
 
