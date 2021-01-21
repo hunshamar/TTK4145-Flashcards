@@ -11,7 +11,7 @@ function Login() {
 
   const login = () => {
 
-    fetch("http://localhost:5000/login")
+    fetch("http://localhost:5000/api/logintoken")
     .then(response => response.json())
     .then(data => {
       console.log(token)
