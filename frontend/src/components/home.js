@@ -1,6 +1,7 @@
 import React, {useEffect, useState}from "react"
 import {useParams} from "react-router"
 import axios from 'axios';
+import { Redirect } from "react-router-dom"
 
 
 const Home = () => {
@@ -12,7 +13,12 @@ const Home = () => {
     //     console.log(data)
     // })
 
+
+
     const [name, setName] = useState("")
+    const [numberOfCards, setNumberOfCards] = useState(3)
+    const [redirectToNewPage, setredirectToNewPage] = useState(false)
+
 
     useEffect(async() => {
         fetch("http://localhost:5000/api/login/callback", {credentials: "include"})    
@@ -25,7 +31,13 @@ const Home = () => {
         })
     } ) 
     
+    const submitCardForm = e => {
+        e.preventDefault()
+        console.log("cards", numberOfCards)
+        
+        setredirectToNewPage(true)
 
+    }
 
     function showUserInformation()  {
 
@@ -46,18 +58,32 @@ const Home = () => {
         })
 
 
+    }  
+
+    if(redirectToNewPage){
+        return(
+            <Redirect to={{
+                pathname: "/cardCreator",
+                state: {numberOfCards: numberOfCards} 
+            }}/>        
+        )
     }
-
-
-
-
-
-
-  
 
     return(
         <div>
             <h1 style={{margin: "200px"}}>You are logged in, {name}</h1>
+
+            <form onSubmit={submitCardForm} style={{margin: "200px"}}>
+                <label htmlFor="cards"> number of cards </label>
+                <select defaultValue={3} id="cards" name="cards" onChange={e => setNumberOfCards(e.target.value)}>
+                    <option value={1}>1</option>
+                    <option value={2}>2</option>
+                    <option value={3} defaultValue >3</option>
+                    <option value={4}>4</option>
+                    <option value={5}>5</option>
+                </select>
+                <input type="submit" value="create cards"/>
+            </form>
         </div>
     )
 }

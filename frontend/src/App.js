@@ -1,9 +1,10 @@
 
 import React from "react"
-import Home from "./home"
-import Login from "./login"
 import Navbar from "./components/navbar"
-
+import Routes from "./routes"
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import theme from "./static/theme"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 
@@ -12,14 +13,16 @@ const App = () => {
 
 
     return(
+        <MuiThemeProvider theme={theme}>
+      <CssBaseline />
+
     
     <Router>
     <Navbar loggedin={true} />
-    <Switch>
-        <Route path="/" exact component={Login}/>
-        <Route path="/home/" exact component={Home}/>
-    </Switch>
+    <Routes />
     </Router>
+    </MuiThemeProvider>
+
     )
 }
 
