@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, redirect, request, session
+from flask import Blueprint, jsonify, redirect, request, session, make_response
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
 import requests
@@ -34,13 +34,30 @@ def addUser(username, email, name):
         print(e)
         return False   
     
-def userRegistred(username):
+def usernameRegistred(username):
     users = User.query.all()
     user = list(filter(lambda x: x.username == username, users))
     if len(user) >= 1:
         return True 
     else:
         return False
+
+def emailRegistred(email):
+    users = User.query.all()
+    user = list(filter(lambda x: x.email == email, users))
+    if len(user) >= 1:
+        return True 
+    else:
+        return False
+
+def userRegistred(email, username):
+    users = User.query.all()
+    user = list(filter(lambda x: x.email == email and x.username == username, users))
+    if len(user) >= 1:
+        return True 
+    else:
+        return False
+
 
 
 def getAllUsers():
@@ -81,7 +98,7 @@ def login():
 def login_callback():
 
     if session.get("userdata"):
-        
+
         userdata = session["userdata"]
         username = userdata["username"]
         email = userdata["email"]
@@ -89,7 +106,7 @@ def login_callback():
 
         print(username, email, name)
 
-        if not userRegistred(username):
+        if not usernameRegistred(username):
             addUser(username, email, name)
         
         user = list(filter(lambda x: x["email"] == email and x["username"] == username, getAllUsers()))
@@ -103,21 +120,80 @@ def login_callback():
     else:
         return jsonify("error, user not valid")
 
-@userBlueprint.route("/api/userdata")
+@userBlueprint.route("/api/userdata", methods=["POST", "GET"])
 def stuff():
 
-    print("type")
+    if request.method == "GET":
+        print("FROM FEIDE")
+        userdata =  request.args.getlist('userdata')[0]
+        userdata_dict = json.loads(userdata)
+        print(type(userdata_dict))
 
-    userdata =  request.args.getlist('userdata')[0]
-    userdata_dict = json.loads(userdata)
-    print(type(userdata_dict))
+        session["userdata"] = userdata_dict
 
-    session["userdata"] = userdata_dict
+        print("added to session:")
+        
+
+        return redirect("http://localhost:3000/home/")
+
+
+    if request.method == "POST":
+        
+        print("from manual")
+        userdata = request.json
+        username = userdata["username"]
+        email = userdata["email"]
+        name = userdata["name"]
+
+        if userRegistred(email, username):
+            print("added to session exists", session.get("userdata"))
+
+        elif usernameRegistred(username) or emailRegistred(email):
+            print("duplicate")
+            return jsonify({"status": "duplicate"})
+        
+        else:
+            print("added to session new", session.get("userdata"))
+
+
+        session["userdata"] = userdata
+        return jsonify({"status": "success"})
+
+
+
+    
+
+@userBlueprint.route("/api/manuallogin", methods=["POST"])
+def manual_login():
+
+    print(request.json)
+
+    userdata = request.json
+
+
+
+    print(userdata["username"])
+    print(userdata["name"])
+    print(userdata["email"])
+
+
+
+    # userdata =  request.args.getlist('userdata')[0]
+    # userdata_dict = json.loads(userdata)
+    # print(type(userdata_dict))
+
+    session["userdata"] = userdata
+
+    gett = session["userdata"]
+
+    print(gett)
 
     print("added to session:")
     
 
-    response = redirect("http://localhost:3000/home/")
+    # response = redirect("http://localhost:3000/home/")
+
+    response = "asdasd"
     return response
 
 

@@ -15,7 +15,7 @@ const Home = () => {
 
 
 
-    const [name, setName] = useState("")
+    const [userInfo, setUserInfo] = useState({})
     const [numberOfCards, setNumberOfCards] = useState(3)
     const [redirectToNewPage, setredirectToNewPage] = useState(false)
 
@@ -27,9 +27,10 @@ const Home = () => {
             localStorage.setItem("user_token", data);
         })    
         .then(stuff => {
+            console.log("hø")
             showUserInformation()
         })
-    } ) 
+    }, [] ) 
     
     const submitCardForm = e => {
         e.preventDefault()
@@ -40,6 +41,8 @@ const Home = () => {
     }
 
     function showUserInformation()  {
+        console.log("hø")
+        console.log("igjen")
 
         let auth =  localStorage.getItem('user_token');
 
@@ -54,7 +57,7 @@ const Home = () => {
             console.log(res.data.name)
             console.log(res.data.email)
             console.log(res.data.username)
-            setName(res.data.name)
+            setUserInfo(res.data)
         })
 
 
@@ -70,10 +73,12 @@ const Home = () => {
     }
 
     return(
-        <div>
-            <h1 style={{margin: "200px"}}>You are logged in, {name}</h1>
+        <div style={{margin: "300px"}}>
+            <h1>You are logged in, {userInfo.name}</h1>
+            <span style={{color: "grey"}}>username: </span><span>{userInfo.username}</span> <br />
+            <span style={{color: "grey"}}>email: </span><span>{userInfo.email}</span>
 
-            <form onSubmit={submitCardForm} style={{margin: "200px"}}>
+            <form onSubmit={submitCardForm} style={{marginTop: "100px"}}>
                 <label htmlFor="cards"> number of cards </label>
                 <select defaultValue={3} id="cards" name="cards" onChange={e => setNumberOfCards(e.target.value)}>
                     <option value={1}>1</option>

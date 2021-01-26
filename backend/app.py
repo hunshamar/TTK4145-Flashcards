@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, session
 from flask_sqlalchemy import SQLAlchemy
 # from routes import initRoute
 from routes.user import userBlueprint
@@ -11,6 +11,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True) # Support credentials to allow sessions in blueprints
+# CORS(app) # Support credentials to allow sessions in blueprints
 JWTManager(app)
 
 
@@ -29,7 +30,11 @@ app.register_blueprint(flashcardBlueprint)
 @app.route("/init")
 def init():
     db.create_all()
-    return "yessum"
+    return jsonify(session.get("userdata"))
+
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

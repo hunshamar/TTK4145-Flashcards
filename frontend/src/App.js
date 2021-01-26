@@ -18,7 +18,7 @@ const App = () => {
 
     
     <Router>
-    <Navbar loggedin={true} />
+      <Navbar loggedin={true} />
     <Routes />
     </Router>
     </MuiThemeProvider>

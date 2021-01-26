@@ -9,12 +9,13 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import { createMuiTheme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
+import { Icon, IconButton } from '@material-ui/core';
 
 import theme from "../static/theme"
 import MobileStepper from '@material-ui/core/MobileStepper';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import Button from '@material-ui/core/Button';
 
@@ -144,12 +145,15 @@ const CardCreator = (props) => {
 
     return(
         <div style={{}}> 
+            <Link to="/home">
+            <IconButton>
+                 <ArrowBackIcon /> 
+            </IconButton>
+            </Link>
+            
             <ThemeProvider theme={theme}>
                 {/* <CssBaseline /> */}
-                Card creator {number}
-                <Button variant="contained" style={{backgroundColor: theme.palette.myColor}} onClick={e => console.log("button")}>
-                    Hello World
-                </Button>
+               
 
                 <Stepper maxSteps={number} style={{margin: "400px"}}/>
       </ThemeProvider>
