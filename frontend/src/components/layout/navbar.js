@@ -1,15 +1,24 @@
 
 import React, {useState, useEffect} from "react"
 import { makeStyles } from '@material-ui/core/styles';
-import  { Redirect, Link } from 'react-router-dom'
+import  { Redirect, Link, NavLink } from 'react-router-dom'
 
 import axios from 'axios';
-import AppBar from '@material-ui/core/AppBar';
+import {AppBar, Tabs, Tab, Avatar} from '@material-ui/core'
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import InboxIcon from '@material-ui/icons/Inbox';
+import DraftsIcon from '@material-ui/icons/Drafts';
 
 
 
@@ -48,31 +57,32 @@ const Navbar = props => {
     return(
         <AppBar position="static">
                     <Toolbar>
-        <IconButton edge="start"  color="inherit" aria-label="menu">
-        <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" style={{flexGrow: 1}}>
+        <Typography variant="h6" style={{flexGrow: 0}}>
         Flashcardstuff
         </Typography>
-        
-            {name ? "Logged in user: " + name : "not logged in"}
 
-            <Button href="/" color="inherit" style={{marginLeft: "100px"}}> LOG OUT</Button>
+        <List style={{textColor: "white", display: "flex"}}>
+            <ListItem>
+                <NavLink style={{color: "white"}} to="/home"> home </NavLink>
+            </ListItem>
+            <ListItem>
+                <NavLink style={{color: "white"}} to="/"> Login</NavLink>
+            </ListItem>
+            <ListItem>
+                <NavLink style={{color: "white"}} to="/showCards"> Cards</NavLink>
+            </ListItem>
+            <ListItem>
+                <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/createCard"> Create card</NavLink>
+            </ListItem>
+        </List>
+
+            <div style={{marginLeft: "auto"}}>
+            {name ? "Logged in user: " + name : "not logged in"}
+            </div>
         </Toolbar>
         </AppBar>
     )
 
-
-    if (props.loggedin){
-        return(
-            <div> logged in {name}</div>
-        )
-    }
-    else{
-        return(
-            <div> Not logged in </div>
-        )
-    }
 
 
 }

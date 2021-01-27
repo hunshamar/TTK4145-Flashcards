@@ -1,11 +1,12 @@
 
 import React from "react"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Navbar from "./components/navbar"
 
 import Home from "./components/home"
 import Login from "./components/login"
 import CardCreator from "./components/cardCreator"
+import ShowCards from './components/showCards';
+import CreateCard from './components/createCard';
 
 const Routes = () => {
 
@@ -18,6 +19,8 @@ const Routes = () => {
                 <Route path="/" exact component={Login}/>
                 <Route path="/home/" exact component={Home}/>
                 <Route path="/cardCreator" exact component={CardCreator}/>
+                <Route path="/createCard" exact component={CreateCard}/>
+                <Route path="/showCards" exact component={ShowCards} />
             </Switch>
         </React.Fragment>
     )

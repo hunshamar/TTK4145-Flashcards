@@ -2,12 +2,11 @@
 import React, {useState} from "react"
 import  { Redirect } from 'react-router-dom'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 
 import { ThemeProvider } from '@material-ui/core/styles'
 import { createMuiTheme } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
+import {TextField, Card} from '@material-ui/core/';
 
 import { Icon, IconButton } from '@material-ui/core';
 
@@ -37,7 +36,6 @@ const CardForm = props => {
     
 
     return(
-
         <Grid container spacing={2} >
             <Grid item xs={12}>
 

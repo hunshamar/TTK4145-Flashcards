@@ -118,7 +118,7 @@ function Login() {
       <Grid item xs={6} >
 
 
-      <form onSubmit={manualLogin} style={{marginTop: "30px", border: '2px solid black', padding: "50px", textAlign: "center", width: "400px"}}>
+      <form onSubmit={manualLogin} style={{marginTop: "30px", border: '2px solid black', padding: "50px", textAlign: "center", width: "400px", backgroundColor: "white"}}>
          <TextField label="username" onChange={e => setUsername(e.target.value)} required />
          <TextField label="name" onChange={e => setName(e.target.value)} required/>
          <TextField label="email" onChange={e => setEmail(e.target.value)} required/>

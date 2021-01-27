@@ -48,19 +48,47 @@ def addFlashcard(title, content, uid):
 
 @flashcardBlueprint.route("/api/flashcards")
 def flashcards():
+
+    print(getAllFlashcards()[0])
+    
     return jsonify(getAllFlashcards())
 
 
 
 
 @flashcardBlueprint.route("/api/addFlashcard", methods=["POST"])
+@jwt_required
 def add_Flashcard():
     try:
         title = request.json["title"]
         content = request.json["content"]
-        uid = request.json["uid"]
-        print("was it addded", addFlashcard(title, content, uid))
+        if not (title and content):
+            return jsonify({"error": "Invalid form"})
+
+        uid = get_jwt_identity()
+        status = addFlashcard(title, content, uid)
+        print("was it addded", status)
         return jsonify({"success": "true"})
     except Exception as e:
         print(e)
+        return jsonify({"error": "Invalid form"})
+
+def delCard(cid):
+    try:
+        card = Flashcard.query.get(cid)
+        db.session.delete(card)
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+@flashcardBlueprint.route("/api/deleteflashcard/<cid>", methods=["DELETE"])
+@jwt_required
+def delete_card(cid):
+    print(cid)
+    try:
+        delCard(cid)
+        return jsonify({"success": "true"})
+    except:
         return jsonify({"error": "Invalid form"})
