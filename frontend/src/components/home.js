@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react"
 import { useParams } from "react-router"
 import axios from 'axios';
 import { Redirect } from "react-router-dom"
+import authReducer from '../store/reducers/authReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInCallack } from '../store/actions/authActions';
 
 
 const Home = () => {
@@ -20,17 +23,25 @@ const Home = () => {
     const [redirectToNewPage, setredirectToNewPage] = useState(false)
 
 
-    useEffect(async () => {
-        fetch("http://localhost:5000/api/login/callback", { credentials: "include" })
-            .then(response => response.json())
-            .then(data => {
-                localStorage.setItem("user_token", data);
-            })
-            .then(stuff => {
-                console.log("hø")
-                showUserInformation()
-            })
-    }, [])
+    // useEffect(async () => {
+
+    //     axios.get("http://localhost:5000/api/login/callback", { withCredentials: true })
+    //     .then(response => {
+    //         let user_token = response.data
+    //         localStorage.setItem("user_token", user_token)
+    //         showUserInformation()
+    //     })
+    // }, [])
+
+    const loggedIn = useSelector(state => state.authReducer.loggedIn)
+    const dispatch = useDispatch();
+    
+    useEffect(() => {
+        dispatch(signInCallack())
+        console.log("is logged", loggedIn)
+        showUserInformation()
+    }, [loggedIn])   
+
 
     const submitCardForm = e => {
         e.preventDefault()

@@ -17,15 +17,12 @@ function Login() {
 
   const feideLogin = () => {
 
-    fetch("http://localhost:5000/api/logintoken")
+    fetch("http://localhost:5000/api/logintoken", { credentials: "include" })
     .then(response => response.json())
     .then(data => {
       console.log(token)
-
       setToken(data)
       window.open("https://www.itk.ntnu.no/api/feide.php?token="+token+"&returnURL=http://localhost:5000/api/userdata", "_self")
-
-
     })
 
     console.log("logging in")

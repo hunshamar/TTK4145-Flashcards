@@ -19,30 +19,40 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
-
-
+import { useDispatch, useSelector } from "react-redux";
+import { signInCallack, signOut } from '../../store/actions/authActions';
 
 const Navbar = props => {
 
     const [name, setName] = useState("")
     const [redirectLogIn, setRedirectLogin] = useState(false)
 
-    useEffect(() => {
+    const loggedIn = useSelector(state => state.authReducer.loggedIn)
+    const dispatch = useDispatch();
+    
+    // useEffect(() => {
+    //     dispatch(signInCallack())
+    //     console.log("is logged", loggedIn)
+    // }, [loggedIn])   
 
-        axios.get("http://localhost:5000/api/getcurrentuser", {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("user_token")}`
-            }
-        }).then(res => {
-            console.log(res.data.name)
-            console.log(res.data.email)
-            console.log(res.data.username)
-            setName(res.data.name)
-        })})
 
-    const LogOut = () => {
-        console.log("logging out")
-        setRedirectLogin(true)
+    // useEffect(() => {
+
+    //     axios.get("http://localhost:5000/api/getcurrentuser", {
+    //         headers: {
+    //             Authorization: `Bearer ${localStorage.getItem("user_token")}`
+    //         }
+    //     }).then(res => {
+    //         console.log(res.data.name)
+    //         console.log(res.data.email)
+    //         console.log(res.data.username)
+    //         setName(res.data.name)
+    //     })})
+
+    const logOut = () => {
+        console.log("logging out yes")
+        dispatch(signOut())
+
     }
 
     if (redirectLogIn) {
@@ -76,8 +86,10 @@ const Navbar = props => {
             </ListItem>
         </List>
 
+
             <div style={{marginLeft: "auto"}}>
-            {name ? "Logged in user: " + name : "not logged in"}
+                <Button style={{color: "white"}} onClick={logOut}>Log Out</Button>
+                {loggedIn ? "Logged in user: " + "yes" : "not logged in"}
             </div>
         </Toolbar>
         </AppBar>
