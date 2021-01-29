@@ -88,8 +88,14 @@ const Navbar = props => {
 
 
             <div style={{marginLeft: "auto"}}>
-                <Button style={{color: "white"}} onClick={logOut}>Log Out</Button>
-                {loggedIn ? "Logged in user: " + "yes" : "not logged in"}
+                
+                {loggedIn ? 
+                    <div>
+                        <Button style={{color: "white"}} onClick={logOut}>Log Out</Button> 
+                        <span>Logged in user: yes  </span> 
+                    </div>
+                    :                    
+                    <span>not logged in </span> }
             </div>
         </Toolbar>
         </AppBar>

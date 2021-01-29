@@ -96,7 +96,7 @@ function Login() {
   if (manualredirect) {
     return( 
       <Redirect to={{
-        pathname: "/home"
+        pathname: "/loginfunc"
       }}/>  
     )
   }

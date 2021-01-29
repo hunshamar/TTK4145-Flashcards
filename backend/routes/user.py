@@ -10,6 +10,7 @@ import urllib.parse as urlparse
 from urllib.parse import parse_qs
 from db import db
 
+jwt = JWTManager()
 
 userBlueprint = Blueprint("user", __name__)
 
@@ -113,8 +114,9 @@ def login_callback():
         user = list(filter(lambda x: x["email"] == email and x["username"] == username, getAllUsers()))
         if (len(user) == 1):   
             token = create_access_token(identity=user[0]["id"])        
+            refresh_token = create_refresh_token(identity=user[0]["id"])
             print("token yes:", token)
-            return jsonify(token)
+            return jsonify({"user_token": token, "refresh_token": refresh_token})
         else:
             print("multiple users exists. Error")
             return jsonify("multiple users exists. Error")    
@@ -135,7 +137,7 @@ def stuff():
         print("added to session:")
         
 
-        return redirect("http://localhost:3000/home/")
+        return redirect("http://localhost:3000/loginfunc/")
 
 
     if request.method == "POST":
@@ -198,3 +200,63 @@ def manual_login():
     return response
 
 
+
+class InvalidToken(db.Model):
+    __tablename__ = "invalid_tokens"
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def is_invalid(self, jti):
+        q = self.query.filter_by(jti=jti).first()
+        return bool(q)
+
+
+@jwt.token_in_blacklist_loader
+def check_if_blacklisted_token(decrypted_token):
+    jti = decrypted_token["jti"]
+    return InvalidToken.is_invalid(jti)
+
+
+@userBlueprint.route("/api/checkiftokenexpire", methods=["POST"])
+@jwt_required
+def check_if_token_expire():
+    return jsonify({"success": True})
+
+
+@userBlueprint.route("/api/refreshtoken", methods=["POST"])
+@jwt_refresh_token_required
+def refresh():
+    identity = get_jwt_identity()
+    token = create_access_token(identity=identity)
+    return jsonify({"token": token})
+
+
+@userBlueprint.route("/api/logout/access", methods=["POST"])
+@jwt_required
+def access_logout():
+    jti = get_raw_jwt()["jti"]
+    try:
+        invalid_token = InvalidToken(jti=jti)
+        invalid_token.save()
+        return jsonify({"success": True})
+    except Exception as e:
+        print(e)
+        return {"error": e.message}
+
+
+@userBlueprint.route("/api/logout/refresh", methods=["POST"])
+@jwt_refresh_token_required
+def refresh_logout():
+    jti = get_raw_jwt()["jti"]
+    try:
+        invalid_token = InvalidToken(jti=jti)
+        invalid_token.save()
+        return jsonify({"success": True})
+    except Exception as e:
+        print(e)
+        return {"error": e.message}

@@ -35,11 +35,14 @@ const Home = () => {
 
     const loggedIn = useSelector(state => state.authReducer.loggedIn)
     const dispatch = useDispatch();
-    
+
+
     useEffect(() => {
-        dispatch(signInCallack())
-        console.log("is logged", loggedIn)
-        showUserInformation()
+        if (loggedIn){
+            showUserInformation()
+        } else {
+            console.log("not here")
+        }
     }, [loggedIn])   
 
 
@@ -56,20 +59,25 @@ const Home = () => {
         console.log("igjen")
 
         let auth = localStorage.getItem('user_token');
+        
+        if(!auth){
+            setUserInfo({})
+        }
+        else{
+            console.log("authmama", auth)
 
-        console.log("auth", auth)
 
-
-        axios.get("http://localhost:5000/api/getcurrentuser", {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("user_token")}`
-            }
-        }).then(res => {
-            console.log(res.data.name)
-            console.log(res.data.email)
-            console.log(res.data.username)
-            setUserInfo(res.data)
-        })
+            axios.get("http://localhost:5000/api/getcurrentuser", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("user_token")}`
+                }
+            }).then(res => {
+                console.log(res.data.name)
+                console.log(res.data.email)
+                console.log(res.data.username)
+                setUserInfo(res.data)
+            })
+        }
 
 
     }
@@ -85,9 +93,11 @@ const Home = () => {
 
     return (
         <div style={{ margin: "300px" }}>
-            <h1>You are logged in, {userInfo.name}</h1>
+            {loggedIn ? <div> <h1>You are logged in, {userInfo.name}</h1>
             <span style={{ color: "grey" }}>username: </span><span>{userInfo.username}</span> <br />
-            <span style={{ color: "grey" }}>email: </span><span>{userInfo.email}</span>
+            <span style={{ color: "grey" }}>email: </span><span>{userInfo.email}</span> </div> : <h1> Not logged in  </h1>}
+
+            
 
             <form onSubmit={submitCardForm} style={{ marginTop: "100px" }}>
                 <label htmlFor="cards"> number of cards </label>

@@ -7,6 +7,7 @@ import Login from "./components/login"
 import CardCreator from "./components/cardCreator"
 import ShowCards from './components/showCards';
 import CreateCard from './components/createCard';
+import logInFunc from './components/loginfunc';
 
 const Routes = () => {
 
@@ -17,6 +18,7 @@ const Routes = () => {
         <React.Fragment>
             <Switch>
                 <Route path="/" exact component={Login}/>
+                <Route path="/loginfunc" exact component={logInFunc}/>
                 <Route path="/home/" exact component={Home}/>
                 <Route path="/cardCreator" exact component={CardCreator}/>
                 <Route path="/createCard" exact component={CreateCard}/>

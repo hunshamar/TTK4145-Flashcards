@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, session
 from flask_sqlalchemy import SQLAlchemy
 # from routes import initRoute
-from routes.user import userBlueprint
+from routes.user import userBlueprint, jwt
 from routes.flashcard import flashcardBlueprint
 from db import db
 from flask_cors import CORS
@@ -12,14 +12,15 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 app = Flask(__name__)
 CORS(app, supports_credentials=True) # Support credentials to allow sessions in blueprints
 # CORS(app) # Support credentials to allow sessions in blueprints
-JWTManager(app)
 
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydb.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = "myawesomesecretisnevergonnagiveyouup"
-# app.config["JWT_BLACKLIST_ENABLED"] = True
-# app.config["JWT_BLACKLIST_TOKEN_CHECKS"] = ["access", "refresh"]
+app.config["JWT_BLACKLIST_ENABLED"] = True
+app.config["JWT_BLACKLIST_TOKEN_CHECKS"] = ["access", "refresh"]
+jwt.init_app(app)
+
 
 app.secret_key = 'super secret key'
 
