@@ -49,7 +49,6 @@ def addFlashcard(title, content, uid):
 @flashcardBlueprint.route("/api/flashcards")
 def flashcards():
 
-    print(getAllFlashcards()[0])
     
     return jsonify(getAllFlashcards())
 
@@ -86,7 +85,7 @@ def delCard(cid):
 @flashcardBlueprint.route("/api/deleteflashcard/<cid>", methods=["DELETE"])
 @jwt_required
 def delete_card(cid):
-    print(cid)
+    print(cid, "is deleted yes")
     try:
         delCard(cid)
         return jsonify({"success": "true"})

@@ -26,23 +26,31 @@ export const addCard = (card) => {
 };
 
 
-
-export const fetchCards = () => {
-    return (dispatch) => {
-        // dispatch()
-        axios.get("http://localhost:5000/api/flashcards")
+export const loadCards = () => async (dispatch, getState) => {
+    const cards = await axios.get("http://localhost:5000/api/flashcards")
         .then(response => {
-            console.log(response.data);
             const cards = response.data
-            dispatch({type: "FETCH_CARD_SUCCESS", cards: cards})
+            console.log("mah cah")
+            console.log(cards)
+            dispatch({type: "LOAD_CARDS", cards: cards})
         })
         .catch(err => console.log(err))
-    }
+
 }
 
-export const deleteCard = (card) => {
-    return(dispatch, getState) => {
-        console.log("jalla")
-    }
+export const deleteCard = (card) => async (dispatch, getState) => {
+    
+    await axios.delete("http://localhost:5000/api/deleteflashcard/" + card.id, 
+    {headers: { 
+        Authorization: "Bearer " +localStorage.getItem("user_token") 
+    }}
+    ).then(res => {
+        console.log(res.data)
+    })
+
+    dispatch({type: "DELETE_CARD", card: card})
 }
+
+
+
 

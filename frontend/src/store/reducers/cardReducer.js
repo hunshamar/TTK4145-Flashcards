@@ -1,9 +1,7 @@
 
 const initState = {
-    cards: [
-        {id: "1", title: "myCard1", content: "ja bla bla"},
-        {id: "2", title: "myCard2", content: "bla ja bla"},
-        {id: "3", title: "myCard3", content: "bla bla ja"},
+    card: [
+       
     ]
 }
 
@@ -15,13 +13,15 @@ const cardReducer = (state = initState, action) => {
         case "CREATE_CARD_ERROR":
             console.log("created card error", action.err)
             return state;
-        case "FETCH_CARD_SUCCES":
+        case "LOAD_CARDS":
             console.log("got them cards", action.cards)
-            return {cards: action.cards}
+            return {...state, cards: action.cards}
+        case "DELETE_CARD":
+            console.log("deleting dem cards", action.card)
+            return state;
         default:
             return state;
     }
-    return state
 }
 
 export default cardReducer

@@ -4,7 +4,7 @@ import { TextField, Card } from '@material-ui/core';
 import { useState } from 'react';
 import axios from 'axios';
 import { addCard } from '../store/actions/cardActions';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 
 
 const CreateCard = (props) => {
@@ -12,6 +12,8 @@ const CreateCard = (props) => {
     const [content, setContent] = useState("");
     const [title, setTitle] = useState("");
     // const [back, setBack] = useState({});
+
+    const dispatch = useDispatch();
 
     console.log("is token?", localStorage.getItem("user_token"))
 
@@ -21,10 +23,16 @@ const CreateCard = (props) => {
         console.log(content, title)
         if (content && title){
 
-            props.addCard({
+
+            dispatch(addCard({
                 title: title,
                 content: content
-            })
+            }))
+
+            // props.addCard({
+            //     title: title,
+            //     content: content
+            // })
 
             
         }
@@ -69,10 +77,12 @@ const CreateCard = (props) => {
     )
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        addCard: (card) => dispatch(addCard(card)),
-    }
-}
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         addCard: (card) => dispatch(addCard(card)),
+//     }
+// }
 
-export default connect(null, mapDispatchToProps)(CreateCard)
+// export default connect(null, mapDispatchToProps)(CreateCard)
+
+export default CreateCard
