@@ -4,7 +4,7 @@ import { Button, Card, IconButton } from '@material-ui/core';
 import {connect, useDispatch, useSelector, shallowEqual} from "react-redux"
 import { useEffect } from 'react';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Grid } from '@material-ui/core/';
+import { Grid, Alert } from '@material-ui/core/';
 import axios from "axios"
 import {compose} from "redux"
 import { fetchCards, loadCards, deleteCard, addCard } from '../store/actions/cardActions';
@@ -15,7 +15,7 @@ const lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do e
 
 const ShowCards = props => {
 
-    const cards = useSelector(state => state.cardReducer.cards, shallowEqual)
+    const cards = useSelector(state => state.cardReducer.cards)
     const dispatch = useDispatch();
     
     useEffect(() => {
@@ -25,15 +25,16 @@ const ShowCards = props => {
 
 
     const deleteThisCard = card => {
-        dispatch(deleteCard(card))
-        window.location.reload();
+        dispatch(deleteCard(card))   
         
     }
     
+  
    
     // console.log(cards)
 
     return (
+        
         <div>
             {cards && cards.map((card) => (
                 <Card key={card.id} style={{margin: "20px", width: "400px", padding: "10px"}}>

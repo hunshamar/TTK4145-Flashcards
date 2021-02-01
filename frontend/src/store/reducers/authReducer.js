@@ -12,14 +12,21 @@ const authReducer = (state = initState, action) => {
             console.log("successfull login callback")
             return {
                 ...state, 
-                loggedIn: true
+                loggedIn: action.loggedIn
             }
         
         case "LOG_OUT":
             console.log("logging out mimi")
             return {
                 ...state,
-                loggedIn: false
+                loggedIn: action.loggedIn
+            }
+        case "LOG_IN_STATUS":
+            console.log("fetching status")
+            console.log(action.loggedIn)
+            return {
+                ...state,
+                loggedIn: action.loggedIn
             }
 
         default:

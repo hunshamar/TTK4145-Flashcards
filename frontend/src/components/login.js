@@ -1,9 +1,12 @@
 import React, {useImperativeHandle, useState} from "react"
 import  { Redirect } from 'react-router-dom'
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Axios from "axios";
+import { Button, Link, IconButton } from "@material-ui/core";
+import { styled } from '@material-ui/core/styles';
+import CloseIcon from '@material-ui/icons/Close';
 
 
 
@@ -12,6 +15,7 @@ function Login() {
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
+  const [AlternativeLogin, setAlternativeLogin] = useState(false)
   const [manualredirect, setManualredirect] = useState(false)
   const [token, setToken] = useState("")
 
@@ -28,6 +32,11 @@ function Login() {
     console.log("logging in")
   }
 
+  const StyledLink = styled(Link)({
+    color: "black",
+    padding: "20px"    
+  })
+
 
   
 
@@ -35,58 +44,31 @@ function Login() {
     e.preventDefault()
     if (username, email, name){
 
-      // const headers = {
-      //   "Access-Control-Allow-Origin": "http://localhost:3000"
-      // };
-
       let data = {
         username: username,
         email: email,
         name: name
-      }
-      
-      // const res = Axios.post("http://localhost:5000/api/userdata", data, {widthCredentials: true})
-      // console.log("e")
-
+      }      
 
       var url = 'http://localhost:5000/api/userdata';
-    fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(data),
-      credentials: 'include',   // this line has been added for sessions 
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => response.json())
-    .then((data) => {
-      console.log(data);
-      if (data.status == "success"){
-        console.log("redirecting")
-        setManualredirect(true)
-      } else {
-        alert(data.status)
-      }
-    })
-
-
-    //   fetch('http://localhost:5000/api/manuallogin', {
-    //   method: 'POST', // or 'PUT'
-    //   mode: "cors", 
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(data),
-    //   })
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     console.log('Success:', data);
-    //   })
-    // .catch((error) => {
-    //   console.error('Error:', error);
-    // });
-
-
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        credentials: 'include',   // this line has been added for sessions 
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status == "success"){
+          console.log("redirecting")
+          setManualredirect(true)
+        } else {
+          alert(data.status)
+        }
+      })
     } else {
       console.log("missing credentials for login", username, email, name)
     }
@@ -105,25 +87,39 @@ function Login() {
       <div>redirecting...</div>
     )
   } else {
+
+  const openManualLogin = () => {
+    console.log("do that shit")
+    setAlternativeLogin(true)
+  }
+
+    
   return (
-    <Grid container spacing={2} style={{margin: "20%"}}>
-      <Grid item xs={6} >
-      <button onClick={feideLogin} style={{width: "300px", height: "80px"}}>
+
+    <div style={{marginTop: "250px", textAlign: "center"}}>
+
+      <Button color="primary" variant="contained" onClick={feideLogin} style={{width: "300px", height: "80px"}}>
         Log in with Feide
-      </button>
-      </Grid>
-      <Grid item xs={6} >
+      </Button> <br/>
+      <div style={{padding: "10px"}}> 
+        <StyledLink href="#" onClick={e => setAlternativeLogin(!AlternativeLogin)}>Alternative login</StyledLink>
+        <StyledLink  target="_blank" href="https://bas.ntnu.no/userclient/" >Forgot Password</StyledLink>        
+      </div>
 
-
-      <form onSubmit={manualLogin} style={{marginTop: "30px", border: '2px solid black', padding: "50px", textAlign: "center", width: "400px", backgroundColor: "white"}}>
-         <TextField label="username" onChange={e => setUsername(e.target.value)} required />
-         <TextField label="name" onChange={e => setName(e.target.value)} required/>
-         <TextField label="email" onChange={e => setEmail(e.target.value)} required/>
-        <input type="submit" value="manual login (for testing)" style={{width: "300px", height: "40px", marginTop: "10px"}}/>
-      </form>
-
-      </Grid>
-      </Grid>
+      {AlternativeLogin ? 
+      <div> 
+        <div style={{marginBottom: 0, marginTop: "50px",}}> 
+          <h3 style={{fontSize: "14px", color: "#666", display: "inline", padding: "12px"}}>ALTERNATIVE LOGIN - JUST FOR TESTING</h3> 
+        </div>
+      <form onSubmit={manualLogin}>
+         <TextField fullwidth label="username" onChange={e => setUsername(e.target.value)} required />  <br />
+         <TextField fullwidth label="name" onChange={e => setName(e.target.value)} required/> <br />
+         <TextField fullwidth label="email" onChange={e => setEmail(e.target.value)} required/> <br />
+         <Button fullwidth variant="contained" color="seconday" style={{margin: "30px"}} type="submit">Manual Login (for testing)</Button>
+      </form> 
+      </div>
+      : <div> </div>}
+      </div>
 
     
   );

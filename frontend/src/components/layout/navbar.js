@@ -20,16 +20,23 @@ import Divider from '@material-ui/core/Divider';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import { useDispatch, useSelector } from "react-redux";
-import { signInCallack, signOut } from '../../store/actions/authActions';
+import { checkLogInStatus, signInCallack, signOut } from '../../store/actions/authActions';
 
 const Navbar = props => {
 
     const [name, setName] = useState("")
     const [redirectLogIn, setRedirectLogin] = useState(false)
 
+        
+
     const loggedIn = useSelector(state => state.authReducer.loggedIn)
-    const dispatch = useDispatch();
-    
+    const dispatch = useDispatch();      
+
+    // useEffect(() => {
+    //     dispatch(checkLogInStatus())
+    //     console.log("is logged", loggedIn)
+    // }, [loggedIn])   
+
     // useEffect(() => {
     //     dispatch(signInCallack())
     //     console.log("is logged", loggedIn)
@@ -50,19 +57,12 @@ const Navbar = props => {
     //     })})
 
     const logOut = () => {
-        console.log("logging out yes")
+        console.log("logging out yes!!!")
         dispatch(signOut())
-
+        setRedirectLogin(true)
     }
 
-    if (redirectLogIn) {
-        setRedirectLogin(false)
-        return( 
-          <Redirect to={{
-            pathname: "/"
-          }}/>  
-        )
-      }
+ 
 
     return(
         <AppBar position="static">
@@ -73,10 +73,7 @@ const Navbar = props => {
 
         <List style={{textColor: "white", display: "flex"}}>
             <ListItem>
-                <NavLink style={{color: "white"}} to="/home"> home </NavLink>
-            </ListItem>
-            <ListItem>
-                <NavLink style={{color: "white"}} to="/"> Login</NavLink>
+                <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/"> {loggedIn ? "Home" : "Log in"}</NavLink>
             </ListItem>
             <ListItem>
                 <NavLink style={{color: "white"}} to="/showCards"> Cards</NavLink>
@@ -91,8 +88,7 @@ const Navbar = props => {
                 
                 {loggedIn ? 
                     <div>
-                        <Button style={{color: "white"}} onClick={logOut}>Log Out</Button> 
-                        <span>Logged in user: yes  </span> 
+                        <Button style={{color: "white"}} onClick={logOut}><Link style={{color: "white"}} to="/">Log Out</Link></Button> 
                     </div>
                     :                    
                     <span>not logged in </span> }

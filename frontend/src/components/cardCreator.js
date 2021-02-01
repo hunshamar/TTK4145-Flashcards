@@ -134,7 +134,7 @@ const CardCreator = (props) => {
 
     if (number === -1){
         return(
-            <Redirect to="/home" /> 
+            <Redirect to="/" /> 
         )
     }
 
@@ -143,7 +143,7 @@ const CardCreator = (props) => {
 
     return(
         <div style={{}}> 
-            <Link to="/home">
+            <Link to="/">
             <IconButton>
                  <ArrowBackIcon /> 
             </IconButton>

@@ -152,8 +152,8 @@ def stuff():
             print("added to session exists", session.get("userdata"))
 
         elif usernameRegistred(username) or emailRegistred(email):
-            print("duplicate")
-            return jsonify({"status": "duplicate"})
+            print("duplicate. Username and email must either belong to a user or be unique")
+            return jsonify({"status": "duplicate. Username and email must either belong to a existing user or be unique"})
         
         else:
             print("added to session new", session.get("userdata"))

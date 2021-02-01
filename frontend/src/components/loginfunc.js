@@ -22,7 +22,7 @@ const LogInFunc = () => {
 
     return( 
         <Redirect to={{
-          pathname: "/home"
+          pathname: "/"
         }}/>  
       )
 

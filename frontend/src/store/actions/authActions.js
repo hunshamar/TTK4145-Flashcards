@@ -19,6 +19,23 @@ export const signInCallack = () => async (dispatch, getState) => {
         .catch(err => console.log(err))
 }
 
+export const checkLogInStatus = () => (dispatch, getState) => {
+    
+    const user_token = localStorage.getItem("user_token")
+    const refresh_token = localStorage.getItem("refresh_token")
+
+    console.log("user_token?", Boolean(user_token))
+    console.log("refresh_token?", Boolean(refresh_token))
+
+    if (user_token && refresh_token){
+        dispatch({type: "LOG_IN_STATUS", loggedIn: true})
+    } else {
+        console.log("we here")
+        dispatch({type: "LOG_IN_STATUS", loggedIn: false})
+    }
+
+}
+
 export const signOut = () => async (dispatch, getState) => {
     // axios.get("http://localhost:5000/api/login/callback", { withCredentials: true })
     //     .then(response => {

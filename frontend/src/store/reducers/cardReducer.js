@@ -1,6 +1,6 @@
 
 const initState = {
-    card: [
+    cards: [
        
     ]
 }
@@ -11,14 +11,23 @@ const cardReducer = (state = initState, action) => {
             console.log("created card", action.card)
             return state;
         case "CREATE_CARD_ERROR":
-            console.log("created card error", action.err)
+            alert(action.err)
             return state;
         case "LOAD_CARDS":
             console.log("got them cards", action.cards)
+            console.log({...state, cards: action.cards})
             return {...state, cards: action.cards}
         case "DELETE_CARD":
-            console.log("deleting dem cards", action.card)
-            return state;
+            console.log("deleting dem cards")
+            console.log(state.cards)
+            console.log(state.cards.filter(card => card.id !== action.card.id))
+           
+
+            return { 
+                ...state,
+                cards: state.cards.filter((card) => card.id !== action.card.id)
+            }
+            // return state;
         default:
             return state;
     }

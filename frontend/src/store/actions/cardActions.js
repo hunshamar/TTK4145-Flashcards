@@ -13,10 +13,11 @@ export const addCard = (card) => {
                 }
             })
             .then(res => {
-                console.log(res.data)
+                console.log("no error lol", res.data)
                 dispatch({type: "CREATE_CARD", card})
             })
             .catch(err => {
+                console.log("This is an error yes plz")
                 dispatch({type: "CREATE_CARD_ERROR", err})
             })
 
@@ -47,6 +48,7 @@ export const deleteCard = (card) => async (dispatch, getState) => {
     ).then(res => {
         console.log(res.data)
     })
+    .catch(err => alert(err))
 
     dispatch({type: "DELETE_CARD", card: card})
 }
