@@ -20,6 +20,8 @@ class Cardgroup(db.Model):
     def __init__(self, title):
         self.title = title
 
+
+
 def getAllCardgroups():
     cardgroups = Cardgroup.query.all()
     return [{"id": i.id, "title": i.title} for i in cardgroups]
@@ -42,6 +44,15 @@ def addCardgroup(title):
             return False   
     else:
         return False
+
+def getCardgroup(cdid):
+
+    # check type, uid must be int
+
+    cardgroups = Cardgroup.query.all()
+    cardgroup = list(filter(lambda x: x.id == cdid, cardgroups))[0]
+    # print(user)
+    return {"id": cardgroup.id, "title": cardgroup.title}
 
 
 @cardgroupBlueprint.route("/api/cardgroups")
@@ -74,12 +85,13 @@ def delCardgroup(cdid):
         print(e)
         return False
 
-@cardgroupBlueprint.route("/api/deletecardgroup/<cid>", methods=["DELETE"])
-@jwt_required
-def delete_cardgroup(cdid):
-    print(cdid, "is deleted yes")
-    try:
-        delCardgroup(cdid)
-        return jsonify({"success": "true"})
-    except:
-        return jsonify({"error": "Invalid form"})
+# @cardgroupBlueprint.route("/api/deletecardgroup/<cid>", methods=["DELETE"])
+# @jwt_required
+# def delete_cardgroup(cdid):
+#     print(cdid, "is deleted yes")
+#     try:
+#         delCardgroup(cdid)
+#         return jsonify({"success": "true"})
+#     except:
+#         return jsonify({"error": "Invalid form"})
+

@@ -5,11 +5,12 @@ import axios from 'axios';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import { addCardgroup, loadCardgroups } from '../store/actions/cardgroupActions';
+import { addCardgroup, loadCardgroups, deleteCardgroup } from '../store/actions/cardgroupActions';
 import { connect, useDispatch } from 'react-redux';
 import {Alert} from '@material-ui/lab/';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import ShowCards from './showCards';
 
 
 
@@ -19,7 +20,6 @@ const CreateCardgroup = (props) => {
     const [back, setBack] = useState({});
 
     const cardgroups = useSelector(state => state.cardgroupReducer.cardgroups)
-    const cardAlert = useSelector(state => state.cardgroupReducer.alert)
     
 
     const dispatch = useDispatch();
@@ -30,6 +30,9 @@ const CreateCardgroup = (props) => {
         dispatch(loadCardgroups())
     }, [])   
 
+    const deleteThisCardgroup = cardgroup => {
+        dispatch(deleteCardgroup(cardgroup))   
+    }
     
 
     let cardgroupItems = []
@@ -38,20 +41,26 @@ const CreateCardgroup = (props) => {
 
         cardgroupItems[index] = 
             // <div>{cardgroup.title}</div>
-            <Card key={cardgroup.id} style={{margin: "20px", width: "400px", padding: "10px"}}>
-                <Grid container spacing={0}> 
-                    <Grid item xs={11}>
+            <div>
 
-                        <div style={{fontWeight: "bold"}}>id: {cardgroup.id}</div>
-                        <div style={{textDecoration: "underline"}}>title: {cardgroup.title}</div>
+
+                <Card key={cardgroup.id} style={{margin: "20px", width: "400px", padding: "10px"}}>
+                    <Grid container spacing={0}> 
+                        <Grid item xs={11}>
+
+                            <div style={{fontWeight: "bold"}}>id: {cardgroup.id}</div>
+                            <div style={{textDecoration: "underline"}}>title: {cardgroup.title}</div>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <IconButton onClick = {() => deleteThisCardgroup(cardgroup)} > 
+                                <DeleteIcon style={{fontSize: "20px"}} /> 
+                            </IconButton>
                     </Grid>
-                    <Grid item xs={1}>
-                        <IconButton > 
-                            <DeleteIcon style={{fontSize: "20px"}} /> 
-                        </IconButton>
-                </Grid>
-                </Grid>
-            </Card>
+                    </Grid>
+                </Card>
+
+
+            </div>
     ))
 
 
@@ -87,17 +96,7 @@ const CreateCardgroup = (props) => {
     return(
 
         <React.Fragment>
-            {cardAlert.success ? 
-                <Alert severity="success">{cardAlert.success}</Alert>   
-                :
-                <div></div>            
-            }
-            {cardAlert.error ? 
-                <Alert severity="error">{cardAlert.error}</Alert>   
-                :
-                <div></div>            
-            }
-            
+           
 
 
             <Card style={{margin: "100px", padding: "100px"}}>

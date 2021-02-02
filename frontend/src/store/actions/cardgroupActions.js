@@ -40,21 +40,28 @@ export const loadCardgroups = () => async (dispatch, getState) => {
 
 }
 
-// export const deleteCard = (card) => async (dispatch, getState) => {
-    
-//     await axios.delete("http://localhost:5000/api/deleteflashcard/" + card.id, 
-//     {headers: { 
-//         Authorization: "Bearer " +localStorage.getItem("user_token") 
-//     }}
-//     ).then(res => {
-//         console.log(res.data)
-//         dispatch({type: "DELETE_CARD", card: card})        
-//     })
-//     .catch(err => {
-//         dispatch({type: "DELETE_CARD_ERROR", card: card}) 
-//     })
+export const deleteCardgroup = (cardgroup) => async (dispatch, getState) => {
+    console.log("and action")
+    console.log(cardgroup.id)
 
-// }
+    await axios.delete("http://localhost:5000/api/deletegroup/" + cardgroup.id, 
+    {headers: { 
+        Authorization: "Bearer " +localStorage.getItem("user_token") 
+    }}
+    ).then(res => {
+        console.log("to be deleted")
+        if(res.data.error){
+            console.log("error")
+            throw new Error(res.data.error)
+        }
+
+        dispatch({type: "DELETE_CARDGROUP", cardgroup: cardgroup})        
+    })
+    .catch(err => {
+        dispatch({type: "DELETE_CARDGROUP_ERROR", cardgroup: cardgroup}) 
+    })
+
+}
 
 
 

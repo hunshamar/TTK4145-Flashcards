@@ -1,6 +1,5 @@
 
 const initState = {
-    alert: {},
     cardgroups: [
        
     ]
@@ -15,49 +14,36 @@ const cardgroupReducer = (state = initState, action) => {
             console.log(state)
             console.log({ 
                 ...state,
-                cardgroups: [...state.cardgroups, action.createdCardgroup],
-                alert: {success: "Successfully created cardgroup with id "+action.createdCardgroup.id},
+                cardgroups: [...state.cardgroups, action.createdCardgroup]                
             })
 
             return { 
                 ...state,
-                cardgroups: [...state.cardgroups, action.createdCardgroup],
-                alert: {success: "Successfully created cardgroup with id "+action.createdCardgroup.id},
+                cardgroups: [...state.cardgroups, action.createdCardgroup]
             }
         case "CREATE_CARDGROUP_ERROR":
-            return { 
-                ...state,
-                alert: {error: "Error creating cardgroup: "+action.err},
-
-            }
-            return state;
+            return state
         case "LOAD_CARDGROUPS":
             console.log("got them cardgroups", action.cardgroups)
             console.log({...state, cardgroups: action.cardgroups})
             return {
                 ...state, 
-                cardgroups: action.cardgroups,
-                alert: {}
+                cardgroups: action.cardgroups
             }
-        // case "DELETE_CARD":
-        //     console.log("deleting dem cards")
-        //     console.log(state.cards)
-        //     console.log(state.cards.filter(card => card.id !== action.card.id))
+        case "DELETE_CARDGROUP":
+            console.log("deleting dem cards")
+            console.log(state.cardgroups)
+            console.log(state.cardgroups.filter(cardgroup => cardgroup.id !== action.cardgroup.id))
            
 
-        //     return { 
-        //         ...state,
-        //         cards: state.cards.filter((card) => card.id !== action.card.id),
-        //         alert: {success: "Successfully deleted card with id "+action.card.id}
-        //     }
-        //     // return state;
+            return { 
+                ...state,
+                cards: state.cardgroups.filter((cardgroup) => cardgroup.id !== action.cardgroup.id),
+            }
+            // return state;
         
-        // case "DELETE_CARD_ERROR":
-        //     return { 
-        //         ...state,
-        //         alert: {error: "Could not delete card with id "+action.card.id}
-        //     }
-            // return state
+        case "DELETE_CARDGROUP_ERROR":
+            return state;
         
         default:
             return state;

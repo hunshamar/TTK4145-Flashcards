@@ -16,18 +16,15 @@ const cardReducer = (state = initState, action) => {
             console.log({ 
                 ...state,
                 cards: [...state.cards, action.createdCard],
-                alert: {success: "Successfully created card with id "+action.createdCard.id},
             })
 
             return { 
                 ...state,
                 cards: [...state.cards, action.createdCard],
-                alert: {success: "Successfully created card with id "+action.createdCard.id},
             }
         case "CREATE_CARD_ERROR":
             return { 
                 ...state,
-                alert: {error: "Error creating card: "+action.err},
 
             }
             return state;
@@ -37,7 +34,6 @@ const cardReducer = (state = initState, action) => {
             return {
                 ...state, 
                 cards: action.cards,
-                alert: {}
             }
         case "DELETE_CARD":
             console.log("deleting dem cards")
@@ -48,15 +44,11 @@ const cardReducer = (state = initState, action) => {
             return { 
                 ...state,
                 cards: state.cards.filter((card) => card.id !== action.card.id),
-                alert: {success: "Successfully deleted card with id "+action.card.id}
             }
             // return state;
         
         case "DELETE_CARD_ERROR":
-            return { 
-                ...state,
-                alert: {error: "Could not delete card with id "+action.card.id}
-            }
+            return state
             // return state
         
         default:

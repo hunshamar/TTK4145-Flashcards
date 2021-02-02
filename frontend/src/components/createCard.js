@@ -8,6 +8,9 @@ import { TextField, Card } from '@material-ui/core';
 import {Alert} from '@material-ui/lab/';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import { loadCardgroups } from '../store/actions/cardgroupActions';
+import CardgroupSelect from './cardgroupselect';
+import Alerter from './notifications/alerter';
 
 
 
@@ -15,69 +18,61 @@ const CreateCard = (props) => {
 
     const [content, setContent] = useState("");
     const [title, setTitle] = useState("");
+    const [cardgroupid, setCardgroupid] = useState("");
     const [back, setBack] = useState({});
 
     const cards = useSelector(state => state.cardReducer.cards)
     const cardAlert = useSelector(state => state.cardReducer.alert)
+    const cardgroups = useSelector(state => state.cardgroupReducer.cardgroups)
+   
     
+    const [age, setAge] = React.useState('');
+  
+    const handleCardgroupChange = (event) => {
+        setCardgroupid(event.target.value);
+    };
 
     const dispatch = useDispatch();
 
-    console.log("is token?", localStorage.getItem("user_token"))
+    // console.log("is token?", localStorage.getItem("user_token"))
 
     useEffect(() => {
         dispatch(loadCards())
+        dispatch(loadCardgroups())
     }, [])   
 
 
 
-
+    console.log("cah gr id", cardgroupid)
 
 
 
     const submit = e => {
         e.preventDefault()
         
-        console.log(content, title)
-        if (content && title){
+        console.log(content, title, cardgroupid)
+        if (content && title && cardgroupid){
 
 
             try{ dispatch(addCard({
                 title: title,
-                content: content
+                content: content,
+                cardgroupid: cardgroupid
             }))}
             catch {
                 console.log("err")
             }
-
-            // props.addCard({
-            //     title: title,
-            //     content: content
-            // })
-
             
         }
         else{
-            console.log("error here")
+            alert("fill inn all fields")
         }
     }
     
     
     return(
 
-        <React.Fragment>
-            {cardAlert.success ? 
-                <Alert severity="success">{cardAlert.success}</Alert>   
-                :
-                <div></div>            
-            }
-            {cardAlert.error ? 
-                <Alert severity="error">{cardAlert.error}</Alert>   
-                :
-                <div></div>            
-            }
-            
-
+        <React.Fragment>           
 
             <Card style={{margin: "100px", padding: "100px"}}>
             <form onSubmit={submit}>
@@ -85,6 +80,9 @@ const CreateCard = (props) => {
                 <Grid item xs={12}>
 
                     <h2>Create a single card </h2>
+                </Grid>
+                <Grid item xs={12}>
+                    <CardgroupSelect onChange={e => setCardgroupid(e)} />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField onChange={e => setTitle(e.target.value)} fullWidth required variant="outlined" label="Title"/>

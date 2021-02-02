@@ -5,8 +5,9 @@ export const addCard = (card) => async( dispatch, getState) => {
         
     
     axios.post("http://localhost:5000/api/addFlashcard", {
-            title: card.title,
-            content: card.content
+            front: card.title,
+            back: card.content,
+            cardgroupid: card.cardgroupid
         }, {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem("user_token")
@@ -15,12 +16,22 @@ export const addCard = (card) => async( dispatch, getState) => {
         .then(res => {
             console.log("returned")
             console.log(res.data)
+            if(res.data.error){
+                console.log("error")
+                throw new Error(res.data.error)
+            }
+
             const createdCard = res.data
             dispatch({type: "CREATE_CARD", createdCard})
+            let alert = {severity: "success", text: "successfully created card"}
+            console.log("erorr her da")
+            dispatch({type: "ALERT", alert})
         })
         .catch(err => {
             console.log("This is an error yes plz")
-            dispatch({type: "CREATE_CARD_ERROR", err})
+            console.log(err.toString())
+            let alert = {severity: "error", text: err.toString()}
+            dispatch({type: "ALERT", alert})
         })
 
     console.log("async call up in hier", card)
@@ -28,15 +39,28 @@ export const addCard = (card) => async( dispatch, getState) => {
 };
 
 
-export const loadCards = () => async (dispatch, getState) => {
-    const cards = await axios.get("http://localhost:5000/api/flashcards")
+export const loadCards = props => async (dispatch, getState) => {
+
+    if (props){
+        const cards = await axios.get("http://localhost:5000/api/cardgroupflashcards/"+props)
         .then(response => {
             const cards = response.data
-            console.log("mah cah")
+            console.log("lmlmlml")
             console.log(cards)
             dispatch({type: "LOAD_CARDS", cards: cards})
         })
         .catch(err => console.log(err))
+    }
+    else {
+        const cards = await axios.get("http://localhost:5000/api/flashcards")
+            .then(response => {
+                const cards = response.data
+                console.log("mah cah")
+                console.log(cards)
+                dispatch({type: "LOAD_CARDS", cards: cards})
+            })
+            .catch(err => console.log(err))
+    }
 
 }
 
