@@ -81,6 +81,9 @@ const Navbar = props => {
             <ListItem>
                 <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/createCard"> Create card</NavLink>
             </ListItem>
+            <ListItem>
+                <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/createCardgroup"> Cardgroups</NavLink>
+            </ListItem>
         </List>
 
 

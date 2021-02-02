@@ -1,24 +1,25 @@
 
-import { Button, Grid } from '@material-ui/core';
+import { Button, Grid, Card, IconButton, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
 import axios from 'axios';
-import { addCard, loadCards } from '../store/actions/cardActions';
+
+import DeleteIcon from '@material-ui/icons/Delete';
+
+import { addCardgroup, loadCardgroups } from '../store/actions/cardgroupActions';
 import { connect, useDispatch } from 'react-redux';
-import { TextField, Card } from '@material-ui/core';
 import {Alert} from '@material-ui/lab/';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 
 
 
-const CreateCard = (props) => {
+const CreateCardgroup = (props) => {
 
-    const [content, setContent] = useState("");
     const [title, setTitle] = useState("");
     const [back, setBack] = useState({});
 
-    const cards = useSelector(state => state.cardReducer.cards)
-    const cardAlert = useSelector(state => state.cardReducer.alert)
+    const cardgroups = useSelector(state => state.cardgroupReducer.cardgroups)
+    const cardAlert = useSelector(state => state.cardgroupReducer.alert)
     
 
     const dispatch = useDispatch();
@@ -26,11 +27,32 @@ const CreateCard = (props) => {
     console.log("is token?", localStorage.getItem("user_token"))
 
     useEffect(() => {
-        dispatch(loadCards())
+        dispatch(loadCardgroups())
     }, [])   
 
+    
 
+    let cardgroupItems = []
 
+    cardgroups.map((cardgroup, index) => (
+
+        cardgroupItems[index] = 
+            // <div>{cardgroup.title}</div>
+            <Card key={cardgroup.id} style={{margin: "20px", width: "400px", padding: "10px"}}>
+                <Grid container spacing={0}> 
+                    <Grid item xs={11}>
+
+                        <div style={{fontWeight: "bold"}}>id: {cardgroup.id}</div>
+                        <div style={{textDecoration: "underline"}}>title: {cardgroup.title}</div>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <IconButton > 
+                            <DeleteIcon style={{fontSize: "20px"}} /> 
+                        </IconButton>
+                </Grid>
+                </Grid>
+            </Card>
+    ))
 
 
 
@@ -38,13 +60,12 @@ const CreateCard = (props) => {
     const submit = e => {
         e.preventDefault()
         
-        console.log(content, title)
-        if (content && title){
+        console.log(title)
+        if (title){
 
 
-            try{ dispatch(addCard({
-                title: title,
-                content: content
+            try{ dispatch(addCardgroup({
+                title: title,                
             }))}
             catch {
                 console.log("err")
@@ -84,24 +105,10 @@ const CreateCard = (props) => {
             <Grid container spacing={2}>
                 <Grid item xs={12}>
 
-                    <h2>Create a single card </h2>
+                    <h2>Create cardgroup </h2>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField onChange={e => setTitle(e.target.value)} fullWidth required variant="outlined" label="Title"/>
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField 
-                        onChange={e => setContent(e.target.value)}
-                        id="asd"
-                        label="Front"
-                        multiline
-                        rows={4}
-                        defaultValue=""
-                        // value={formData[props.formNumber]}
-                        fullWidth
-                        required
-                        variant="outlined"
-                    />
                 </Grid>
                 <Grid item xs={12}>
                 <Button type="submit" fullWidth style={{backgroundColor: "grey", color: "white"}}>Submit</Button>
@@ -110,6 +117,9 @@ const CreateCard = (props) => {
             </Grid>
                 </form>
                 </Card>
+
+        {cardgroupItems.length ? cardgroupItems : <div>no items</div>}
+
         </React.Fragment>
     )
 }
@@ -122,4 +132,4 @@ const CreateCard = (props) => {
 
 // export default connect(null, mapDispatchToProps)(CreateCard)
 
-export default CreateCard
+export default CreateCardgroup

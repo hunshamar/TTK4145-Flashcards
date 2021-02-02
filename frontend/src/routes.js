@@ -7,6 +7,7 @@ import Login from "./components/login"
 import CardCreator from "./components/cardCreator"
 import ShowCards from './components/showCards';
 import CreateCard from './components/createCard';
+import CreateCardgroup from "./components/createCardgroup"
 import logInFunc from './components/loginfunc';
 import { checkLogInStatus } from "./store/actions/authActions";
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,6 +31,7 @@ const Routes = () => {
                 <Route path="/loginfunc" exact component={logInFunc}/>
                 <Route path="/cardCreator" exact component={CardCreator}/>
                 <Route path="/createCard" exact component={CreateCard}/>
+                <Route path="/createCardgroup" exact component={CreateCardgroup}/>
                 <Route path="/showCards" exact component={ShowCards} />
             </Switch>
         </React.Fragment>

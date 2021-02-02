@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from db import db
 from .user import User, getUser
 
-flashcardBlueprint = Blueprint("flsahcard", __name__)
+flashcardBlueprint = Blueprint("flashcard", __name__)
 
 class Flashcard(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -13,11 +13,18 @@ class Flashcard(db.Model):
     title = db.Column(db.String(256))
     content = db.Column(db.String(2048))
 
-    # # Constructor
-    # def __init__(self, title, content, user):
-    #     self.title = title
-    #     self.content = content
-    #     self.user = user
+    def toJson(self):
+        return {
+            "id": self.id, 
+            "title": self.title, 
+            "content": self.content,
+            "user": getUser(self.uid)
+        }
+    # Constructor
+    def __init__(self, title, content, user):
+        self.title = title
+        self.content = content
+        self.user = user
 
 def getAllFlashcards():
     flashcards = Flashcard.query.all()
@@ -38,7 +45,7 @@ def addFlashcard(title, content, uid):
             print(flashcard)
             db.session.add(flashcard)
             db.session.commit()
-            return True
+            return flashcard
         except Exception as e:
             print(e)
             return False   
@@ -65,9 +72,10 @@ def add_Flashcard():
             return jsonify({"error": "Invalid form"})
 
         uid = get_jwt_identity()
-        status = addFlashcard(title, content, uid)
-        print("was it addded", status)
-        return jsonify({"success": "true"})
+        card = addFlashcard(title, content, uid)
+        print("was it addded", jsonify(card.toJson()))
+        # return jsonify(card)
+        return jsonify(card.toJson())
     except Exception as e:
         print(e)
         return jsonify({"error": "Invalid form"})

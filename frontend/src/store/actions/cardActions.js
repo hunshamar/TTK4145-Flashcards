@@ -1,29 +1,30 @@
 
 import axios from 'axios';
 
-export const addCard = (card) => {
-    return (dispatch, getState) => {
+export const addCard = (card) => async( dispatch, getState) => {
         
-        axios.post("http://localhost:5000/api/addFlashcard", {
-                title: card.title,
-                content: card.content
-            }, {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("user_token")
-                }
-            })
-            .then(res => {
-                console.log("no error lol", res.data)
-                dispatch({type: "CREATE_CARD", card})
-            })
-            .catch(err => {
-                console.log("This is an error yes plz")
-                dispatch({type: "CREATE_CARD_ERROR", err})
-            })
+    
+    axios.post("http://localhost:5000/api/addFlashcard", {
+            title: card.title,
+            content: card.content
+        }, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("user_token")
+            }
+        })
+        .then(res => {
+            console.log("returned")
+            console.log(res.data)
+            const createdCard = res.data
+            dispatch({type: "CREATE_CARD", createdCard})
+        })
+        .catch(err => {
+            console.log("This is an error yes plz")
+            dispatch({type: "CREATE_CARD_ERROR", err})
+        })
 
-        console.log("async call up in hier", card)
-        dispatch({type: "CREATE_CARD", card: card})
-    }
+    console.log("async call up in hier", card)
+    
 };
 
 
@@ -47,10 +48,12 @@ export const deleteCard = (card) => async (dispatch, getState) => {
     }}
     ).then(res => {
         console.log(res.data)
+        dispatch({type: "DELETE_CARD", card: card})        
     })
-    .catch(err => alert(err))
+    .catch(err => {
+        dispatch({type: "DELETE_CARD_ERROR", card: card}) 
+    })
 
-    dispatch({type: "DELETE_CARD", card: card})
 }
 
 
