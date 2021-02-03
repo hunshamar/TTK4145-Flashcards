@@ -72,9 +72,13 @@ export const deleteCard = (card) => async (dispatch, getState) => {
     }}
     ).then(res => {
         console.log(res.data)
+        let alert = {severity: "success", text: "successfully deleted card"}
+        dispatch({type: "ALERT", alert})  
         dispatch({type: "DELETE_CARD", card: card})        
     })
     .catch(err => {
+        let alert = {severity: "error", text: err.toString() + " when attemting to delete card"}
+        dispatch({type: "ALERT", alert})  
         dispatch({type: "DELETE_CARD_ERROR", card: card}) 
     })
 

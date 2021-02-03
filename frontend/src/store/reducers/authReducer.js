@@ -2,7 +2,8 @@
 
 
 const initState = {
-    loggedIn: false
+    loggedIn: false,
+    loggedInUser: {}
 }
 
 const authReducer = (state = initState, action) => {
@@ -23,11 +24,8 @@ const authReducer = (state = initState, action) => {
             }
         case "LOG_IN_STATUS":
             console.log("fetching status")
-            console.log(action.loggedIn)
-            return {
-                ...state,
-                loggedIn: action.loggedIn
-            }
+            console.log(action.state)
+            return action.state
 
         default:
             console.log("default auth")

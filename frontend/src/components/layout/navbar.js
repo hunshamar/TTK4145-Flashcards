@@ -72,18 +72,28 @@ const Navbar = props => {
         </Typography>
 
         <List style={{textColor: "white", display: "flex"}}>
-            <ListItem>
-                <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/"> {loggedIn ? "Home" : "Log in"}</NavLink>
-            </ListItem>
-            <ListItem>
-                <NavLink style={{color: "white"}} to="/showCards"> Cards</NavLink>
-            </ListItem>
-            <ListItem>
-                <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/createCard"> Create card</NavLink>
-            </ListItem>
-            <ListItem>
-                <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/createCardgroup"> Cardgroups</NavLink>
-            </ListItem>
+            
+
+            {loggedIn ?  
+
+            <React.Fragment>
+                <ListItem>
+                    <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/"> {loggedIn ? "Home" : "Log in"}</NavLink>
+                </ListItem>
+                <ListItem>
+                    <NavLink style={{color: "white"}} to="/showCards"> Cards</NavLink>
+                </ListItem>
+                <ListItem>
+                    <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/createCard"> Create card</NavLink>
+                </ListItem>
+                <ListItem>
+                    <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/createCardgroup"> Cardgroups</NavLink>
+                </ListItem>
+            </React.Fragment>
+            :
+            <div></div>
+            }
+
         </List>
 
 

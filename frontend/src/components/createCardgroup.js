@@ -24,7 +24,6 @@ const CreateCardgroup = (props) => {
 
     const dispatch = useDispatch();
 
-    console.log("is token?", localStorage.getItem("user_token"))
 
     useEffect(() => {
         dispatch(loadCardgroups())
@@ -44,12 +43,12 @@ const CreateCardgroup = (props) => {
             <div>
 
 
-                <Card key={cardgroup.id} style={{margin: "20px", width: "400px", padding: "10px"}}>
+                <Card key={cardgroup.id} style={{margin: "30px 0", width: "400px", padding: "10px"}}>
                     <Grid container spacing={0}> 
                         <Grid item xs={11}>
 
-                            <div style={{fontWeight: "bold"}}>id: {cardgroup.id}</div>
-                            <div style={{textDecoration: "underline"}}>title: {cardgroup.title}</div>
+                            <div style={{fontWeight: "bold"}}>{cardgroup.title}</div>
+                            <div style={{textDecoration: "underline"}}>id: {cardgroup.id}</div>
                         </Grid>
                         <Grid item xs={1}>
                             <IconButton onClick = {() => deleteThisCardgroup(cardgroup)} > 
@@ -69,26 +68,16 @@ const CreateCardgroup = (props) => {
     const submit = e => {
         e.preventDefault()
         
-        console.log(title)
         if (title){
 
 
-            try{ dispatch(addCardgroup({
+            dispatch(addCardgroup({
                 title: title,                
-            }))}
-            catch {
-                console.log("err")
-            }
-
-            // props.addCard({
-            //     title: title,
-            //     content: content
-            // })
+            }))
 
             
         }
         else{
-            console.log("error here")
         }
     }
     
@@ -99,7 +88,7 @@ const CreateCardgroup = (props) => {
            
 
 
-            <Card style={{margin: "100px", padding: "100px"}}>
+            <Card style={{margin: "100px 100px 0 ", padding: "100px"}}>
             <form onSubmit={submit}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -117,7 +106,10 @@ const CreateCardgroup = (props) => {
                 </form>
                 </Card>
 
-        {cardgroupItems.length ? cardgroupItems : <div>no items</div>}
+        
+            <div style={{margin: "0 100px", color: "grey"}}>
+            {cardgroupItems.length ? cardgroupItems : <h1 > no cardgroups </h1>}            
+            </div>
 
         </React.Fragment>
     )

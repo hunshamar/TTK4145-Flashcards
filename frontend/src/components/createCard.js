@@ -34,7 +34,6 @@ const CreateCard = (props) => {
 
     const dispatch = useDispatch();
 
-    // console.log("is token?", localStorage.getItem("user_token"))
 
     useEffect(() => {
         dispatch(loadCards())
@@ -43,14 +42,12 @@ const CreateCard = (props) => {
 
 
 
-    console.log("cah gr id", cardgroupid)
 
 
 
     const submit = e => {
         e.preventDefault()
         
-        console.log(content, title, cardgroupid)
         if (content && title && cardgroupid){
 
 
@@ -60,7 +57,6 @@ const CreateCard = (props) => {
                 cardgroupid: cardgroupid
             }))}
             catch {
-                console.log("err")
             }
             
         }

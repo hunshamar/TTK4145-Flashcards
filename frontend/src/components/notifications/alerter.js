@@ -14,22 +14,22 @@ const Alerter = () => {
     console.log(alert)
     const [open, setOpen] = React.useState(true);
     
-    useEffect(() => {
-        
-    }, [alert])
+    // useEffect(() => {
+    //     if (alert){
+
+    //     }
+    // }, [alert])
 
     return(
         <React.Fragment>
 
-        <Fade in={open} eixt={3000}>
 
         {alert.text ? 
             <Alert severity={alert.severity}>{alert.text}</Alert>
             :
-            <Alert severity="info">fade</Alert>
+            <React.Fragment></React.Fragment>
         }
 
-        </Fade>
         </React.Fragment>
     )
 }

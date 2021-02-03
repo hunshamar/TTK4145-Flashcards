@@ -28,10 +28,21 @@ export const checkLogInStatus = () => (dispatch, getState) => {
     console.log("refresh_token?", Boolean(refresh_token))
 
     if (user_token && refresh_token){
-        dispatch({type: "LOG_IN_STATUS", loggedIn: true})
-    } else {
-        console.log("we here")
-        dispatch({type: "LOG_IN_STATUS", loggedIn: false})
+        console.log("found both tokens, yes")
+        axios.get("http://localhost:5000/api/getcurrentuser", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("user_token")}`
+                }
+        }).then(res => {
+                console.log("found user?", res.data)
+                let state = {loggedIn: true, loggedInUser: res.data}
+                dispatch({type: "LOG_IN_STATUS", state})
+        })
+    }
+    else {
+        console.log("no user logged in")
+        let state = {loggedIn: false, loggedInUser: {}}
+        dispatch({type: "LOG_IN_STATUS", state})
     }
 
 }
