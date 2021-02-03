@@ -81,13 +81,14 @@ const CreateCard = (props) => {
                     <CardgroupSelect onChange={e => setCardgroupid(e)} />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField onChange={e => setTitle(e.target.value)} fullWidth required variant="outlined" label="Title"/>
+                    <TextField onChange={e => setTitle(e.target.value)} fullWidth required variant="outlined" label="Front" multiline
+                        rows={4}/>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField 
                         onChange={e => setContent(e.target.value)}
                         id="asd"
-                        label="Front"
+                        label="Back"
                         multiline
                         rows={4}
                         defaultValue=""
