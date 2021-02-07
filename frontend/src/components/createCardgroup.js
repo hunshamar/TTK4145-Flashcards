@@ -1,5 +1,20 @@
 
-import { Button, Grid, Card, IconButton, TextField } from '@material-ui/core';
+import { Button, 
+    Grid, 
+    Card, 
+    IconButton, 
+    TextField
+} from '@material-ui/core';
+import DateFnsUtils from '@date-io/date-fns';
+
+import {
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+    KeyboardDatePicker,
+  } from '@material-ui/pickers';
+  
+
+
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -16,8 +31,7 @@ import ShowCards from './showCards';
 
 const CreateCardgroup = (props) => {
 
-    const [title, setTitle] = useState("");
-    const [back, setBack] = useState({});
+    
 
     const cardgroups = useSelector(state => state.cardgroupReducer.cardgroups)
     
@@ -66,29 +80,33 @@ const CreateCardgroup = (props) => {
 
 
     const submit = e => {
-        e.preventDefault()
-        
+        e.preventDefault()        
         if (title){
-
-
             dispatch(addCardgroup({
                 title: title,                
-            }))
-
-            
+            }))            
         }
         else{
         }
     }
     
+    const [selectedDate, setSelectedDate] = React.useState(null);
+    const [title, setTitle] = useState("");
+    const [numberOfCards, setNumberOfCards] = useState(0)
+
+    const handleDateChange = (date) => {
+      setSelectedDate(date);
+    };
+  
     
     return(
 
-        <React.Fragment>
-           
+        <React.Fragment>    
+
+               
 
 
-            <Card style={{margin: "100px 100px 0 ", padding: "100px"}}>
+            <Card style={{margin: "100px 200px 0 ", padding: "100px"}}>
             <form onSubmit={submit}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -96,10 +114,56 @@ const CreateCardgroup = (props) => {
                     <h2>Create cardgroup </h2>
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField onChange={e => setTitle(e.target.value)} fullWidth required variant="outlined" label="Title"/>
+                    <TextField 
+                        onChange={e => setTitle(e.target.value)} 
+                        fullWidth 
+                        required 
+                        variant="outlined" 
+                        label="Cardgroup title"/>
                 </Grid>
+
                 <Grid item xs={12}>
-                <Button type="submit" fullWidth style={{backgroundColor: "grey", color: "white"}}>Submit</Button>
+                <TextField
+                    fullWidth
+                    id="outlined-number"
+                    label="Number of flashcards for delivery pr student"
+                    type="number"
+                    required
+                    onChange={e => setNumberOfCards(e.target.value)} 
+                    variant="outlined"
+                />
+                </Grid>
+
+                <Grid item xs={12}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container justify="left">
+                        <KeyboardDatePicker
+                        disableToolbar         
+                        required    
+                        inputVariant="outlined"           
+                        variant="outlined"
+                        format="MM/dd/yyyy"
+                        margin="normal"
+                        id="date-picker-inline"
+                        label="Due date for delivery"
+                        value={selectedDate}
+                        
+                        onChange={handleDateChange}
+                        onClick={console.log("close")}
+                        autoOk
+                        animateYearScrolling
+                        KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                        }}
+                        />
+                        </Grid>
+                </MuiPickersUtilsProvider>
+                </Grid>
+
+               
+
+                <Grid item xs={12}>
+                <Button type="submit" fullWidth style={{backgroundColor: selectedDate && title && numberOfCards ? "green" : "grey", color: "white"}}>Submit</Button>
                 </Grid>
 
             </Grid>
@@ -107,7 +171,7 @@ const CreateCardgroup = (props) => {
                 </Card>
 
         
-            <div style={{margin: "0 100px", color: "grey"}}>
+            <div style={{margin: "0 200px", color: "grey"}}>
             {cardgroupItems.length ? cardgroupItems : <h1 > no cardgroups </h1>}            
             </div>
 

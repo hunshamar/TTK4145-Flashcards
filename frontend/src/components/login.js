@@ -21,7 +21,7 @@ function Login() {
 
   const feideLogin = () => {
 
-    fetch("http://localhost:5000/api/logintoken", { credentials: "include" })
+    fetch("/api/logintoken", { credentials: "include" })
     .then(response => response.json())
     .then(data => {
       console.log(token)
@@ -50,7 +50,7 @@ function Login() {
         name: name
       }      
 
-      var url = 'http://localhost:5000/api/userdata';
+      var url = '/api/userdata';
       fetch(url, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -103,7 +103,7 @@ function Login() {
       </Button> <br/>
       <div style={{padding: "10px"}}> 
         <StyledLink href="#" onClick={e => setAlternativeLogin(!AlternativeLogin)}>Alternative login</StyledLink>
-        <StyledLink  target="_blank" href="https://bas.ntnu.no/userclient/" >Forgot Password</StyledLink>        
+        <StyledLink  target="_blank" href="https://s.ntnu.no/glemt" >Forgot Password</StyledLink>        
       </div>
 
       {AlternativeLogin ? 

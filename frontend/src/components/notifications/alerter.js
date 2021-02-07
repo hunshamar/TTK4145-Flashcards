@@ -4,33 +4,44 @@ import { Alert } from '@material-ui/lab/';
 import alertReducer from '../../store/reducers/alertReducer';
 import { useSelector } from 'react-redux';
 import {Fade} from '@material-ui/core';
+import Snackbar from '@material-ui/core/Snackbar';
+
 
 
 const Alerter = () => {
 
     const alert = useSelector(state => state.alertReducer.alert)
+    const [calert, setCalert] = React.useState(alert.text)
     
-    console.log("allleerrtt")
-    console.log(alert)
-    const [open, setOpen] = React.useState(true);
-    
-    // useEffect(() => {
-    //     if (alert){
+    const [open, setOpen] = React.useState(false);
 
-    //     }
-    // }, [alert])
-
+    const handleClick = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpen(false);
+    };
+  
     return(
-        <React.Fragment>
 
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
 
-        {alert.text ? 
-            <Alert severity={alert.severity}>{alert.text}</Alert>
+            <Alert 
+                onClose={handleClose}
+                style={{}}
+                severity={alert.severity}
+            >{alert.text}
+            </Alert>
             :
             <React.Fragment></React.Fragment>
-        }
+        
 
-        </React.Fragment>
+    </Snackbar>
     )
 }
 

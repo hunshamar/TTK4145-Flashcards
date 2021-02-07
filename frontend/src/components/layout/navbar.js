@@ -45,7 +45,7 @@ const Navbar = props => {
 
     // useEffect(() => {
 
-    //     axios.get("http://localhost:5000/api/getcurrentuser", {
+    //     axios.get("/api/getcurrentuser", {
     //         headers: {
     //             Authorization: `Bearer ${localStorage.getItem("user_token")}`
     //         }
@@ -61,10 +61,16 @@ const Navbar = props => {
         dispatch(signOut())
         setRedirectLogin(true)
     }
+    if (redirectLogIn && !loggedIn) {
+        setRedirectLogin(false)
+        return( 
+          <Redirect to={{
+            pathname: "/"
+          }}/>  
+        )
+      }
 
- 
-
-    return(
+    else return(
         <AppBar position="static">
                     <Toolbar>
         <Typography variant="h6" style={{flexGrow: 0}}>

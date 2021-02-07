@@ -1,3 +1,4 @@
+import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT } from "../actionTypes"
 
 
 
@@ -9,20 +10,20 @@ const initState = {
 const authReducer = (state = initState, action) => {
 
     switch(action.type){
-        case "LOG_IN_CALLBACK":
+        case LOG_IN_CALLBACK:
             console.log("successfull login callback")
             return {
                 ...state, 
                 loggedIn: action.loggedIn
             }
         
-        case "LOG_OUT":
-            console.log("logging out mimi")
+        case LOG_OUT:
+            console.log("logging out")
             return {
                 ...state,
                 loggedIn: action.loggedIn
             }
-        case "LOG_IN_STATUS":
+        case LOG_IN_STATUS:
             console.log("fetching status")
             console.log(action.state)
             return action.state

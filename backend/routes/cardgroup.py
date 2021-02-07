@@ -26,9 +26,6 @@ def getAllCardgroups():
     cardgroups = Cardgroup.query.all()
     return [{"id": i.id, "title": i.title} for i in cardgroups]
 
-# def getCardgroupFlashcards():
-#     flashcards = Flashcard.querry.all()
-#     return [{"id": i.id, "userid": i.user_id, "title": i.title, "content": i.content} for i in filter(lambda i: i.user_id == uid, flashcards)]
 
 def addCardgroup(title):
     if (title):
@@ -85,13 +82,5 @@ def delCardgroup(cdid):
         print(e)
         return False
 
-# @cardgroupBlueprint.route("/api/deletecardgroup/<cid>", methods=["DELETE"])
-# @jwt_required
-# def delete_cardgroup(cdid):
-#     print(cdid, "is deleted yes")
-#     try:
-#         delCardgroup(cdid)
-#         return jsonify({"success": "true"})
-#     except:
-#         return jsonify({"error": "Invalid form"})
+
 

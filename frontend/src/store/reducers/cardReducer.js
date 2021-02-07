@@ -1,3 +1,4 @@
+import { CREATE_CARD, CREATE_CARD_ERROR, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARDS } from "../actionTypes"
 
 const initState = {
     alert: {},    
@@ -8,8 +9,8 @@ const initState = {
 
 const cardReducer = (state = initState, action) => {
     switch(action.type) {
-        case "CREATE_CARD":
-            console.log("created ca22rd", action.createdCard)
+        case CREATE_CARD:
+            console.log("created card", action.createdCard)
             // alert(action.err)
 
             console.log(state)
@@ -22,20 +23,20 @@ const cardReducer = (state = initState, action) => {
                 ...state,
                 cards: [...state.cards, action.createdCard],
             }
-        case "CREATE_CARD_ERROR":
+        case CREATE_CARD_ERROR:
             return { 
                 ...state,
 
             }
             return state;
-        case "LOAD_CARDS":
-            console.log("got them cards", action.cards)
+        case LOAD_CARDS:
+            console.log("got cards", action.cards)
             console.log({...state, cards: action.cards})
             return {
                 ...state, 
                 cards: action.cards,
             }
-        case "DELETE_CARD":
+        case DELETE_CARD:
             console.log("deleting dem cards")
             console.log(state.cards)
             console.log(state.cards.filter(card => card.id !== action.card.id))
@@ -47,7 +48,7 @@ const cardReducer = (state = initState, action) => {
             }
             // return state;
         
-        case "DELETE_CARD_ERROR":
+        case DELETE_CARD_ERROR:
             return state
             // return state
         

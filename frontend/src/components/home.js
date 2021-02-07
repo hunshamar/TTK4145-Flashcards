@@ -9,7 +9,7 @@ import { signInCallack, checkLogInStatus } from '../store/actions/authActions';
 
 const Home = () => {
 
-    // fetch("http://localhost:5000/api/login/callback",
+    // fetch("/api/login/callback",
     // { credentials: 'include' }).then(response => {
     //     return response.text()
     // }).then(data => {
@@ -24,7 +24,7 @@ const Home = () => {
 
     // useEffect(async () => {
 
-    //     axios.get("http://localhost:5000/api/login/callback", { withCredentials: true })
+    //     axios.get("/api/login/callback", { withCredentials: true })
     //     .then(response => {
     //         let user_token = response.data
     //         localStorage.setItem("user_token", user_token)

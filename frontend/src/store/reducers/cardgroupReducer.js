@@ -1,4 +1,6 @@
 
+import { CREATE_CARDGROUP, CREATE_CARDGROUP_ERROR, DELETE_CARDGROUP, LOAD_CARDGROUPS, DELETE_CARDGROUP_ERROR } from '../actionTypes';
+
 const initState = {
     cardgroups: [
        
@@ -7,9 +9,8 @@ const initState = {
 
 const cardgroupReducer = (state = initState, action) => {
     switch(action.type) {
-        case "CREATE_CARDGROUP":
+        case CREATE_CARDGROUP:
             console.log("created cardgroup", action.createdCardgroup)
-            // alert(action.err)
 
             console.log(state)
             console.log({ 
@@ -21,17 +22,17 @@ const cardgroupReducer = (state = initState, action) => {
                 ...state,
                 cardgroups: [...state.cardgroups, action.createdCardgroup]
             }
-        case "CREATE_CARDGROUP_ERROR":
+        case CREATE_CARDGROUP_ERROR:
             return state
-        case "LOAD_CARDGROUPS":
-            console.log("got them cardgroups", action.cardgroups)
+        case LOAD_CARDGROUPS:
+            console.log("got cardgroups", action.cardgroups)
             console.log({...state, cardgroups: action.cardgroups})
             return {
                 ...state, 
                 cardgroups: action.cardgroups
             }
-        case "DELETE_CARDGROUP":
-            console.log("deleting dem cards")
+        case DELETE_CARDGROUP:
+            console.log("deleting cardgroup")
             console.log(state.cardgroups)
             console.log(state.cardgroups.filter(cardgroup => cardgroup.id !== action.cardgroup.id))
            
@@ -42,7 +43,7 @@ const cardgroupReducer = (state = initState, action) => {
             }
             // return state;
         
-        case "DELETE_CARDGROUP_ERROR":
+        case DELETE_CARDGROUP_ERROR:
             return state;
         
         default:
