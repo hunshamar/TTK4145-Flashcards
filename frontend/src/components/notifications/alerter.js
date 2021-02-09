@@ -1,6 +1,6 @@
 
 import React, {useEffect} from "react"
-import { Alert } from '@material-ui/lab/';
+import {Alert} from '@material-ui/lab/';
 import alertReducer from '../../store/reducers/alertReducer';
 import { useSelector } from 'react-redux';
 import {Fade} from '@material-ui/core';
@@ -18,6 +18,10 @@ const Alerter = () => {
     const handleClick = () => {
       setOpen(true);
     };
+
+    useEffect(() => {
+      setOpen(true)
+    }, [alert])
   
     const handleClose = (event, reason) => {
       if (reason === 'clickaway') {
@@ -27,21 +31,16 @@ const Alerter = () => {
       setOpen(false);
     };
   
+    
     return(
-
+        
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-
             <Alert 
                 onClose={handleClose}
-                style={{}}
                 severity={alert.severity}
             >{alert.text}
-            </Alert>
-            :
-            <React.Fragment></React.Fragment>
-        
-
-    </Snackbar>
+            </Alert>                
+      </Snackbar>
     )
 }
 

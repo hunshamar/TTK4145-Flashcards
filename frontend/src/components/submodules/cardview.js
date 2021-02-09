@@ -9,8 +9,8 @@ import { Grid, Link } from '@material-ui/core/';
 import {  Alert } from '@material-ui/lab/';
 import axios from "axios"
 import {compose} from "redux"
-import { fetchCards, loadCards, deleteCard, addCard } from '../store/actions/cardActions';
-import cardReducer from '../store/reducers/cardReducer';
+import { fetchCards, loadCards, deleteCard, addCard } from '../../store/actions/cardActions';
+import cardReducer from '../../store/reducers/cardReducer';
 
 
 
@@ -56,16 +56,7 @@ const CardView = props => {
     return (
         
         <div>
-            {cardAlert.success ? 
-                <Alert severity="success">{cardAlert.success}</Alert>   
-                :
-                <div></div>            
-            }
-            {cardAlert.error ? 
-                <Alert severity="error">{cardAlert.error}</Alert>   
-                :
-                <div></div>            
-            }
+           
             
             {cardItems.length ? cardItems : 
             <div style={{margin: "20px", color: "grey"}}>

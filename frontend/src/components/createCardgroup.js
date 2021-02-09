@@ -26,6 +26,7 @@ import {Alert} from '@material-ui/lab/';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import ShowCards from './showCards';
+import GroupView from './submodules/groupview';
 
 
 
@@ -81,9 +82,24 @@ const CreateCardgroup = (props) => {
 
     const submit = e => {
         e.preventDefault()        
-        if (title){
+
+        console.log("ddate")
+        console.log(selectedDate.getDate())
+
+        const dueDate = {
+            date: selectedDate.getDate(),
+            month: selectedDate.getMonth()+1, // Months are zero indexed for some reason
+            year: selectedDate.getFullYear(),
+        }
+        console.log("dddddd")
+        console.log(dueDate)
+
+
+        if (title && dueDate && numberOfCards){
             dispatch(addCardgroup({
-                title: title,                
+                title: title,        
+                dueDate: dueDate,
+                numberOfCardsDue: numberOfCards        
             }))            
         }
         else{
@@ -134,16 +150,16 @@ const CreateCardgroup = (props) => {
                 />
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <Grid container justify="left">
                         <KeyboardDatePicker
+                        fullWidth
                         disableToolbar         
                         required    
                         inputVariant="outlined"           
                         variant="outlined"
                         format="MM/dd/yyyy"
-                        margin="normal"
+                        // margin="normal"
                         id="date-picker-inline"
                         label="Due date for delivery"
                         value={selectedDate}
@@ -155,25 +171,41 @@ const CreateCardgroup = (props) => {
                         KeyboardButtonProps={{
                             'aria-label': 'change date',
                         }}
-                        />
-                        </Grid>
-                </MuiPickersUtilsProvider>
-                </Grid>
+                        />                 
+                </MuiPickersUtilsProvider>                   
+
+                    </Grid>
+                    <Grid item xs={6} >
+                    <TextField
+                            fullWidth
+                            id="time"
+                            label=""
+                            type="time"
+                            variant="outlined"
+                            defaultValue="23:59"
+                            InputLabelProps={{
+                                shrink: true,
+                                }}
+                            inputProps={{
+                                step: 1500, // 5 min
+                            }}
+                          />
+                    </Grid>
+
 
                
 
                 <Grid item xs={12}>
-                <Button type="submit" fullWidth style={{backgroundColor: selectedDate && title && numberOfCards ? "green" : "grey", color: "white"}}>Submit</Button>
+                    <Button type="submit" fullWidth style={{backgroundColor: selectedDate && title && numberOfCards ? "green" : "grey", color: "white"}}>Submit</Button>
                 </Grid>
 
-            </Grid>
+                </Grid>
                 </form>
+
                 </Card>
 
-        
-            <div style={{margin: "0 200px", color: "grey"}}>
-            {cardgroupItems.length ? cardgroupItems : <h1 > no cardgroups </h1>}            
-            </div>
+                        
+            < GroupView cardgroups={cardgroups}/>
 
         </React.Fragment>
     )

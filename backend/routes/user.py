@@ -20,6 +20,14 @@ class User(db.Model):
     email = db.Column(db.String(64))
     name = db.Column(db.String(64))
 
+    def to_json(self):
+        return {
+            "id": self.id, 
+            "username": self.username,
+            "email": self.email,
+            "name": self.name
+        }
+
     # Constructor
     def __init__(self, username, email, name):
         self.username = username
@@ -64,23 +72,23 @@ def userRegistred(email, username):
 
 def getAllUsers():
     users = User.query.all()
-    return [{"id": i.id, "username": i.username, "email": i.email, "name": i.name} for i in users]
+    return [i.to_json() for i in users]
 
 def getUser(uid):
 
     # check type, uid must be int
 
     users = User.query.all()
+    print("getting user with id", uid)
     print(users[0].id, uid)
     user = list(filter(lambda x: x.id == uid, users))[0]
     # print(user)
-    return {"id": user.id, "username": user.username, "email": user.email, "name": user.name}
+    return user.to_json()
 
 @userBlueprint.route("/api/getcurrentuser")
 @jwt_required
 def get_current_user():
     uid = get_jwt_identity()
-    print("her it comes", uid)
     return jsonify(getUser(uid))
 
 

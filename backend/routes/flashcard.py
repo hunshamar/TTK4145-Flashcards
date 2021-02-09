@@ -22,15 +22,20 @@ class Flashcard(db.Model):
     
 
     def to_json(self):
+        print("user--id", self.user.to_json())
+        print("user--id", self.userid)
+        print("cardgroupid", self.cardgroupid)
+            
         return {
             "id": self.id, 
             "front": self.front,
-            "front": self.back,
-            "user": getUser(self.userid),
-            "cardgroup": getCardgroup(self.cardgroupid)
+            "back": self.back,
+            "user": self.user.to_json(),
+            "cardgroup": self.cardgroup.to_json()
         }
     # Constructor
     def __init__(self, front, back, user, cardgroup):
+        print(f"Creating flashcard front '{front}' back '{back}' user '{user.to_json()}' cardgroup '{cardgroup.to_json()}'")
         self.front = front
         self.back = back
         self.user = user
@@ -38,80 +43,69 @@ class Flashcard(db.Model):
 
 def getAllFlashcards():
     flashcards = Flashcard.query.all()
-    return [{"id": i.id, "front": i.front, "back": i.back, "user": getUser(i.userid), "cardgroup": getCardgroup(i.cardgroupid)} for i in flashcards]
+    return [i.to_json() for i in flashcards]
 
 def getUserFlashcards():
     flashcards = Flashcard.querry.all()
-    return [{"id": i.id, "front": i.front, "back": i.back, "user": getUser(i.userid), "cardgroup": getCardgroup(i.cardgroupid)} for i in filter(lambda i: i.user_id == uid, flashcards)]
+    return [i.to_json() for i in filter(lambda i: i.user_id == uid, flashcards)]
 
 def addFlashcard(front, back, userid, cardgroupid):
     if (front and back and userid and cardgroupid):
-        try:
-            print("can we find user with uid", userid)
-            user = list(filter(lambda i: i.id == userid, User.query.all()))[0]
-            print(user)
+        print("can we find user with uid", userid)
+        user_list = list(filter(lambda i: i.id == userid, User.query.all()))
+        if not user_list:
+            raise Exception("Cardgroup not found when adding flashcard")
+        user = user_list[0]
 
-            print("can we find cardgroup with id", cardgroupid)
-            cardgroup = list(filter(lambda i: i.id == cardgroupid, Cardgroup.query.all()))[0]
-            
-            flashcard = Flashcard(front=front, back=back, user=user, cardgroup=cardgroup)
+        cardgroup_list = list(filter(lambda i: i.id == cardgroupid, Cardgroup.query.all()))
+        if not cardgroup_list:
+            raise Exception("Cardgroup not found when adding flashcard")
+        cardgroup = cardgroup_list[0]
 
-            print(flashcard)
-            db.session.add(flashcard)
-            db.session.commit()
-            return flashcard
-        except Exception as e:
-            print(e)
-            return False
+        flashcard = Flashcard(front, back, user, cardgroup)
+        db.session.add(flashcard)
+        db.session.commit()
+        return flashcard
     else:
-        return False
+        raise Exception("Error. Invalid form for adding flashcard")
         
 def getCardgroupCards(cgip):
     flashcards = Flashcard.query.all()
-    return [{"id": i.id, "front": i.front, "back": i.back, "user": getUser(i.userid), "cardgroup": getCardgroup(i.cardgroupid)} for i in filter(lambda x: x.cardgroup.id == cgip, flashcards)] #filter(lambda i: i.cardgroup.id == cgip, flashcards)]
-    # return({"fml": "fml"})
+    return [i.to_json() for i in filter(lambda x: x.cardgroup.id == cgip, flashcards)] 
 
 
+def delCard(cid):
+    card = Flashcard.query.get(cid)
+    db.session.delete(card)
+    db.session.commit()
+    return True
 
 @flashcardBlueprint.route("/api/flashcards")
-def flashcards():
-
-    
+def flashcards():    
     return jsonify(getAllFlashcards())
-
-
-
 
 @flashcardBlueprint.route("/api/addFlashcard", methods=["POST"])
 @jwt_required
 def add_Flashcard():
     print(request.json)
-
     try:
         front = request.json["front"]
         back = request.json["back"]
         cardgroupid = request.json["cardgroupid"]
-        if not (front and back):
-            return jsonify({"error": "Invalid form"})
+        if not (front and back and cardgroupid):
+            raise Exception("Error. Invalid form for card")
 
         uid = get_jwt_identity()
         card = addFlashcard(front, back, uid, cardgroupid)
+        print("the card added", card.to_json())
+
         print("was it addded", jsonify(card.to_json()))
         # return jsonify(card)
         return jsonify(card.to_json())
     except Exception as e:
         print(e)
-        return jsonify({"error": "Invalid form"})
+        return jsonify({"error": str(e)})
 
-def delCard(cid):
-    try:
-        card = Flashcard.query.get(cid)
-        db.session.delete(card)
-        db.session.commit()
-        return True
-    except Exception as e:
-        print(e)
-        return False
 
 @flashcardBlueprint.route("/api/deleteflashcard/<cid>", methods=["DELETE"])
 @jwt_required
@@ -120,8 +114,8 @@ def delete_card(cid):
     try:
         delCard(cid)
         return jsonify({"success": "true"})
-    except:
-        return jsonify({"error": "Invalid form"})
+    except Exception as e:
+        return jsonify({"error": str(e)})
 
 @flashcardBlueprint.route("/api/cardgroupflashcards/<cgid>", methods=["GET"])
 # @jwt_required
@@ -154,18 +148,5 @@ def delete_group(cgid):
 
 
 
-# @flashcardBlueprint.route("/api/deletegroup/<cgid>", methods=["DELETE"])
-# @jwt_required
-# def delete_group(cgid):
-#     print("deleting the group")
-#     return jsonify({"error": "here"})
-#     try:   
-#         cards = getCardgroupCards(cgid)
-#         for card in cards:
-#             delCard(card.id)
-#         delCardgroup(cgid)
 
-#         return jsonify({"success": "deleted all cards and groups"})
-#     except:
-#         return jsonify({"error": "Invalid form"})
 

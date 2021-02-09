@@ -11,6 +11,7 @@ import CreateCardgroup from "./components/createCardgroup"
 import logInFunc from './components/loginfunc';
 import { checkLogInStatus } from "./store/actions/authActions";
 import { useDispatch, useSelector } from 'react-redux';
+import CardGroupPage from './components/cardGroupPage';
 
 const Routes = () => {
 
@@ -33,6 +34,7 @@ const Routes = () => {
                 <Route path="/createCard" exact component={CreateCard}/>
                 <Route path="/createCardgroup" exact component={CreateCardgroup}/>
                 <Route path="/showCards" exact component={ShowCards} />
+                <Route path="/cardgroup/:id" exact component={CardGroupPage} />
             </Switch>
         </React.Fragment>
     )

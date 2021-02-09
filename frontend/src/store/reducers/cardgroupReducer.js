@@ -39,7 +39,7 @@ const cardgroupReducer = (state = initState, action) => {
 
             return { 
                 ...state,
-                cards: state.cardgroups.filter((cardgroup) => cardgroup.id !== action.cardgroup.id),
+                cardgroups: state.cardgroups.filter((cardgroup) => cardgroup.id !== action.cardgroup.id),
             }
             // return state;
         

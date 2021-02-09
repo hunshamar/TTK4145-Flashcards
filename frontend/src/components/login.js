@@ -7,6 +7,9 @@ import Axios from "axios";
 import { Button, Link, IconButton } from "@material-ui/core";
 import { styled } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
+import Loading from "./submodules/loading";
+import authReducer from '../store/reducers/authReducer';
+import { useSelector } from 'react-redux';
 
 
 
@@ -19,14 +22,20 @@ function Login() {
   const [manualredirect, setManualredirect] = useState(false)
   const [token, setToken] = useState("")
 
+    
+
   const feideLogin = () => {
 
+    
     fetch("/api/logintoken", { credentials: "include" })
     .then(response => response.json())
     .then(data => {
       console.log(token)
       setToken(data)
       window.open("https://www.itk.ntnu.no/api/feide.php?token="+token+"&returnURL=http://localhost:5000/api/userdata", "_self")
+    })
+    .catch(err => {
+      console.log("err", err)
     })
 
     console.log("logging in")
@@ -36,6 +45,9 @@ function Login() {
     color: "black",
     padding: "20px"    
   })
+
+   const loading = useSelector(state => state.authReducer.loading)
+
 
 
   
@@ -93,7 +105,12 @@ function Login() {
     setAlternativeLogin(true)
   }
 
-    
+  if (loading){
+    return(
+      <Loading />
+    )
+  }
+
   return (
 
     <div style={{marginTop: "250px", textAlign: "center"}}>

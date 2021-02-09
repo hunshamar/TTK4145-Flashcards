@@ -4,6 +4,7 @@ import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT } from "../actionTypes"
 
 const initState = {
     loggedIn: false,
+    loading: true,
     loggedInUser: {}
 }
 

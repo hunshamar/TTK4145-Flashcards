@@ -5,6 +5,9 @@ import { Redirect } from "react-router-dom"
 import authReducer from '../store/reducers/authReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInCallack, checkLogInStatus } from '../store/actions/authActions';
+import GroupView from "./submodules/groupview";
+import { loadCardgroups } from "../store/actions/cardgroupActions";
+import cardgroupReducer from '../store/reducers/cardgroupReducer';
 
 
 const Home = () => {
@@ -43,7 +46,15 @@ const Home = () => {
         setredirectToNewPage(true)
     }
 
+    const cardgroups = useSelector(state => state.cardgroupReducer.cardgroups)
+    
+    useEffect(() => {
+        dispatch(loadCardgroups())
+    }, [])   
 
+    useEffect(() => {
+        console.log("cardgroups changed...")
+    }, [cardgroups])   
 
     
 
@@ -57,7 +68,11 @@ const Home = () => {
     }
 
     return (
-        <div style={{ margin: "200px 300px" }}>
+        <div style={{ margin: "100px 20px   " }}>
+
+            <GroupView cardgroups={cardgroups}/>
+
+
             <h1>HOME PAGE</h1>
             {loggedInuser ? <div> <h2>You are logged in, {loggedInuser.name}</h2>
             <span style={{ color: "grey" }}>username: </span><span>{loggedInuser.username}</span> <br />

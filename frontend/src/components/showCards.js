@@ -11,7 +11,7 @@ import axios from "axios"
 import {compose} from "redux"
 import { fetchCards, loadCards, deleteCard, addCard } from '../store/actions/cardActions';
 import cardReducer from '../store/reducers/cardReducer';
-import CardView from './cardview';
+import CardView from './submodules/cardview';
 
 
 const lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad"
@@ -22,8 +22,7 @@ const ShowCards = props => {
     const dispatch = useDispatch();
     
     useEffect(() => {
-        dispatch(loadCards())
-        
+        dispatch(loadCards())        
     }, [])   
 
 
