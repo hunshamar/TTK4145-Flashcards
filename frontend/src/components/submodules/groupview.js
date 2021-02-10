@@ -1,4 +1,4 @@
-import { Card, CardActionArea, Grid, IconButton, makeStyles, styled, Typography } from '@material-ui/core';
+import { Card, CardActionArea, Divider, Grid, IconButton, makeStyles, styled, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
@@ -38,11 +38,17 @@ const GroupView = ({cardgroups}) => {
         setredirectToGroupWithId(groupId)
     }
 
+    const dateToString = date => {
+
+        let a = new Date(date.year, date.month-1, date.date, date.hour, date.minute)
+        console.log("aa", a)
+        // return a.getUTCMonth()
+        return a.toString()
+    }
     
 
     let cardgroupItems = cardgroups.map((cardgroup) => (
         <Grid item xs={12} key={cardgroup.id}> 
-            <StyledCard >
                 <CardActionArea onClick={e => handleClick(e, cardgroup.id)} className={classes.customHoverFocus} style={{padding: "10px", minHeight: "100px"}}>
                 <Grid container spacing={2} >
                     <Grid item xs={10}>
@@ -51,7 +57,7 @@ const GroupView = ({cardgroups}) => {
                             {cardgroup.title}     
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="h2">
-                            Due: {cardgroup.dueDate}     
+                            {cardgroup.numberOfCardsDue} cards are due: {dateToString.call(this, cardgroup.dueDate)}     
                         </Typography>
                     </Grid>
                     <Grid item xs={2}>
@@ -61,7 +67,7 @@ const GroupView = ({cardgroups}) => {
                     </Grid>
                 </Grid>
                 </CardActionArea> 
-            </StyledCard>     
+                <Divider   /> 
         </Grid>
     ))
 
@@ -74,13 +80,20 @@ const GroupView = ({cardgroups}) => {
       }
     else if (cardgroupItems){
         return(
-            <Grid container spacing={2}>
+
+            <div>
+            <Divider   /> 
+            <Grid container spacing={0}>
+                 
+                 <Divider   /> 
                 {cardgroupItems}
+                
             </Grid>
+            </div>
         )
     } else{
         return (
-            <div></div>
+            <div>empty</div>
         )
     }
 

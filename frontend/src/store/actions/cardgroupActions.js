@@ -11,11 +11,7 @@ export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
     axios.post("/api/addcardgroup", {
             title: cardgroup.title,
             numberOfCardsDue: cardgroup.numberOfCardsDue,
-            dueDate: {
-                year: cardgroup.dueDate.year,
-                month: cardgroup.dueDate.month,
-                date: cardgroup.dueDate.date
-            },
+            dueDate: cardgroup.dueDate
         }, {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem("user_token")
@@ -32,13 +28,6 @@ export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
 
 
             const createdCardgroup = res.data
-            // const dueDate = new Date(createdCardgroup.dueDate)
-            // const date = dueDate.getDate()
-            // const year = dueDate.getYear()
-            // const month = dueDate.getMonth()
-            // createdCardgroup.dueDate = {year: year, month: month, date: date}
-
-
             console.log(createdCardgroup.dueDate)
 
             console.log("was created, ", createdCardgroup)

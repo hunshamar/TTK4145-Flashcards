@@ -1,10 +1,14 @@
 
 import React, {useState, useEffect} from "react"
 import { makeStyles } from '@material-ui/core/styles';
-import  { Redirect, Link, NavLink } from 'react-router-dom'
-
+import  { Redirect, NavLink, Link } from 'react-router-dom'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import axios from 'axios';
-import {AppBar, Tabs, Tab, Avatar} from '@material-ui/core'
+import {AppBar, Tabs, Tab, Avatar, Menu, MenuItem} from '@material-ui/core'
+import PersonIcon from '@material-ui/icons/Person';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -22,7 +26,90 @@ import DraftsIcon from '@material-ui/icons/Drafts';
 import { useDispatch, useSelector } from "react-redux";
 import { checkLogInStatus, signInCallack, signOut } from '../../store/actions/authActions';
 
+
+const useStyles = makeStyles(theme => ({
+    navbar: {
+        paddingLeft: theme.values.siteSideMargin,
+        paddingRight: theme.values.siteSideMargin
+    },   
+    link: {
+        color: theme.palette.textColor,
+        textDecoration: "none"
+    }
+}));
+
+
+
+const UserMenu  = (props) => {
+    const classes = useStyles()
+
+    const user = useSelector(state => state.authReducer.loggedInUser)
+    const dispatch = useDispatch();    
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    
+    const logOut = () => {
+        console.log("out")
+        dispatch(signOut())
+        handleClose();
+    }
+
+    const handleMode = () => {
+        props.setDarkMode()
+    }
+    
+    if (user.username) {return(
+        <div>
+        <Button color="inherit" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+            <AccountCircleIcon />
+            
+            <div style={{marginLeft: "5px"}}> 
+                {user.username}
+            </div>
+            <ExpandMoreIcon />
+        </Button>
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+            >
+            <Link to={"/userprofile/"+user.username} className={classes.link}  >
+                <MenuItem onClick={handleClose}>
+                    <PersonIcon /> My Profile
+                </MenuItem>
+            </Link>
+            <MenuItem onClick={handleMode}>            
+                  <Brightness4Icon />
+                  Toggle Dark Mode
+            </MenuItem>
+
+            <MenuItem onClick={logOut}>
+                <ExitToAppIcon /> Logout
+                </MenuItem>
+      </Menu>
+
+
+        </div>
+    )}
+    else return (
+        <div></div>
+    )
+    
+}
+
 const Navbar = props => {
+
+    const classes = useStyles();
 
     const [name, setName] = useState("")
     const [redirectLogIn, setRedirectLogin] = useState(false)
@@ -71,11 +158,13 @@ const Navbar = props => {
       }
 
     else return(
-        <AppBar position="static">
-                    <Toolbar>
+        <AppBar position="static" className={classes.navbar}>
+                    <Toolbar style={{padding: 0}}>
         <Typography variant="h6" style={{flexGrow: 0}}>
-        Flashcardstuff
+        TTK4145 Flashcards
         </Typography>
+        
+
 
         <List style={{textColor: "white", display: "flex"}}>
             
@@ -87,14 +176,11 @@ const Navbar = props => {
                     <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/"> {loggedIn ? "Home" : "Log in"}</NavLink>
                 </ListItem>
                 <ListItem>
-                    <NavLink style={{color: "white"}} to="/showCards"> Cards</NavLink>
+                    <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/showCards"> All Cards</NavLink>
                 </ListItem>
-                <ListItem>
+                <ListItem >
                     <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/createCard"> Create card</NavLink>
-                </ListItem>
-                <ListItem>
-                    <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/createCardgroup"> Cardgroups</NavLink>
-                </ListItem>
+                </ListItem>         
             </React.Fragment>
             :
             <div></div>
@@ -103,14 +189,8 @@ const Navbar = props => {
         </List>
 
 
-            <div style={{marginLeft: "auto"}}>
-                
-                {loggedIn ? 
-                    <div>
-                        <Button style={{color: "white"}} onClick={logOut}><Link style={{color: "white"}} to="/">Log Out</Link></Button> 
-                    </div>
-                    :                    
-                    <span>not logged in </span> }
+            <div style={{marginLeft: "auto"}}>                
+                <UserMenu setDarkMode={props.setDarkMode}></UserMenu>
             </div>
         </Toolbar>
         </AppBar>

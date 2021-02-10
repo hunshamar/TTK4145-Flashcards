@@ -20,7 +20,9 @@ const Alerter = () => {
     };
 
     useEffect(() => {
-      setOpen(true)
+      if (alert.text){
+        setOpen(true)
+      }
     }, [alert])
   
     const handleClose = (event, reason) => {

@@ -113,7 +113,7 @@ function Login() {
 
   return (
 
-    <div style={{marginTop: "250px", textAlign: "center"}}>
+    <div style={{textAlign: "center", marginTop: "20%"}}>
 
       <Button color="primary" variant="contained" onClick={feideLogin} style={{width: "300px", height: "80px"}}>
         Log in with Feide

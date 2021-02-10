@@ -46,6 +46,7 @@ const CardgroupSelect = props => {
             <InputLabel id="demo-simple-select-outlined-label">Cardgroup</InputLabel>
             <Select
             required
+            color="secondary"
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
             value={age}

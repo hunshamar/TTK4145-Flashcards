@@ -10,14 +10,21 @@ cardgroupBlueprint = Blueprint("cardgroup", __name__)
 class Cardgroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(256))
-    due_date = db.Column(db.Date)
+    due_date = db.Column(db.DateTime)
     number_of_cards_due = db.Column(db.Integer)
 
     def to_json(self):
         return{
             "id": self.id,
             "title": self.title,
-            "dueDate": self.due_date,
+            "dueDate": {
+                "year": self.due_date.year,
+                "month": self.due_date.month,
+                "date": self.due_date.day,
+                "hour": self.due_date.hour,
+                "minute": self.due_date.minute,
+                "second": self.due_date.second
+            },
             "numberOfCardsDue": self.number_of_cards_due
         }
 
@@ -102,7 +109,9 @@ def cardgroup(cgid):
 def add_cardgroup():
 
     print("title og greier:")
-    print(request.json["dueDate"])
+    date = request.json["dueDate"]
+
+    
 
     try:
         title = request.json["title"]
@@ -114,7 +123,15 @@ def add_cardgroup():
         print("year:", due_date["year"])
         print("month:", due_date["month"])
         print("day:", due_date)
-        due_date = datetime.datetime(int(due_date["year"]),int(due_date["month"]),int(due_date["date"]), 23, 59, 59)
+        year = int(due_date["year"])
+        month = int(due_date["month"])
+        date = int(due_date["date"])
+        hour = int(due_date["hour"])
+        minute = int(due_date["minute"])
+        second = int(due_date["second"])
+
+
+        due_date = datetime.datetime(year, month, date, hour, minute, second)
         # due_date = datetime.date(2020,3,4)
 
         print("real due date")

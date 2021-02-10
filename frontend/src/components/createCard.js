@@ -70,7 +70,7 @@ const CreateCard = (props) => {
 
         <React.Fragment>           
 
-            <Card style={{margin: "100px", padding: "100px"}}>
+            <Card style={{padding: "100px"}}>
             <form onSubmit={submit}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -81,7 +81,14 @@ const CreateCard = (props) => {
                     <CardgroupSelect onChange={e => setCardgroupid(e)} />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField onChange={e => setTitle(e.target.value)} fullWidth required variant="outlined" label="Front" multiline
+                    <TextField 
+                        onChange={e => setTitle(e.target.value)} 
+                        fullWidth 
+                        required 
+                        variant="outlined"
+                        color="secondary"
+                        label="Front"
+                        multiline
                         rows={4}/>
                 </Grid>
                 <Grid item xs={12}>
@@ -89,6 +96,7 @@ const CreateCard = (props) => {
                         onChange={e => setContent(e.target.value)}
                         id="asd"
                         label="Back"
+                        color="secondary"
                         multiline
                         rows={4}
                         defaultValue=""

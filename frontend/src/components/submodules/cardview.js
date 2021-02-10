@@ -34,7 +34,7 @@ const CardView = props => {
         
         cardItems[index] = 
 
-        <Card key={card.id} style={{margin: "20px", width: "400px", padding: "10px"}}>
+        // <Card key={card.id} style={{margin: "20px", width: "400px", padding: "10px"}}>
             <Grid container spacing={0}> 
                 <Grid item xs={11}>
 
@@ -50,7 +50,8 @@ const CardView = props => {
                     </IconButton>
             </Grid>
             </Grid>
-        </Card>))
+        // </Card>))
+    ))
 
   
     return (

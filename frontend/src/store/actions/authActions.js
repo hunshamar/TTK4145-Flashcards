@@ -41,7 +41,7 @@ export const checkLogInStatus = () => async (dispatch, getState) => {
             dispatch({type: LOG_IN_STATUS, state})
         }).catch(err => {
             console.log("error..", err)
-            let state = {loading: false}
+            let state = {loading: false, loggedInUser: {}}
             dispatch({type: LOG_IN_STATUS, state})
 
         })

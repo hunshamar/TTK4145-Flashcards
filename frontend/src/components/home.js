@@ -9,9 +9,30 @@ import GroupView from "./submodules/groupview";
 import { loadCardgroups } from "../store/actions/cardgroupActions";
 import cardgroupReducer from '../store/reducers/cardgroupReducer';
 
+import {Divider, Typography, Button, Grid, IconButton, makeStyles} from '@material-ui/core';
+
+import {wrapper} from "../static/wrappers"
+import CreateCardGroup from "./dialogs/createCardGroup";
+
+const useStyles = makeStyles(theme => ({
+    addButton: {
+        backgroundColor: theme.palette.button.success.main,
+        color: "white",
+        border: "none",
+        align: "center",
+        '&:hover': {
+            background: theme.palette.button.success.dark,
+          }
+
+    }
+}))
+
+
 
 const Home = () => {
 
+    const classes = useStyles()
+    
     // fetch("/api/login/callback",
     // { credentials: 'include' }).then(response => {
     //     return response.text()
@@ -56,7 +77,17 @@ const Home = () => {
         console.log("cardgroups changed...")
     }, [cardgroups])   
 
-    
+    const [open, setOpen] = React.useState(false);
+    // const [selectedValue, setSelectedValue] = React.useState(emails[1]);
+  
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = (value) => {
+      setOpen(false);
+    };
+  
 
     if (redirectToNewPage) {
         return (
@@ -68,29 +99,26 @@ const Home = () => {
     }
 
     return (
-        <div style={{ margin: "100px 20px   " }}>
+        <div>
 
-            <GroupView cardgroups={cardgroups}/>
-
-
-            <h1>HOME PAGE</h1>
-            {loggedInuser ? <div> <h2>You are logged in, {loggedInuser.name}</h2>
-            <span style={{ color: "grey" }}>username: </span><span>{loggedInuser.username}</span> <br />
-            <span style={{ color: "grey" }}>email: </span><span>{loggedInuser.email}</span> </div> : <h1> Not logged in  </h1>}
-
-            
-
-            <form onSubmit={submitCardForm} style={{ marginTop: "100px" }}>
-                <label htmlFor="cards"> number of cards </label>
-                <select defaultValue={3} id="cards" name="cards" onChange={e => setNumberOfCards(e.target.value)}>
-                    <option value={1}>1</option>
-                    <option value={2}>2</option>
-                    <option value={3} defaultValue >3</option>
-                    <option value={4}>4</option>
-                    <option value={5}>5</option>
-                </select>
-                <input type="submit" value="create cards" />
-            </form>
+        <Grid container spacing={2}>
+            <Grid item xs={8}  >
+                <Typography variant="h4" gutterBottom >
+                    Cardgroups    
+                </Typography>
+            </Grid>
+            <Grid item xs={4}>
+                <Button fullWidth className={classes.addButton} variant="outlined" onClick={handleClickOpen}>
+                    + Create group
+                </Button> 
+            </Grid> 
+            <Grid item xs={12}>
+                <GroupView cardgroups={cardgroups}/>
+            </Grid> 
+        </Grid>
+    
+        
+    <CreateCardGroup open={open} onClose={handleClose} />
         </div>
     )
 }
