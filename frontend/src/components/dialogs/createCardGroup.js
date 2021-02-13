@@ -103,14 +103,14 @@ const CreateCardGroup = props => {
     };
   
     return (
-      <Dialog onClose={handleClose}  open={open} style={{ margin: "100px"}}>
+      <Dialog onClose={handleClose} open={open} style={{ margin: "100px"}}>
           <ConfirmDialog></ConfirmDialog>
             
             <div style={{margin: "40px 40px"}}> 
 
             <Grid container spacing={2}>
                 <Grid item xs={12} >
-                    <Typography variant="h4" align="left" >New Cardgroup</Typography>
+                    <Typography variant="h6" align="left" >New Cardgroup</Typography>
                 </Grid>
             </Grid>
 
