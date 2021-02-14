@@ -4,6 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from db import db
 import datetime
 from .user import User, getUser
+import sys
 
 cardgroupBlueprint = Blueprint("cardgroup", __name__)
 
@@ -64,17 +65,16 @@ def addCardgroup(title, due_date, number_of_cards_due):
         raise Exception("Error adding cardgroup function")
 
 def getCardgroup(cdid):
-    try: 
-        cdid = int(cdid) # make sure int
-        cardgroups = Cardgroup.query.all()
-        found_cardgroup_list = list(filter(lambda x: x.id == cdid, cardgroups))
-        if not found_cardgroup_list:
-            raise Exception("Error finding cardgroup. Id not found")
-        if len(found_cardgroup_list) >= 1:
-            raise Exception("Error finding cardgroup. Multiple cardgroups with same id")
-        return found_cardgroup_list[0].to_json()
-    except Exception as e:
-        return e
+    if (not cdid):
+        raise Exception("No group id")
+    cdid = int(cdid) # make sure int
+    cardgroups = Cardgroup.query.all()
+    found_cardgroup_list = list(filter(lambda x: x.id == cdid, cardgroups))
+    if not found_cardgroup_list:
+        raise Exception("Error finding cardgroup. Id not found")
+    if len(found_cardgroup_list) > 1:
+        raise Exception("Error finding cardgroup. Multiple cardgroups with same id")
+    return found_cardgroup_list[0].to_json()
 
 def delCardgroup(cdid):
     cardgroup = Cardgroup.query.get(cdid)
@@ -89,7 +89,10 @@ def delCardgroup(cdid):
 
 @cardgroupBlueprint.route("/api/cardgroups")
 def cardgroups():    
+    print('This is standard output', file=sys.stdout)
+
     try:
+        print("getting them")
         return jsonify(getAllCardgroups())
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -101,6 +104,7 @@ def cardgroup(cgid):
     try:
         return jsonify(getCardgroup(cgid))
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)})
 
 
