@@ -5,7 +5,8 @@ import { Button,
     IconButton, 
     TextField,
     Dialog,
-    Typography
+    Typography,
+    makeStyles
 } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -30,7 +31,15 @@ import ShowCards from '../showCards';
 import GroupView from '../submodules/groupview';
 import ConfirmDialog from "./confirmDialog"
 
-const CreateCardGroup = props => {
+const useStyles = makeStyles(theme => ({
+    dialog: {
+        "& .MuiDialog-paperScrollPaper": {
+            maxHeight: "100vh",
+        },
+    }
+}))
+
+const CreateCardGroup = (props) => {
     const { onClose, selectedValue, open } = props;
     const dispatch = useDispatch();    
     
@@ -38,6 +47,8 @@ const CreateCardGroup = props => {
     const [title, setTitle] = useState("");
     const [numberOfCards, setNumberOfCards] = useState(0)
     const [time, setTime] = useState("23:59")
+
+    const classes = useStyles()
 
 
 
@@ -103,7 +114,10 @@ const CreateCardGroup = props => {
     };
   
     return (
-      <Dialog onClose={handleClose} open={open} style={{ margin: "100px"}}>
+      <Dialog onClose={handleClose} 
+        className={classes.dialog}
+
+       open={open} style={{ margin: "100px"}}>
           <ConfirmDialog></ConfirmDialog>
             
             <div style={{margin: "40px 40px"}}> 

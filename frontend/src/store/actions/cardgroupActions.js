@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { SET_ALERT, CREATE_CARDGROUP, CREATE_CARDGROUP_ERROR, LOAD_CARDGROUPS, DELETE_CARDGROUP, DELETE_CARDGROUP_ERROR } from '../actionTypes';
+import { SET_ALERT, CREATE_CARDGROUP, CREATE_CARDGROUP_ERROR, LOAD_CARDGROUPS, DELETE_CARDGROUP, DELETE_CARDGROUP_ERROR, LOAD_CARDGROUP } from '../actionTypes';
 
 export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
         
@@ -48,20 +48,39 @@ export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
 
 
 export const loadCardgroups = () => async (dispatch, getState) => {
-    const cardgroups = await axios.get("/api/cardgroups")
-        .then(res => {
-            if(res.data.error){
-                console.log("error")
-                throw new Error(res.data.error)
-            }
-            const cardgroups = res.data
-            console.log("mah cardgroups")
-            
-            console.log(cardgroups)
-            dispatch({type: LOAD_CARDGROUPS, cardgroups: cardgroups})
-        })
-        .catch(err => console.log(err))
+    await axios.get("/api/cardgroups")
+    .then(res => {
+        if(res.data.error){
+            console.log("error")
+            throw new Error(res.data.error)
+        }
+        const cardgroups = res.data
+        console.log("mah cardgroups")
+        
+        console.log(cardgroups)
+        dispatch({type: LOAD_CARDGROUPS, cardgroups: cardgroups})
+    })
+    .catch(err => console.log(err))
+}
 
+export const loadCardgroup = (groupId) => async (dispatch) => {
+    await axios.get("/api/cardgroup/"+groupId)
+    .then(res => {
+        console.log("res,", res)
+        if(res.data.error){
+            console.log("error")
+            throw new Error(res.data.error)
+        }
+        const cardgroup = [res.data]
+        console.log("cardgroup found")
+        
+        console.log(cardgroup)
+        dispatch({type: LOAD_CARDGROUP, payload: cardgroup})
+    })
+    .catch(err => {
+        let alert = {severity: "error", text: "Error fetching cardgroup: "+groupId}
+        dispatch({type: SET_ALERT, alert})
+    })
 }
 
 export const deleteCardgroup = (cardgroup) => async (dispatch, getState) => {

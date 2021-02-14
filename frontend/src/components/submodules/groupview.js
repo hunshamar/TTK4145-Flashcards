@@ -39,11 +39,17 @@ const GroupView = ({cardgroups}) => {
     }
 
     const dateToString = date => {
-
-        let a = new Date(date.year, date.month-1, date.date, date.hour, date.minute)
-        console.log("aa", a)
-        // return a.getUTCMonth()
-        return a.toString()
+        console.log("ddatee")
+        console.log(date)
+        try{
+            let a = new Date(date.year, date.month-1, date.date, date.hour, date.minute)
+            console.log("aa", a)
+            // return a.getUTCMonth()
+            return a.toString()
+        }
+        catch{
+            return "Date error"
+        }
     }
     
 

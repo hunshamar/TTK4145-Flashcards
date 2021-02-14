@@ -45,6 +45,18 @@ def getAllFlashcards():
     flashcards = Flashcard.query.all()
     return [i.to_json() for i in flashcards]
 
+def getFlashcard(cid):
+    if (not cid):
+        raise Exception("No card id")
+    cid = int(cid) # make sure int
+    flashcards = Flashcard.query.all()
+    found_flashcard_list = list(filter(lambda x: x.id == cid, flashcards))
+    if not found_flashcard_list:
+        raise Exception("Error finding card. Id not found")
+    if len(found_flashcard_list) > 1:
+        raise Exception("Error finding flashcards. Multiple cards with same id")
+    return found_flashcard_list[0]
+
 def getUserFlashcards():
     flashcards = Flashcard.querry.all()
     return [i.to_json() for i in filter(lambda i: i.user_id == uid, flashcards)]
@@ -54,12 +66,11 @@ def addFlashcard(front, back, userid, cardgroupid):
         print("can we find user with uid", userid)
         user_list = list(filter(lambda i: i.id == userid, User.query.all()))
         if not user_list:
-            raise Exception("Cardgroup not found when adding flashcard")
+            raise Exception("User not found when adding flashcard")
         user = user_list[0]
-
-        cardgroup_list = list(filter(lambda i: i.id == cardgroupid, Cardgroup.query.all()))
+        cardgroup_list = list(filter(lambda i: i.id == int(cardgroupid), Cardgroup.query.all()))
         if not cardgroup_list:
-            raise Exception("Cardgroup not found when adding flashcard")
+            raise Exception("Cardgroup not found when adding flashcard.")
         cardgroup = cardgroup_list[0]
 
         flashcard = Flashcard(front, back, user, cardgroup)
@@ -71,6 +82,7 @@ def addFlashcard(front, back, userid, cardgroupid):
         
 def getCardgroupCards(cgip):
     flashcards = Flashcard.query.all()
+    
     return [i.to_json() for i in filter(lambda x: x.cardgroup.id == cgip, flashcards)] 
 
 
@@ -80,9 +92,40 @@ def delCard(cid):
     db.session.commit()
     return True
 
+
+
 @flashcardBlueprint.route("/api/flashcards")
 def flashcards():    
     return jsonify(getAllFlashcards())
+
+@flashcardBlueprint.route("/api/flashcard/<cid>")
+def flashcard(cid):    
+    try:
+        return jsonify(getFlashcard(cid).to_json())
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+@flashcardBlueprint.route("/api/editflashcard", methods=["GET", "POST"])
+# @jwt_required
+def edit_flashcard():
+    try: 
+        newFront = request.json["front"]
+        newBack = request.json["back"]
+        cardId = request.json["id"]
+
+        flashcard = getFlashcard(cardId)
+        flashcard.front = newFront
+        flashcard.back = newBack
+        db.session.commit()
+
+        return jsonify(flashcard.to_json())
+
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
+
+
+
 
 @flashcardBlueprint.route("/api/addFlashcard", methods=["POST"])
 @jwt_required
