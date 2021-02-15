@@ -9,8 +9,9 @@ import { styled } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
 import Loading from "./submodules/loading";
 import authReducer from '../store/reducers/authReducer';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { PageWrapper } from "../static/wrappers";
+import { SET_ALERT } from "../store/actionTypes";
 
 
 
@@ -23,9 +24,11 @@ function Login() {
   const [manualredirect, setManualredirect] = useState(false)
   const [token, setToken] = useState("")
 
-    
+  const dispatch = useDispatch()
 
   const feideLogin = () => {
+
+    
 
     
     fetch("/api/logintoken", { credentials: "include" })
@@ -37,6 +40,8 @@ function Login() {
     })
     .catch(err => {
       console.log("err", err)
+      let alert = {severity: "error", text: "External login failed"}
+      dispatch({type: SET_ALERT, alert}) 
     })
 
     console.log("logging in")
@@ -56,7 +61,6 @@ function Login() {
   const manualLogin = e =>{
     e.preventDefault()
     if (username, email, name){
-
       let data = {
         username: username,
         email: email,

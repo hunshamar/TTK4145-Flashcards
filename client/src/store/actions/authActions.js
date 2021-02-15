@@ -1,12 +1,11 @@
 
 import axios from 'axios';
-import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT } from '../actionTypes';
+import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT, SET_ALERT } from '../actionTypes';
+
 
 
 
 export const signInCallack = () => async (dispatch, getState) => {
-
-
     axios.get("/api/login/callback", { withCredentials: true })
         .then(response => {
             let user_token = response.data.user_token
@@ -18,7 +17,10 @@ export const signInCallack = () => async (dispatch, getState) => {
             
             dispatch({type: LOG_IN_CALLBACK, loggedIn: true})
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            console.log(err)
+            console.log("was the err in signincallback")
+        })
 }
 
 export const checkLogInStatus = () => async (dispatch, getState) => {

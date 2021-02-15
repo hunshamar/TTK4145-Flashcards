@@ -14,10 +14,7 @@ import cardReducer from '../store/reducers/cardReducer';
 import CardView from './submodules/cardview';
 import {PageWrapper} from "../static/wrappers"
 
-
-const lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad"
-
-const ShowCards = props => {
+const AllCards = props => {
 
     const cards = useSelector(state => state.cardReducer.cards)
     const dispatch = useDispatch();
@@ -31,22 +28,7 @@ const ShowCards = props => {
         <PageWrapper> 
         <CardView cards={cards}/>
         </PageWrapper>
-
     )
 }
 
-// const mapStateToProps = state => {
-//     return{
-//         cards: state.cards
-//     }
-// }
-
-// // const mapDispatchToProps = dispatch => {
-// //     return{
-// //         fetchCards: () => dispatch(fetchCards)
-// //     }
-// // }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(ShowCards)
-
-export default ShowCards
+export default AllCards

@@ -27,7 +27,6 @@ import { connect, useDispatch } from 'react-redux';
 import {Alert} from '@material-ui/lab/';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import ShowCards from '../showCards';
 import GroupView from '../submodules/groupview';
 import ConfirmDialog from "./confirmDialog"
 import { addCard } from '../../store/actions/cardActions';

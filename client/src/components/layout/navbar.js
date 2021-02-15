@@ -183,11 +183,8 @@ const Navbar = props => {
                     <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/"> {loggedIn ? "Home" : "Log in"}</NavLink>
                 </ListItem>
                 <ListItem>
-                    <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/showCards"> All Cards</NavLink>
+                    <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/allcards"> All Cards</NavLink>
                 </ListItem>
-                <ListItem >
-                    <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/createCard"> Create card</NavLink>
-                </ListItem>         
             </React.Fragment>
             :
             <div></div>
@@ -203,11 +200,6 @@ const Navbar = props => {
         </NavBarWrapper>
          </AppBar>
     )
-
-
-
 }
-
-
 
 export default Navbar

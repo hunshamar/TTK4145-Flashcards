@@ -4,8 +4,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-d
 
 import Home from "./components/home"
 import Login from "./components/login"
-import ShowCards from './components/showCards';
-import CreateCard from './components/createCard';
+import AllCards from './components/allCards';
 // import CreateCardgroup from "./components/createCardgroup"
 import logInFunc from './components/loginfunc';
 import { checkLogInStatus } from "./store/actions/authActions";
@@ -46,8 +45,7 @@ const Routes = () => {
 
                 {loggedIn ? 
                 <React.Fragment>
-                    <Route path="/createCard" exact component={CreateCard}/>
-                    <Route path="/showCards" exact component={ShowCards} />
+                    <Route path="/allcards" exact component={AllCards} />
                     <Route path="/cardgroup/:id" exact component={CardGroupPage} />
                     <Route path="/userprofile/:username" exact component={UserProfile} />
                 </React.Fragment>

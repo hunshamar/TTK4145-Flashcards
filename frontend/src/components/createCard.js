@@ -11,7 +11,6 @@ import { useEffect } from 'react';
 import { loadCardgroups } from '../store/actions/cardgroupActions';
 import CardgroupSelect from './cardgroupselect';
 import Alerter from './notifications/alerter';
-import { PageWrapper } from '../static/wrappers';
 
 
 
@@ -53,8 +52,8 @@ const CreateCard = (props) => {
 
 
             try{ dispatch(addCard({
-                title: title,
-                content: content,
+                front: title,
+                back: content,
                 cardgroupid: cardgroupid
             }))}
             catch {
@@ -69,12 +68,13 @@ const CreateCard = (props) => {
     
     return(
 
-        <PageWrapper>           
+        <React.Fragment>           
 
-            <Card style={{padding: "10px 40px"}}>
+            <Card style={{padding: "100px"}}>
             <form onSubmit={submit}>
-            <Grid container spacing={1}>
+            <Grid container spacing={2}>
                 <Grid item xs={12}>
+
                     <h2>Create a single card </h2>
                 </Grid>
                 <Grid item xs={12}>
@@ -113,7 +113,7 @@ const CreateCard = (props) => {
             </Grid>
                 </form>
                 </Card>
-        </PageWrapper>
+        </React.Fragment>
     )
 }
 

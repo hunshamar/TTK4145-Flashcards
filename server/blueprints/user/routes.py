@@ -2,88 +2,14 @@ from flask import Blueprint, jsonify, redirect, request, session, make_response
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, \
  get_jwt_identity, jwt_refresh_token_required, create_refresh_token, get_raw_jwt
 
+jwt = JWTManager()
 import requests
 import json
-from flask_cors import CORS
-import webbrowser
-import urllib.parse as urlparse
-from urllib.parse import parse_qs
-from db import db
-
-jwt = JWTManager()
 
 userBlueprint = Blueprint("user", __name__)
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key = True) # primary_key makes it so that this value is unique and can be used to identify this record.
-    username = db.Column(db.String(24), unique=True)
-    email = db.Column(db.String(64))
-    name = db.Column(db.String(64))
-
-    def to_json(self):
-        return {
-            "id": self.id, 
-            "username": self.username,
-            "email": self.email,
-            "name": self.name
-        }
-
-    # Constructor
-    def __init__(self, username, email, name):
-        self.username = username
-        self.email = email
-        self.name = name
-
-def addUser(username, email, name):
-    try:
-        user = User(username, email, name)
-        db.session.add(user)
-        db.session.commit()
-        return True
-    except Exception as e:
-        print(e)
-        return False   
-    
-def usernameRegistred(username):
-    users = User.query.all()
-    user = list(filter(lambda x: x.username == username, users))
-    if len(user) >= 1:
-        return True 
-    else:
-        return False
-
-def emailRegistred(email):
-    users = User.query.all()
-    user = list(filter(lambda x: x.email == email, users))
-    if len(user) >= 1:
-        return True 
-    else:
-        return False
-
-def userRegistred(email, username):
-    users = User.query.all()
-    user = list(filter(lambda x: x.email == email and x.username == username, users))
-    if len(user) >= 1:
-        return True 
-    else:
-        return False
-
-
-
-def getAllUsers():
-    users = User.query.all()
-    return [i.to_json() for i in users]
-
-def getUser(uid):
-
-    # check type, uid must be int
-
-    users = User.query.all()
-    print("getting user with id", uid)
-    print(users[0].id, uid)
-    user = list(filter(lambda x: x.id == uid, users))[0]
-    # print(user)
-    return user.to_json()
+from .invalid_token import *
+from .user import *
 
 @userBlueprint.route("/api/getcurrentuser")
 @jwt_required
@@ -99,10 +25,12 @@ def users():
 @userBlueprint.route("/api/logintoken")
 def login():
 
-    token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey=3b41006f342e166d2320b82059c35784")
-    token_string = token.text
-
-    return jsonify(token_string)
+    try:
+        token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey=3b41006f342e166d2320b82059c35784")
+        token_string = token.text
+        return jsonify(token_string)
+    except:
+        return jsonify({"error": "error getting logintoken"})
 
 @userBlueprint.route("/api/login/callback")
 def login_callback():
@@ -129,11 +57,10 @@ def login_callback():
             print("multiple users exists. Error")
             return jsonify("multiple users exists. Error")    
     else:
-        return jsonify("error, user not valid")
+        return jsonify({"error": "Login callback error"})
 
 @userBlueprint.route("/api/userdata", methods=["POST", "GET"])
-def stuff():
-
+def user_data():
     if request.method == "GET":
         print("FROM FEIDE")
         userdata =  request.args.getlist('userdata')[0]
@@ -209,19 +136,7 @@ def manual_login():
 
 
 
-class InvalidToken(db.Model):
-    __tablename__ = "invalid_tokens"
-    id = db.Column(db.Integer, primary_key=True)
-    jti = db.Column(db.String)
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-    @classmethod
-    def is_invalid(self, jti):
-        q = self.query.filter_by(jti=jti).first()
-        return bool(q)
 
 
 @jwt.token_in_blacklist_loader
@@ -254,7 +169,7 @@ def access_logout():
         return jsonify({"success": True})
     except Exception as e:
         print(e)
-        return {"error": e.message}
+        return jsonify({"error": e.message})
 
 
 @userBlueprint.route("/api/logout/refresh", methods=["POST"])
@@ -267,4 +182,4 @@ def refresh_logout():
         return jsonify({"success": True})
     except Exception as e:
         print(e)
-        return {"error": e.message}
+        return jsonify({"error": e.message})

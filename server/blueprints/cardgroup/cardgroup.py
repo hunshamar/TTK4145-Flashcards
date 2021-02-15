@@ -3,10 +3,8 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from db import db
 import datetime
-from .user import User, getUser
-import sys
+from ..user.user import User, getUser
 
-cardgroupBlueprint = Blueprint("cardgroup", __name__)
 
 class Cardgroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -14,9 +12,9 @@ class Cardgroup(db.Model):
     due_date = db.Column(db.DateTime)
     number_of_cards_due = db.Column(db.Integer)
 
-    def to_json(self):
+    def to_dict(self):
         return{
-            "id": self.id,
+            "id": self.id, 
             "title": self.title,
             "dueDate": {
                 "year": self.due_date.year,
@@ -43,7 +41,7 @@ def getAllCardgroups():
     cardgroups = Cardgroup.query.all()
     if not cardgroups:
         raise Exception("Error finding cardgroups function. No cardgroups")
-    return [i.to_json() for i in cardgroups]
+    return [i.to_dict() for i in cardgroups]
 
 
 def addCardgroup(title, due_date, number_of_cards_due):
@@ -60,7 +58,7 @@ def addCardgroup(title, due_date, number_of_cards_due):
         cardgroup = Cardgroup(title, due_date, number_of_cards_due)
         db.session.add(cardgroup)
         db.session.commit()
-        return cardgroup
+        return cardgroup.to_dict()
     else: 
         raise Exception("Error adding cardgroup function")
 
@@ -74,7 +72,7 @@ def getCardgroup(cdid):
         raise Exception("Error finding cardgroup. Id not found")
     if len(found_cardgroup_list) > 1:
         raise Exception("Error finding cardgroup. Multiple cardgroups with same id")
-    return found_cardgroup_list[0].to_json()
+    return found_cardgroup_list[0].to_dict()
 
 def delCardgroup(cdid):
     cardgroup = Cardgroup.query.get(cdid)
@@ -87,71 +85,6 @@ def delCardgroup(cdid):
 
 
 
-@cardgroupBlueprint.route("/api/cardgroups")
-def cardgroups():    
-    print('This is standard output', file=sys.stdout)
-
-    try:
-        print("getting them")
-        return jsonify(getAllCardgroups())
-    except Exception as e:
-        return jsonify({"error": str(e)})
-
-
-
-@cardgroupBlueprint.route("/api/cardgroup/<cgid>", methods=["GET"])
-def cardgroup(cgid):    
-    try:
-        return jsonify(getCardgroup(cgid))
-    except Exception as e:
-        print(e)
-        return jsonify({"error": str(e)})
-
-
-@cardgroupBlueprint.route("/api/addcardgroup", methods=["POST"])
-@jwt_required
-def add_cardgroup():
-
-    print("title og greier:")
-    date = request.json["dueDate"]
-
-    
-
-    try:
-        title = request.json["title"]
-        print(title)
-        number_of_cards_due = request.json["numberOfCardsDue"]
-        print(number_of_cards_due)
-        due_date = request.json["dueDate"]
-        
-        print("year:", due_date["year"])
-        print("month:", due_date["month"])
-        print("day:", due_date)
-        year = int(due_date["year"])
-        month = int(due_date["month"])
-        date = int(due_date["date"])
-        hour = int(due_date["hour"])
-        minute = int(due_date["minute"])
-        second = int(due_date["second"])
-
-
-        due_date = datetime.datetime(year, month, date, hour, minute, second)
-        # due_date = datetime.date(2020,3,4)
-
-        print("real due date")
-        print(due_date)
-
-        if not (title or number_of_cards_due or due_date):
-            return jsonify({"error": "Invalid form"})
-
-        cardgroup = addCardgroup(title, due_date, number_of_cards_due)
-        print("added?")
-        print("was it addded", jsonify(cardgroup.to_json()))
-        return jsonify(cardgroup.to_json())
-    except Exception as e:
-        print("error...")
-        print(e)
-        return jsonify({"error": str(e)})
 
 
 
