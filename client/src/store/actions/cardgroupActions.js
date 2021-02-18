@@ -78,7 +78,7 @@ export const loadCardgroup = (groupId) => async (dispatch) => {
         dispatch({type: LOAD_CARDGROUP, payload: cardgroup})
     })
     .catch(err => {
-        let alert = {severity: "error", text: "Error fetching cardgroup: "+groupId}
+        let alert = {severity: "error", text: err.toString()}
         dispatch({type: SET_ALERT, alert})
     })
 }

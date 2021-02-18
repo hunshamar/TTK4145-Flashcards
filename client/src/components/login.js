@@ -1,66 +1,31 @@
-import React, {useImperativeHandle, useState} from "react"
+import React, { useState} from "react"
 import  { Redirect } from 'react-router-dom'
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import Axios from "axios";
-import { Button, Link, IconButton } from "@material-ui/core";
+import axios from "axios";
+import { Button, Link } from "@material-ui/core";
 import { styled } from '@material-ui/core/styles';
-import CloseIcon from '@material-ui/icons/Close';
-import Loading from "./submodules/loading";
-import authReducer from '../store/reducers/authReducer';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch  } from 'react-redux';
 import { PageWrapper } from "../static/wrappers";
 import { SET_ALERT } from "../store/actionTypes";
 
 
+const StyledLink = styled(Link)({
+  color: "black",
+  padding: "20px"    
+})
 
-function Login() {
-
+const ManualLogin = () => {
+  
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
-  const [AlternativeLogin, setAlternativeLogin] = useState(false)
-  const [manualredirect, setManualredirect] = useState(false)
-  const [token, setToken] = useState("")
-
   const dispatch = useDispatch()
+  const [manualredirect, setManualredirect] = useState(false)
 
-  const feideLogin = () => {
-
-    
-
-    
-    fetch("/api/logintoken", { credentials: "include" })
-    .then(response => response.json())
-    .then(data => {
-      console.log(token)
-      setToken(data)
-      window.open("https://www.itk.ntnu.no/api/feide.php?token="+token+"&returnURL=http://localhost:5000/api/userdata", "_self")
-    })
-    .catch(err => {
-      console.log("err", err)
-      let alert = {severity: "error", text: "External login failed"}
-      dispatch({type: SET_ALERT, alert}) 
-    })
-
-    console.log("logging in")
-  }
-
-  const StyledLink = styled(Link)({
-    color: "black",
-    padding: "20px"    
-  })
-
-   const loading = useSelector(state => state.authReducer.loading)
-
-
-
-  
 
   const manualLogin = e =>{
     e.preventDefault()
-    if (username, email, name){
+    if (username && email && name){
       let data = {
         username: username,
         email: email,
@@ -79,15 +44,21 @@ function Login() {
       .then(response => response.json())
       .then((data) => {
         console.log(data);
-        if (data.status == "success"){
+        if (data.status === "success"){
           console.log("redirecting")
           setManualredirect(true)
         } else {
           alert(data.status)
         }
       })
+      .catch(err => {
+        let alert = {severity: "error", text: err}
+        dispatch({type: SET_ALERT, alert}) 
+  
+      })
     } else {
-      console.log("missing credentials for login", username, email, name)
+      let alert = {severity: "error", text: "Missing credentials for login"}
+      dispatch({type: SET_ALERT, alert}) 
     }
 
   }
@@ -99,26 +70,45 @@ function Login() {
       }}/>  
     )
   }
-  else if (token){
-    return (
-      <div>redirecting...</div>
-    )
-  } else {
-
-  const openManualLogin = () => {
-    console.log("do that shit")
-    setAlternativeLogin(true)
-  }
-
-  if (loading){
+  else {
     return(
-      <Loading />
+      <div> 
+          <div style={{marginBottom: 0, marginTop: "50px",}}> 
+            <h3 style={{fontSize: "14px", color: "#666", display: "inline", padding: "12px"}}>ALTERNATIVE LOGIN - JUST FOR TESTING</h3> 
+          </div>
+          <form onSubmit={manualLogin}>
+            <TextField  label="username" onChange={e => setUsername(e.target.value)} required />  <br />
+            <TextField  label="name" onChange={e => setName(e.target.value)} required/> <br />
+            <TextField  label="email" onChange={e => setEmail(e.target.value)} required/> <br />
+            <Button  variant="contained"  style={{margin: "30px"}} type="submit">Manual Login (for testing)</Button>
+          </form> 
+        </div>
     )
   }
+}
 
-  return (
+function Login() {
 
-    // <div style={{textAlign: "center", marginTop: "20%"}}>
+  const [AlternativeLogin, setAlternativeLogin] = useState(false)
+
+
+  const dispatch = useDispatch()
+  const feideLogin = () => {    
+    axios.get("/api/logintoken", { withCredentials: true })
+    .then(res => {
+      window.open("https://www.itk.ntnu.no/api/feide.php?token="+res.data.token+"&returnURL=http://localhost:5000/api/userdata", "_self")
+    })
+    .catch(err => {
+      console.log("err", err)
+      let alert = {severity: "error", text: "External login failed"}
+      dispatch({type: SET_ALERT, alert}) 
+    })
+  } 
+
+
+
+  
+    return (
     <PageWrapper style={{textAlign: "center", marginTop: "15%"}}>
 
       <Button color="primary" variant="contained" onClick={feideLogin} style={{width: "300px", height: "80px"}}>
@@ -130,24 +120,11 @@ function Login() {
       </div>
 
       {AlternativeLogin ? 
-      <div> 
-        <div style={{marginBottom: 0, marginTop: "50px",}}> 
-          <h3 style={{fontSize: "14px", color: "#666", display: "inline", padding: "12px"}}>ALTERNATIVE LOGIN - JUST FOR TESTING</h3> 
-        </div>
-      <form onSubmit={manualLogin}>
-         <TextField fullwidth label="username" onChange={e => setUsername(e.target.value)} required />  <br />
-         <TextField fullwidth label="name" onChange={e => setName(e.target.value)} required/> <br />
-         <TextField fullwidth label="email" onChange={e => setEmail(e.target.value)} required/> <br />
-         <Button fullwidth variant="contained" color="seconday" style={{margin: "30px"}} type="submit">Manual Login (for testing)</Button>
-      </form> 
-      </div>
+        <ManualLogin />
       : <div> </div>}
-      {/* </div> */} 
-      </PageWrapper> 
-
-    
+    </PageWrapper>     
   );
-}
+
 }
 
 export default Login;

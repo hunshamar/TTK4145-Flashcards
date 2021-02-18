@@ -1,16 +1,10 @@
 import { Typography } from "@material-ui/core"
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { PageWrapper } from "../static/wrappers";
 
-
-
 const UserProfile  = () => {
-    // const user = useSelector(state => state.authReducer.loggedInUser)
-    // const dispatch = useDispatch();    
     const loggedInuser = useSelector(state => state.authReducer.loggedInUser)
-    const dispatch = useDispatch();
-
-    
+    // const dispatch = useDispatch();    
 
     return(
         <PageWrapper>

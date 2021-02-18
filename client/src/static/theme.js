@@ -1,11 +1,11 @@
-import { createMuiTheme, rgbToHex } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 
 
 
 import blue from '@material-ui/core/colors/blue';
-import red from '@material-ui/core/colors/red';
-import yellow from '@material-ui/core/colors/yellow';
-import green from '@material-ui/core/colors/green';
+// import red from '@material-ui/core/colors/red';
+// import yellow from '@material-ui/core/colors/yellow';
+// import green from '@material-ui/core/colors/green';
 import {grey} from '@material-ui/core/colors/';
 
 export const darkTheme = createMuiTheme({

@@ -19,7 +19,7 @@ def cardgroups():
 @cardgroupBlueprint.route("/api/cardgroup/<cgid>", methods=["GET"])
 def cardgroup(cgid):    
     try:
-        return jsonify(getCardgroup(cgid))
+        return jsonify(getCardgroup(cgid).to_dict())
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
@@ -45,7 +45,7 @@ def add_cardgroup():
         due_date = datetime.datetime(year, month, date, hour, minute, second)
 
         if not (title or number_of_cards_due or due_date):
-            return jsonify({"error": "Invalid form for cardgroup"})
+            raise Eception("Invalid form for cardgroup")
 
         cardgroup = addCardgroup(title, due_date, number_of_cards_due)
         return jsonify(cardgroup)

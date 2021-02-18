@@ -4,7 +4,6 @@ import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT } from "../actionTypes"
 
 const initState = {
     loggedIn: false,
-    loading: true,
     loggedInUser: {}
 }
 
@@ -21,8 +20,8 @@ const authReducer = (state = initState, action) => {
         case LOG_OUT:
             console.log("logging out")
             return {
-                ...state,
-                loggedIn: action.loggedIn
+                loggedIn: action.loggedIn,
+                loggedInUser: action.loggedInUser
             }
         case LOG_IN_STATUS:
             console.log("fetching status")

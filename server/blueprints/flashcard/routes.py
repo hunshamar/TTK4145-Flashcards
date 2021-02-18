@@ -12,7 +12,7 @@ def flashcards():
 @flashcardBlueprint.route("/api/flashcard/<cid>")
 def flashcard(cid):    
     try:
-        return jsonify(getFlashcard(cid))
+        return jsonify(getFlashcard(cid).to_dict())
     except Exception as e:
         return jsonify({"error": str(e)})
 
@@ -59,7 +59,7 @@ def add_Flashcard():
 def delete_card(cid):
     print(cid, "is deleted yes")
     try:
-        delCard(cid)
+        deleteFlashcard(cid)
         return jsonify({"success": "true"})
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -70,8 +70,8 @@ def cardgroup_cards(cgid):
     print(type(cgid), "find this")
     try:
         return jsonify(getCardgroupFlashcards(int(cgid)))
-    except:
-        return jsonify({"error": "Invalid form"})
+    except Exception as e:
+        return jsonify({"error": str(e)})
 
 
 
@@ -86,12 +86,12 @@ def delete_group(cgid):
 
         for card in cards:
             print("card", card["id"])
-            deleleteFlashcard(card["id"])
+            deleteFlashcard(card["id"])
         delCardgroup(cgid)
         return jsonify({"success": "deleted all cards and groups"})
-    except:
+    except Exception as e:
         print("errr")
-        return jsonify({"error": "Invalid form"})
+        return jsonify({"error": str(e)})
 
 
 

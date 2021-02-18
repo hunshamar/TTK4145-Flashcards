@@ -1,34 +1,15 @@
 
 import { Button, 
     Grid, 
-    Card, 
-    IconButton, 
     TextField,
     Dialog,
     Typography,
     makeStyles
 } from '@material-ui/core';
-import DateFnsUtils from '@date-io/date-fns';
-
-import {
-    MuiPickersUtilsProvider,
-    KeyboardTimePicker,
-    KeyboardDatePicker,
-  } from '@material-ui/pickers';
-  
-  import CloseIcon from '@material-ui/icons/Close';
-
 import React, { useState } from 'react';
-import axios from 'axios';
 
 
-import { addCardgroup, loadCardgroups, deleteCardgroup } from '../../store/actions/cardgroupActions';
-import { connect, useDispatch } from 'react-redux';
-import {Alert} from '@material-ui/lab/';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import GroupView from '../submodules/groupview';
-import ConfirmDialog from "./confirmDialog"
+import {  useDispatch } from 'react-redux';
 import { addCard } from '../../store/actions/cardActions';
 
 const useStyles = makeStyles(theme => ({
@@ -80,9 +61,6 @@ const CreateCardDialog = (props) => {
         onClose(selectedValue);
     };
   
-    const handleListItemClick = (value) => {
-      onClose(value);
-    };
   
     return (
       <Dialog onClose={handleClose} 

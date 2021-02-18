@@ -1,36 +1,14 @@
 
 import { Button, 
-    Grid, 
-    Card, 
-    IconButton, 
+    Grid,  
     TextField,
     Dialog,
     Typography,
     makeStyles
 } from '@material-ui/core';
-import DateFnsUtils from '@date-io/date-fns';
-
-import {
-    MuiPickersUtilsProvider,
-    KeyboardTimePicker,
-    KeyboardDatePicker,
-  } from '@material-ui/pickers';
-  
-  import CloseIcon from '@material-ui/icons/Close';
-
-import React, { useState } from 'react';
-import axios from 'axios';
-
-
-import { addCardgroup, loadCardgroups, deleteCardgroup } from '../../store/actions/cardgroupActions';
-import { connect, useDispatch } from 'react-redux';
-import {Alert} from '@material-ui/lab/';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import GroupView from '../submodules/groupview';
-import ConfirmDialog from "./confirmDialog"
-import { addCard, editCard, loadCard } from '../../store/actions/cardActions';
-import cardReducer from '../../store/reducers/cardReducer';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addCard, editCard } from '../../store/actions/cardActions';
 
 const useStyles = makeStyles(theme => ({
     dialog: {
@@ -48,7 +26,6 @@ const FlashcardForm = (props) => {
 
     const [front, setFront] = useState("")
     const [back, setBack] = useState("")
-    const [cardId, setCardId] = useState(-1)
 
     // const card = useSelector(state => state.cardReducer.cards)
     
@@ -100,10 +77,6 @@ const FlashcardForm = (props) => {
     const handleClose = () => {
 
         onClose(selectedValue);
-    };
-  
-    const handleListItemClick = (value) => {
-      onClose(value);
     };
   
     // return 

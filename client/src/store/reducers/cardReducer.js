@@ -1,4 +1,4 @@
-import { CREATE_CARD, CREATE_CARD_ERROR, DELETE_CARD, DELETE_CARD_ERROR, EDIT_CARD, LOAD_CARD, LOAD_CARDS } from "../actionTypes"
+import { CREATE_CARD, CREATE_CARD_ERROR, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARD, LOAD_CARDS } from "../actionTypes"
 
 const initState = {
     cards: [
@@ -39,9 +39,7 @@ const cardReducer = (state = initState, action) => {
         case CREATE_CARD_ERROR:
             return { 
                 ...state,
-
             }
-            return state;
         case LOAD_CARD:
             console.log("got card", action.card)
             return {

@@ -3,6 +3,7 @@ from ..user.user import User, getUser
 from ..cardgroup.cardgroup import Cardgroup, getCardgroup, delCardgroup
 
 class Flashcard(db.Model):
+    __tablename__ = "flashcard"
     #member variables
     id = db.Column(db.Integer, primary_key=True)
     front = db.Column(db.String(2048))
@@ -40,13 +41,11 @@ def getFlashcard(cid):
     if (not cid):
         raise Exception("No card id")
     cid = int(cid) # make sure int
-    flashcards = Flashcard.query.all()
-    found_flashcard_list = list(filter(lambda x: x.id == cid, flashcards))
-    if not found_flashcard_list:
-        raise Exception("Error finding card. Id not found")
-    if len(found_flashcard_list) > 1:
-        raise Exception("Error finding flashcards. Multiple cards with same id")
-    return found_flashcard_list[0].to_dict()
+    flashcard = Flashcard.query.get(cid)
+    if (not flashcard):
+        raise Exception(f"Card with id {cid} not found")
+    return Flashcard.query.get(cid)
+
 
 # def getUserFlashcards():
 #     flashcards = Flashcard.querry.all()
@@ -54,14 +53,13 @@ def getFlashcard(cid):
 
 def addFlashcard(front, back, userid, cardgroupid):
     if (front and back and userid and cardgroupid):
-        user_list = list(filter(lambda i: i.id == userid, User.query.all()))
-        if not user_list:
-            raise Exception("User not found when adding flashcard")
-        user = user_list[0]
-        cardgroup_list = list(filter(lambda i: i.id == int(cardgroupid), Cardgroup.query.all()))
-        if not cardgroup_list:
-            raise Exception("Cardgroup not found when adding flashcard.")
-        cardgroup = cardgroup_list[0]
+        user = User.query.get(userid)
+        if (not user):
+            raise Exception(f"Error. User with id {userid} not found")
+
+        cardgroup = Cardgroup.query.get(cardgroupid)
+        if (not cardgroup):
+            raise Exception(f"Error. cardgroup with id {cardgroupid} not found")
 
         flashcard = Flashcard(front, back, user, cardgroup)
         db.session.add(flashcard)
@@ -70,10 +68,11 @@ def addFlashcard(front, back, userid, cardgroupid):
     else:
         raise Exception("Error. Invalid form for adding flashcard")
         
-def getCardgroupFlashcards(cgip):
-    flashcards = Flashcard.query.all()    
-    return [i.to_dict() for i in filter(lambda x: x.cardgroup.id == cgip, flashcards)] 
-
+def getCardgroupFlashcards(cgid):
+    cards = Flashcard.query.filter_by(cardgroupid=cgid)
+    if (not cards):
+        raise Exception(f"cards from cardgroup not found")
+    return [i.to_dict() for i in cards]
 
 def deleteFlashcard(cid):
     card = Flashcard.query.get(cid)

@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { loadCards } from '../store/actions/cardActions';
 import CardView from './submodules/cardview';
 import { loadCardgroup } from '../store/actions/cardgroupActions';
-import cardgroupReducer from '../store/reducers/cardgroupReducer';
-import { Button, Divider, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
+import { Button, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
 import CreateCardDialog from './dialogs/createCardDialog';
 import {PageWrapper} from "../static/wrappers"
 
@@ -56,7 +55,7 @@ const CardGroupPage = props => {
         console.log("stuff and things")
         dispatch(loadCards(props.match.params.id))       
         dispatch(loadCardgroup(props.match.params.id))
-    }, [])   
+    }, [dispatch, props.match.params.id])   
 
     const date = cardgroup.dueDate
     let a = new Date(date.year, date.month-1, date.date, date.hour, date.minute)

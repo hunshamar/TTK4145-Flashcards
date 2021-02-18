@@ -3,11 +3,10 @@ import React, { useEffect } from "react"
 import Navbar from "./components/layout/navbar"
 import Routes from "./routes"
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider } from "@material-ui/core/styles";
 import {theme, darkTheme} from "./static/theme"
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import Alerter from './components/notifications/alerter';
-import Feedback from "./components/submodules/feedback";
 
 
 const App = () => {
@@ -36,7 +35,6 @@ const App = () => {
       setDarkMode(true)
       sessionStorage.setItem("dark-mode", "true")
     }
-
   }
 
     return(

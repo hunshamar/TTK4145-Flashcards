@@ -1,27 +1,19 @@
 
 import { useState } from 'react';
-import { Button, Card, IconButton, Typography } from '@material-ui/core';
+import { Card, IconButton, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
-import {connect, useDispatch, useSelector, shallowEqual} from "react-redux"
-import { useEffect } from 'react';
+import { useDispatch} from "react-redux"
 import { Grid } from '@material-ui/core/';
-import {  Alert } from '@material-ui/lab/';
-import axios from "axios"
-import {compose} from "redux"
-import { fetchCards, loadCards, deleteCard, addCard } from '../../store/actions/cardActions';
-import cardReducer from '../../store/reducers/cardReducer';
-import { Link } from 'react-router-dom';
+import { deleteCard } from '../../store/actions/cardActions';
 import FlashcardForm from '../dialogs/flashcardForm';
-import CreateCardGroup from '../dialogs/createCardGroup';
 
 
 
 const CardView = props => {
 
     const dispatch = useDispatch();
-    const cardAlert = useSelector(state => state.cardReducer.alert)
     const [editCard, setEditCard] = useState({})
     const [open, setOpen] = useState(false);
 
@@ -44,42 +36,42 @@ const CardView = props => {
         setEditCard(card)    
         handleClickOpen()
     }
-
+    console.log("car1ds", props.cards)
     
     let cardItems = []
-    props.cards.map((card, index) => (
-
-        
+    if (props.cards.length){
+    props.cards.map((card, index) => (        
         cardItems[index] = 
-
-        <Card key={card.id} style={{padding: "10px", width:"100%", margin:"5px"}}>
+        <Grid item xs={12}>
+        <Card key={card.id} style={{padding: "10px", margin: "5px"}}>
         <Grid container spacing={0}> 
-                <Grid item xs={11}>
-                    <Typography variant="subtitle2" bold >
-                        Front:
-                    </Typography>
-                    <Typography variant="caption" >
-                        {card.front}
-                    </Typography>
-                    <Typography variant="subtitle2" >
-                        Back:
-                    </Typography>
-                    <Typography variant="caption" >
-                        {card.back}
-                    </Typography>
-                </Grid>
-                <Grid item xs={1} style={{padding: "auto"}} >
-                    <IconButton onClick = {() => editThisCard(card)}> 
-                        <EditIcon style={{fontSize: "20px"}} /> 
-                    </IconButton>
-                    <IconButton onClick = {() => deleteThisCard(card)}> 
-                        <DeleteIcon style={{fontSize: "20px"}} /> 
-                    </IconButton>
+            <Grid item xs={11}>
+                <Typography variant="subtitle2" >
+                    Front:
+                </Typography>
+                <Typography variant="caption" >
+                    {card.front}
+                </Typography>
+                <Typography variant="subtitle2" >
+                    Back:
+                </Typography>
+                <Typography variant="caption" >
+                    {card.back}
+                </Typography>
             </Grid>
-            
-            </Grid>
-        </Card>))
+            <Grid item xs={1} style={{padding: "auto"}} >
+                <IconButton onClick = {() => editThisCard(card)}> 
+                    <EditIcon style={{fontSize: "20px"}} /> 
+                </IconButton>
+                <IconButton onClick = {() => deleteThisCard(card)}> 
+                    <DeleteIcon style={{fontSize: "20px"}} /> 
+                </IconButton>
+            </Grid>        
+        </Grid>
+    </Card>
     
+    </Grid>))
+    }
 
   
     return (
@@ -92,7 +84,7 @@ const CardView = props => {
             
             {cardItems.length ? 
             
-            <Grid container spacing={2}> 
+            <Grid container spacing={0}> 
              {cardItems} 
             </Grid>
             

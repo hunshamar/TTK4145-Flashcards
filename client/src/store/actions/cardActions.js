@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { SET_ALERT, CREATE_CARD, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARDS, LOAD_CARD, EDIT_CARD } from '../actionTypes';
+import { SET_ALERT, CREATE_CARD, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARDS, LOAD_CARD } from '../actionTypes';
 
 export const addCard = (card) => async( dispatch, getState) => {
         
@@ -80,7 +80,7 @@ export const editCard = (card) => async( dispatch, getState) => {
 export const loadCards = props => async (dispatch, getState) => {
 
     if (props){
-        const cards = await axios.get("/api/cardgroupflashcards/"+props)
+        await axios.get("/api/cardgroupflashcards/"+props)
         .then(response => {
             const cards = response.data
             console.log("lmlmlml")
@@ -90,21 +90,21 @@ export const loadCards = props => async (dispatch, getState) => {
         .catch(err => console.log(err))
     }
     else {
-        const cards = await axios.get("/api/flashcards")
-            .then(response => {
-                const cards = response.data
-                console.log("mah cah")
-                console.log(cards)
-                dispatch({type: LOAD_CARDS, cards: cards})
-            })
-            .catch(err => console.log(err))
+        await axios.get("/api/flashcards")
+        .then(response => {
+            const cards = response.data
+            console.log("mah cah")
+            console.log(cards)
+            dispatch({type: LOAD_CARDS, cards: cards})
+        })
+        .catch(err => console.log(err))
     }
 }
 
 export const loadCard = props => async (dispatch, getState) => {
 
     if (props){
-        const cards = await axios.get("/api/flashcard/"+props)
+        await axios.get("/api/flashcard/"+props)
         .then(response => {
             const card = response.data
             console.log("lmlmlml")

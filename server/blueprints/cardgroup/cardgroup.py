@@ -7,6 +7,7 @@ from ..user.user import User, getUser
 
 
 class Cardgroup(db.Model):
+    __tablename__ = "cardgroup"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(256))
     due_date = db.Column(db.DateTime)
@@ -66,19 +67,13 @@ def getCardgroup(cdid):
     if (not cdid):
         raise Exception("No group id")
     cdid = int(cdid) # make sure int
-    cardgroups = Cardgroup.query.all()
-    found_cardgroup_list = list(filter(lambda x: x.id == cdid, cardgroups))
-    if not found_cardgroup_list:
-        raise Exception("Error finding cardgroup. Id not found")
-    if len(found_cardgroup_list) > 1:
-        raise Exception("Error finding cardgroup. Multiple cardgroups with same id")
-    return found_cardgroup_list[0].to_dict()
+    cardgroup = Cardgroup.query.get(cdid)
+    if (not cardgroup):
+        raise Exception(f"Cardgroup with id {cdid} not found")
+    return cardgroup
 
 def delCardgroup(cdid):
-    cardgroup = Cardgroup.query.get(cdid)
-    if not cardgroup:
-        raise Exception("Error. Could not find cardgroup to delete")
-
+    cardgroup = getCardgroup
     db.session.delete(cardgroup)
     db.session.commit()
     return True

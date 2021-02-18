@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT, SET_ALERT } from '../actionTypes';
+import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT } from '../actionTypes';
 
 
 
@@ -90,7 +90,7 @@ export const signOut = () => async (dispatch, getState) => {
     localStorage.clear();
 
     console.log("logging out...")
-    dispatch({type: LOG_OUT, loggedIn: false})
+    dispatch({type: LOG_OUT, loggedIn: false, loggedInUser: {}})
 
 }
 

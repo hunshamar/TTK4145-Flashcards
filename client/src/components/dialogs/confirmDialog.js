@@ -11,10 +11,7 @@ const ConfirmDIalog = (props) =>  {
       onClose(selectedValue);
     };
   
-    const handleListItemClick = (value) => {
-      onClose(value);
-    };
-  
+   
     return (
       <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
 

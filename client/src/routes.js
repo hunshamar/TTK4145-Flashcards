@@ -1,6 +1,6 @@
 
 import React, {useEffect} from "react"
-import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Redirect, Route, Switch } from "react-router-dom";
 
 import Home from "./components/home"
 import Login from "./components/login"
@@ -33,7 +33,7 @@ const Routes = () => {
     useEffect(() => {
         dispatch(checkLogInStatus())
         console.log("is logged", loggedIn)
-    }, [loggedIn])   
+    }, [loggedIn, dispatch])   
 
     // get log in status
 
