@@ -2,22 +2,19 @@
 import { SET_ALERT } from '../actionTypes';
 
 const initState = {
-    alert: {}
+    severity: "",
+    text: ""
 }
 
 const alertReducer = (state = initState, action) => {
 
     switch(action.type){
         case SET_ALERT:
-            console.log("Alert", action.alert)
+            console.log("Alert", action)
             return {
-                ...state,
-                alert: {
-                    severity: action.alert.severity,
-                    text: action.alert.text
-                }
-            }       
-        
+                severity: action.payload.severity,
+                text: action.payload.text
+            }               
         default:
             console.log("default alert")
             return state

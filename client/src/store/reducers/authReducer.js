@@ -14,19 +14,28 @@ const authReducer = (state = initState, action) => {
             console.log("successfull login callback")
             return {
                 ...state, 
-                loggedIn: action.loggedIn
+                loggedIn: action.payload.loggedIn
             }
         
         case LOG_OUT:
             console.log("logging out")
+
+            console.log(action.payload)
+
             return {
-                loggedIn: action.loggedIn,
-                loggedInUser: action.loggedInUser
+                ...state,
+                loggedIn: action.payload.loggedIn,
+                loggedInUser: action.payload.loggedInUser
             }
         case LOG_IN_STATUS:
             console.log("fetching status")
-            console.log(action.state)
-            return action.state
+            console.log(action.payload)
+            return {
+                ...state,
+                loggedIn: action.payload.loggedIn,
+                loggedInUser: action.payload.loggedInUser
+            }
+            
 
         default:
             console.log("default auth")

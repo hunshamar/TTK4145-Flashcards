@@ -60,6 +60,7 @@ const UserMenu  = (props) => {
         props.setDarkMode()
     }
 
+    console.log(user)
     if (!user.username){
         console.log("true")    
 

@@ -1,11 +1,11 @@
 
 import axios from 'axios';
-import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT } from '../actionTypes';
+import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT, SET_ALERT } from '../actionTypes';
 
 
 
 
-export const signInCallack = () => async (dispatch, getState) => {
+export const signInCallack = () => async (dispatch) => {
     axios.get("/api/login/callback", { withCredentials: true })
         .then(response => {
             let user_token = response.data.user_token
@@ -14,12 +14,13 @@ export const signInCallack = () => async (dispatch, getState) => {
             console.log("action, refresh", refresh_token)
             localStorage.setItem("user_token", user_token)
             localStorage.setItem("refresh_token", refresh_token)
-            
-            dispatch({type: LOG_IN_CALLBACK, loggedIn: true})
+            const payload = {loggedIn: true}
+            dispatch({type: LOG_IN_CALLBACK, payload})
         })
         .catch(err => {
-            console.log(err)
-            console.log("was the err in signincallback")
+            console.log("Error in signInCallback", err)
+            const alert = {severity: "error", text: err.toString()}
+            dispatch({type: SET_ALERT, payload: alert})
         })
 }
 
@@ -39,20 +40,21 @@ export const checkLogInStatus = () => async (dispatch, getState) => {
             }
         }).then(res => {
             console.log("found user?", res.data)
-            let state = {loggedIn: true, loggedInUser: res.data}
-            dispatch({type: LOG_IN_STATUS, state})
+            let payload = {loggedIn: true, loggedInUser: res.data}
+            dispatch({type: LOG_IN_STATUS, payload})
         }).catch(err => {
             console.log("error..", err)
-            let state = {loading: false, loggedInUser: {}}
-            dispatch({type: LOG_IN_STATUS, state})
+            let payload = {loading: false, loggedInUser: {}}
+            dispatch({type: LOG_IN_STATUS, payload})
 
+            const alert = {severity: "error", text: err.toString()}
+            dispatch({type: SET_ALERT, payload: alert})
         })
-        console.log("...")
     }
     else {
         console.log("no user logged in")
-        let state = {loggedIn: false, loggedInUser: {}, loading: false}
-        dispatch({type: LOG_IN_STATUS, state})
+        let payload = {loggedIn: false, loggedInUser: {}, loading: false}
+        dispatch({type: LOG_IN_STATUS, payload})
     }
 
 }
@@ -90,7 +92,8 @@ export const signOut = () => async (dispatch, getState) => {
     localStorage.clear();
 
     console.log("logging out...")
-    dispatch({type: LOG_OUT, loggedIn: false, loggedInUser: {}})
+    const payload = {loggedIn: false, loggedInUser: {}}
+    dispatch({type: LOG_OUT, payload})
 
 }
 

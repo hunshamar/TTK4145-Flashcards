@@ -8,15 +8,16 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 const Alerter = () => {
 
-    const alert = useSelector(state => state.alertReducer.alert)
+    const severity = useSelector(state => state.alertReducer.severity)
+    const text = useSelector(state => state.alertReducer.text)
     
     const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
-      if (alert.text){
+      if (text){
         setOpen(true)
       }
-    }, [alert])
+    }, [text])
   
     const handleClose = (event, reason) => {
       if (reason === 'clickaway') {
@@ -31,8 +32,8 @@ const Alerter = () => {
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
             <Alert 
                 onClose={handleClose}
-                severity={alert.severity}
-            >{alert.text}
+                severity={severity}
+            >{text}
             </Alert>                
       </Snackbar>
     )

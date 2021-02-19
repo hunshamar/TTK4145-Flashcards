@@ -23,36 +23,25 @@ const cardReducer = (state = initState, action) => {
                 cards: [...state.cards, action.payload],
             }
         // case EDIT_CARD:
-
-        //     console.log("card changed...")
-        //     console.log(action.payload)
-        //     return { 
-        //         ...state,
-        //         cards: [...state.cards, action.createdCard],
-        //         cards: state.cards.filter((card) => card.id !== action.card.id
-        //     }
-
-
-            
-
+        
 
         case CREATE_CARD_ERROR:
             return { 
                 ...state,
             }
         case LOAD_CARD:
-            console.log("got card", action.card)
+            console.log("got card", action.payload)
             return {
                 ...state, 
                 cards: action.payload,
             }
         
         case LOAD_CARDS:
-            console.log("got cards", action.cards)
-            console.log({...state, cards: action.cards})
+            console.log("got cards", action.payload)
+            console.log({...state, cards: action.payload})
             return {
                 ...state, 
-                cards: action.cards,
+                cards: action.payload,
             }
         case DELETE_CARD:
             console.log("deleting dem cards")

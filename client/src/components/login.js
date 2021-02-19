@@ -101,7 +101,7 @@ function Login() {
     .catch(err => {
       console.log("err", err)
       let alert = {severity: "error", text: "External login failed"}
-      dispatch({type: SET_ALERT, alert}) 
+      dispatch({type: SET_ALERT, payload: alert}) 
     })
   } 
 

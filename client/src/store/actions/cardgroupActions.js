@@ -32,14 +32,14 @@ export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
 
             console.log("was created, ", createdCardgroup)
             let alert = {severity: "success", text: "successfully created cardgroup: "+createdCardgroup.title}
-            dispatch({type: SET_ALERT, alert})
-            dispatch({type: CREATE_CARDGROUP, createdCardgroup})
+            dispatch({type: SET_ALERT, payload: alert})
+            dispatch({type: CREATE_CARDGROUP, payload: createdCardgroup})
         })
         .catch(err => {
             console.log("This is an error yes plz")
             let alert = {severity: "error", text: err.toString()}
-            dispatch({type: SET_ALERT, alert})
-            dispatch({type: CREATE_CARDGROUP_ERROR, err})
+            dispatch({type: SET_ALERT, payload: alert})
+            // dispatch({type: CREATE_CARDGROUP_ERROR, err})
         })
 
     console.log("async call up in hier", cardgroup)
@@ -58,7 +58,7 @@ export const loadCardgroups = () => async (dispatch, getState) => {
         console.log("mah cardgroups")
         
         console.log(cardgroups)
-        dispatch({type: LOAD_CARDGROUPS, cardgroups: cardgroups})
+        dispatch({type: LOAD_CARDGROUPS, payload: cardgroups})
     })
     .catch(err => console.log(err))
 }
@@ -79,7 +79,7 @@ export const loadCardgroup = (groupId) => async (dispatch) => {
     })
     .catch(err => {
         let alert = {severity: "error", text: err.toString()}
-        dispatch({type: SET_ALERT, alert})
+        dispatch({type: SET_ALERT, payload: alert})
     })
 }
 
@@ -99,14 +99,14 @@ export const deleteCardgroup = (cardgroup) => async (dispatch, getState) => {
         }
 
         let alert = {severity: "success", text: "successfully deleted cardgroup: "+cardgroup.title}
-        dispatch({type: SET_ALERT, alert})
-        dispatch({type: DELETE_CARDGROUP, cardgroup: cardgroup})        
+        dispatch({type: SET_ALERT, payload: alert})
+        dispatch({type: DELETE_CARDGROUP, payload: cardgroup})        
     })
     .catch(err => {
 
         let alert = {severity: "error", text: err.toString()}
-        dispatch({type: SET_ALERT, alert})
-        dispatch({type: DELETE_CARDGROUP_ERROR, cardgroup: cardgroup}) 
+        dispatch({type: SET_ALERT, payload: alert})
+        // dispatch({type: DELETE_CARDGROUP_ERROR, payload: cardgroup}) 
     })
 
 }
