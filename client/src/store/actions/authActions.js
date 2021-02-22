@@ -24,6 +24,28 @@ export const signInCallack = () => async (dispatch) => {
         })
 }
 
+export const adminOnly = () => async (dispatch) => {
+    axios.get("/api/adminonly", {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("user_token")}`
+        }
+    })
+    .then(response => {
+        console.log("from admin test")
+        console.log(response.data)       
+        const alert = {severity: "success", text: response.data.status}
+        dispatch({type: SET_ALERT, payload: alert})
+ 
+
+        // dispatch({type: LOG_IN_CALLBACK, payload})
+    })
+    .catch(err => {
+        console.log("Error in signInCallback", err)
+        const alert = {severity: "error", text: err.toString()}
+        dispatch({type: SET_ALERT, payload: alert})
+    })
+}
+
 export const checkLogInStatus = () => async (dispatch, getState) => {
     
     const user_token = localStorage.getItem("user_token")
@@ -40,7 +62,8 @@ export const checkLogInStatus = () => async (dispatch, getState) => {
             }
         }).then(res => {
             console.log("found user?", res.data)
-            let payload = {loggedIn: true, loggedInUser: res.data}
+            console.log("true? ", res.data.roles.includes("Admin"))
+            let payload = {loggedIn: true, loggedInUser: res.data, isAdmin: res.data.roles.includes("Admin")}
             dispatch({type: LOG_IN_STATUS, payload})
         }).catch(err => {
             console.log("error..", err)

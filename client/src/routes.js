@@ -28,11 +28,13 @@ const Routes = () => {
 
     const classes = useStyles()
     const loggedIn = useSelector(state => state.authReducer.loggedIn)
+    const isAdmin = useSelector(state => state.authReducer.isAdmin)
     const dispatch = useDispatch();     
     
     useEffect(() => {
         dispatch(checkLogInStatus())
         console.log("is logged", loggedIn)
+        console.log("is admin", isAdmin)
     }, [loggedIn, dispatch])   
 
     // get log in status
@@ -45,9 +47,13 @@ const Routes = () => {
 
                 {loggedIn ? 
                 <React.Fragment>
-                    <Route path="/allcards" exact component={AllCards} />
                     <Route path="/cardgroup/:id" exact component={CardGroupPage} />
                     <Route path="/userprofile/:username" exact component={UserProfile} />
+                    {isAdmin ? 
+                    <React.Fragment>
+                        <Route path="/allcards" exact component={AllCards} />
+                    </React.Fragment>
+                     :    <React.Fragment />}
                 </React.Fragment>
                 :
                 <Redirect to={{

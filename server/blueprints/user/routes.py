@@ -2,6 +2,12 @@ from flask import Blueprint, jsonify, redirect, request, session, make_response
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, \
  get_jwt_identity, jwt_refresh_token_required, create_refresh_token, get_raw_jwt
 
+
+# from flask_login import *
+
+from functools import wraps
+
+
 jwt = JWTManager()
 import requests
 import json
@@ -11,6 +17,50 @@ userBlueprint = Blueprint("user", __name__)
 from .invalid_token import *
 from .user import *
 
+def admin_only(f):
+    @wraps(f)
+    def wrapper(*args, **kwds):
+        uid = get_jwt_identity()
+        user = getUser(uid)
+
+        print("is admin", user.is_admin())
+        
+        if user.is_admin():                 
+            return f(*args, **kwds) # continue
+        else:
+            raise Exception("Not admin")
+            return jsonify({"error": "Not admin"})
+    return wrapper
+
+@userBlueprint.route("/api/addadmin/<uid>")
+def add_admin(uid):
+    try:
+        makeAdmin(int(uid))
+        return jsonify("success")
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
+
+
+
+@userBlueprint.route("/api/adminonly")
+@jwt_required
+@admin_only
+def admin_page():
+    try:
+        print("signed in ???")
+        return jsonify({"status": "you successfully accessed because you are an admin. gz"})
+
+            # if "Admin" in current_user.roles:
+            # else:
+            #     flash("You need to be an admin to view this page.")
+            #     return jsonify({error: "error with admin elns"})
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
+
+
+
 @userBlueprint.route("/api/getcurrentuser")
 @jwt_required
 def get_current_user():
@@ -19,7 +69,8 @@ def get_current_user():
         return jsonify(getUser(uid).to_dict())
     except Exception as e:
         print(e)
-        return jsonify({"erorr": str(e)})
+        return jsonify({"error": str(e)})
+
 
 
 @userBlueprint.route("/api/users")
@@ -28,17 +79,17 @@ def users():
         return jsonify(getAllUsers())
     except Exception as e:
         print(e)
-        return jsonify({"erorr": str(e)})
+        return jsonify({"error": str(e)})
 
 @userBlueprint.route("/api/logintoken")
-def login():
+def login_token():
     try:
         token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey=3b41006f342e166d2320b82059c35784")
         token_string = token.text
         return jsonify({"token": token_string})
     except Exception as e:
         print(e)
-        return jsonify({"erorr": str(e)})
+        return jsonify({"error": str(e)})
 
 @userBlueprint.route("/api/login/callback")
 def login_callback():
@@ -54,18 +105,27 @@ def login_callback():
             if not usernameRegistred(username):
                 addUser(username, email, name)
 
-            user = userRegistred(email, username)[0]
+            # user = userRegistred(email, username)[0]
+
+            if not userRegistred(email, username):
+                raise Exception("error fetching user")
+            
+            user = getUser(getUserId(email, username))
+
+
             token = create_access_token(identity=user.id)        
             refresh_token = create_refresh_token(identity=user.id)
             if not (token and refresh_token):
                 raise Exception("Error creating tokens")
             return jsonify({"user_token": token, "refresh_token": refresh_token})
-        else:
+        else:   
             raise Exception("Login callback session error")
         
     except Exception as e:
         print(e)
-        return jsonify({"erorr": str(e)})
+        return jsonify({"error": str(e)})
+
+
 
 @userBlueprint.route("/api/userdata", methods=["POST", "GET"])
 def user_data():

@@ -4,7 +4,8 @@ import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT } from "../actionTypes"
 
 const initState = {
     loggedIn: false,
-    loggedInUser: {}
+    loggedInUser: {},
+    isAdmin: false
 }
 
 const authReducer = (state = initState, action) => {
@@ -14,7 +15,8 @@ const authReducer = (state = initState, action) => {
             console.log("successfull login callback")
             return {
                 ...state, 
-                loggedIn: action.payload.loggedIn
+                loggedIn: action.payload.loggedIn,
+                isAdmin: action.payload.isAdmin
             }
         
         case LOG_OUT:
@@ -33,7 +35,8 @@ const authReducer = (state = initState, action) => {
             return {
                 ...state,
                 loggedIn: action.payload.loggedIn,
-                loggedInUser: action.payload.loggedInUser
+                loggedInUser: action.payload.loggedInUser,
+                isAdmin: action.payload.isAdmin
             }
             
 

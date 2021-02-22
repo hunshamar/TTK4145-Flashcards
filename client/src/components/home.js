@@ -5,6 +5,7 @@ import { loadCardgroups } from "../store/actions/cardgroupActions";
 import {Typography, Button, Grid, makeStyles} from '@material-ui/core';
 import {PageWrapper} from "../static/wrappers"
 import CreateCardGroup from "./dialogs/createCardGroup";
+import { adminOnly } from "../store/actions/authActions";
 
 const useStyles = makeStyles(theme => ({
     addButton: {
@@ -46,6 +47,11 @@ const Home = () => {
     const handleClose = (value) => {
       setOpen(false);
     };
+
+    const handleAdmin = () => {
+        console.log("admin only yes")
+        dispatch(adminOnly())        
+    }
   
 
 
@@ -63,6 +69,9 @@ const Home = () => {
             <Grid item xs={4}>
                 <Button fullWidth className={classes.addButton} variant="outlined" onClick={handleClickOpen}>
                     + Create group
+                </Button> 
+                <Button fullWidth className={classes.addButton} variant="outlined" onClick={handleAdmin}>
+                    Admin only
                 </Button> 
             </Grid> 
             <Grid item xs={12}>
