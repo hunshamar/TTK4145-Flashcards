@@ -2,9 +2,9 @@
 
 import {useDispatch, useSelector} from "react-redux"
 import { useEffect } from 'react';
-import {  loadCards } from '../store/actions/cardActions';
-import CardView from './submodules/cardview';
-import {PageWrapper} from "../static/wrappers"
+import {  loadCards } from '../../store/actions/cardActions';
+import CardView from '../submodules/cardview';
+import {PageWrapper} from "../../static/wrappers"
 
 const AllCards = props => {
 

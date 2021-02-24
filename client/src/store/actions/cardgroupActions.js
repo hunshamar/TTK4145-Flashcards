@@ -1,6 +1,10 @@
 
 import axios from 'axios';
-import { SET_ALERT, CREATE_CARDGROUP, CREATE_CARDGROUP_ERROR, LOAD_CARDGROUPS, DELETE_CARDGROUP, DELETE_CARDGROUP_ERROR, LOAD_CARDGROUP } from '../actionTypes';
+import { SET_ALERT, CREATE_CARDGROUP, SET_LOADING, LOAD_CARDGROUPS, DELETE_CARDGROUP, DELETE_CARDGROUP_ERROR, LOAD_CARDGROUP } from '../actionTypes';
+
+const Sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+  }
 
 export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
         
@@ -18,6 +22,9 @@ export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
             }
         })
         .then(res => {
+            if(res.data.error){
+                throw new Error(res.data.error)
+            }
             console.log("returned")
             console.log(res.data)
             
@@ -48,6 +55,9 @@ export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
 
 
 export const loadCardgroups = () => async (dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})
+
+
     await axios.get("/api/cardgroups")
     .then(res => {
         if(res.data.error){
@@ -61,9 +71,15 @@ export const loadCardgroups = () => async (dispatch, getState) => {
         dispatch({type: LOAD_CARDGROUPS, payload: cardgroups})
     })
     .catch(err => console.log(err))
+
+    dispatch({type: SET_LOADING, payload: false})
 }
 
+
+
 export const loadCardgroup = (groupId) => async (dispatch) => {
+    dispatch({type: SET_LOADING, payload: true})
+
     await axios.get("/api/cardgroup/"+groupId)
     .then(res => {
         console.log("res,", res)
@@ -81,6 +97,9 @@ export const loadCardgroup = (groupId) => async (dispatch) => {
         let alert = {severity: "error", text: err.toString()}
         dispatch({type: SET_ALERT, payload: alert})
     })
+
+    dispatch({type: SET_LOADING, payload: false})
+
 }
 
 export const deleteCardgroup = (cardgroup) => async (dispatch, getState) => {

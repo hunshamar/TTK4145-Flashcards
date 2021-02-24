@@ -1,11 +1,12 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from 'react-redux';
-import GroupView from "./submodules/groupview";
-import { loadCardgroups } from "../store/actions/cardgroupActions";
+import GroupView from "../submodules/groupview";
+import { loadCardgroups } from "../../store/actions/cardgroupActions";
 import {Typography, Button, Grid, makeStyles} from '@material-ui/core';
-import {PageWrapper} from "../static/wrappers"
-import CreateCardGroup from "./dialogs/createCardGroup";
-import { adminOnly } from "../store/actions/authActions";
+import {PageWrapper} from "../../static/wrappers"
+import CreateCardGroup from "../dialogs/createCardGroup";
+import { adminOnly } from "../../store/actions/authActions";
+import authReducer from '../../store/reducers/authReducer';
 
 const useStyles = makeStyles(theme => ({
     addButton: {
@@ -28,6 +29,7 @@ const Home = () => {
     const dispatch = useDispatch();
    
     const cardgroups = useSelector(state => state.cardgroupReducer.cardgroups)
+    const isAdmin = useSelector(state => state.authReducer.isAdmin)
     
     useEffect(() => {
         dispatch(loadCardgroups())
@@ -48,10 +50,7 @@ const Home = () => {
       setOpen(false);
     };
 
-    const handleAdmin = () => {
-        console.log("admin only yes")
-        dispatch(adminOnly())        
-    }
+
   
 
 
@@ -67,12 +66,11 @@ const Home = () => {
                 </Typography>
             </Grid>
             <Grid item xs={4}>
+                {isAdmin ?                 
                 <Button fullWidth className={classes.addButton} variant="outlined" onClick={handleClickOpen}>
                     + Create group
-                </Button> 
-                <Button fullWidth className={classes.addButton} variant="outlined" onClick={handleAdmin}>
-                    Admin only
-                </Button> 
+                </Button> :
+                <div></div>}
             </Grid> 
             <Grid item xs={12}>
                 <GroupView cardgroups={cardgroups}/>

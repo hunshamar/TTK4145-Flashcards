@@ -7,6 +7,8 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, \
 
 from functools import wraps
 
+from time import sleep
+from ..values import DELAY_S
 
 jwt = JWTManager()
 import requests
@@ -34,6 +36,7 @@ def admin_only(f):
 
 @userBlueprint.route("/api/addadmin/<uid>")
 def add_admin(uid):
+    sleep(DELAY_S)
     try:
         makeAdmin(int(uid))
         return jsonify("success")
@@ -47,6 +50,7 @@ def add_admin(uid):
 @jwt_required
 @admin_only
 def admin_page():
+    sleep(DELAY_S)
     try:
         print("signed in ???")
         return jsonify({"status": "you successfully accessed because you are an admin. gz"})
@@ -64,6 +68,7 @@ def admin_page():
 @userBlueprint.route("/api/getcurrentuser")
 @jwt_required
 def get_current_user():
+    sleep(DELAY_S)
     try:
         uid = get_jwt_identity()
         return jsonify(getUser(uid).to_dict())
@@ -75,6 +80,7 @@ def get_current_user():
 
 @userBlueprint.route("/api/users")
 def users():
+    sleep(DELAY_S)
     try:
         return jsonify(getAllUsers())
     except Exception as e:
@@ -83,6 +89,7 @@ def users():
 
 @userBlueprint.route("/api/logintoken")
 def login_token():
+    sleep(DELAY_S)
     try:
         token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey=3b41006f342e166d2320b82059c35784")
         token_string = token.text
@@ -93,6 +100,7 @@ def login_token():
 
 @userBlueprint.route("/api/login/callback")
 def login_callback():
+    sleep(DELAY_S)
     try:
         if session.get("userdata"):
             userdata = session["userdata"]
@@ -129,6 +137,7 @@ def login_callback():
 
 @userBlueprint.route("/api/userdata", methods=["POST", "GET"])
 def user_data():
+    sleep(DELAY_S)
     try: 
         if request.method == "GET": # External login
             print("FROM FEIDE")
@@ -162,7 +171,7 @@ def user_data():
             
     except Exception as e:
         print(e)
-        return jsonify({"error": e.message})
+        return jsonify({"error": str(e)})
 
  
 

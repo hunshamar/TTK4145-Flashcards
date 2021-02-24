@@ -2,8 +2,8 @@ import React, {useEffect} from "react"
 import { FormControl, InputLabel, Select, makeStyles, MenuItem } from "@material-ui/core"
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { loadCards } from "../store/actions/cardActions";
-import { loadCardgroups } from "../store/actions/cardgroupActions";
+import { loadCards } from "../../store/actions/cardActions";
+import { loadCardgroups } from "../../store/actions/cardgroupActions";
 
 
 
@@ -37,7 +37,9 @@ const CardgroupSelect = props => {
 
     const handleChange = (event) => {
       setAge(event.target.value);
-      props.onChange(event.target.value)
+      if (props.onChange){
+        props.onChange(event.target.value)
+      }
     };
   
 

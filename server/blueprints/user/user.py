@@ -74,6 +74,7 @@ class User(db.Model):
         self.email = email
         self.name = name
 
+
 def addUser(username, email, name):
     user = User(username, email, name)
     db.session.add(user)

@@ -7,9 +7,12 @@ import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT, SET_ALERT } from '../actionTyp
 
 export const signInCallack = () => async (dispatch) => {
     axios.get("/api/login/callback", { withCredentials: true })
-        .then(response => {
-            let user_token = response.data.user_token
-            let refresh_token = response.data.refresh_token
+        .then(res => {
+            if(res.data.error){
+                throw new Error(res.data.error)
+            }
+            let user_token = res.data.user_token
+            let refresh_token = res.data.refresh_token
             console.log("action, usertoken", user_token)
             console.log("action, refresh", refresh_token)
             localStorage.setItem("user_token", user_token)
@@ -30,10 +33,13 @@ export const adminOnly = () => async (dispatch) => {
             Authorization: `Bearer ${localStorage.getItem("user_token")}`
         }
     })
-    .then(response => {
+    .then(res => {
         console.log("from admin test")
-        console.log(response.data)       
-        const alert = {severity: "success", text: response.data.status}
+        if(res.data.error){
+            throw new Error(res.data.error)
+        }
+        console.log(res.data)       
+        const alert = {severity: "success", text: res.data.status}
         dispatch({type: SET_ALERT, payload: alert})
  
 
@@ -61,6 +67,9 @@ export const checkLogInStatus = () => async (dispatch, getState) => {
                 Authorization: `Bearer ${localStorage.getItem("user_token")}`
             }
         }).then(res => {
+            if(res.data.error){
+                throw new Error(res.data.error)
+            }
             console.log("found user?", res.data)
             console.log("true? ", res.data.roles.includes("Admin"))
             let payload = {loggedIn: true, loggedInUser: res.data, isAdmin: res.data.roles.includes("Admin")}
@@ -105,8 +114,8 @@ export const signOut = () => async (dispatch, getState) => {
                 Authorization: `Bearer ${refreshToken}`
             }
         }).then(res => {
-            if (res.data.error) {
-                console.error(res.data.error)
+            if(res.data.error){
+                throw new Error(res.data.error)
             } else {
                 localStorage.removeItem("refresh_token")
             }

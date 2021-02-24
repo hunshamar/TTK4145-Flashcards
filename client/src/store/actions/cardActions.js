@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { SET_ALERT, CREATE_CARD, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARDS, LOAD_CARD } from '../actionTypes';
+import { SET_ALERT, CREATE_CARD, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARDS, LOAD_CARD, SET_LOADING } from '../actionTypes';
 
 export const addCard = (card) => async( dispatch, getState) => {
         
@@ -77,36 +77,91 @@ export const editCard = (card) => async( dispatch, getState) => {
     
 };
 
-export const loadCards = props => async (dispatch, getState) => {
+export const loadCardGroupUserFlashcards = (cardgroupId, userId) => async dispatch => {
+    dispatch({type: SET_LOADING, payload: true})
+    console.log("userid", userId)
+    console.log("cardgroupid", cardgroupId)
 
-    if (props){
-        await axios.get("/api/cardgroupflashcards/"+props)
-        .then(response => {
-            const cards = response.data
+    await axios.get("/api/cardgroupuserflashcards/"+cardgroupId+"/"+userId,
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("user_token")}`
+            }
+        })
+        .then(res => {
+            if(res.data.error){
+                throw new Error(res.data.error)
+            }
+            const cards = res.data
             console.log("lmlmlml")
             console.log(cards)
             dispatch({type: LOAD_CARDS, payload: cards})
         })
         .catch(err => console.log(err))
-    }
-    else {
-        await axios.get("/api/flashcards")
-        .then(response => {
-            const cards = response.data
-            console.log("mah cah")
-            console.log(cards)
-            dispatch({type: LOAD_CARDS, payload: cards})
-        })
-        .catch(err => console.log(err))
-    }
+
+
+    dispatch({type: SET_LOADING, payload: false})
 }
 
+export const loadCards = props => async (dispatch, getState) => {
+
+    dispatch({type: SET_LOADING, payload: true})
+
+    await axios.get("/api/flashcards")
+    .then(res => {
+        if(res.data.error){
+            throw new Error(res.data.error)
+        }
+        const cards = res.data
+        console.log("mah cah")
+        console.log(cards)
+        dispatch({type: LOAD_CARDS, payload: cards})
+    })
+    .catch(err => {
+        let alert = {severity: "error", text: err.toString() + " when attemting to get card"}
+        dispatch({type: SET_ALERT, payload: alert})  
+    })
+
+    dispatch({type: SET_LOADING, payload: false})
+
+}
+
+export const loadCardgroupFlashcards = (cardgroupId) => async (dispatch, getState) => {
+
+    dispatch({type: SET_LOADING, payload: true})
+
+
+    console.log("idd",cardgroupId)
+
+    await axios.get("/api/cardgroupflashcards/"+cardgroupId)
+    .then(response => {
+        const cards = response.data
+        console.log("lmlmlml")
+        console.log(cards)
+        dispatch({type: LOAD_CARDS, payload: cards})
+    })
+    .catch(err => {
+        let alert = {severity: "error", text: err.toString() + " when attemting to get card"}
+        dispatch({type: SET_ALERT, payload: alert})  
+    })
+
+    dispatch({type: SET_LOADING, payload: false})
+
+}
+
+
+
 export const loadCard = props => async (dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})
+
 
     if (props){
         await axios.get("/api/flashcard/"+props)
-        .then(response => {
-            const card = response.data
+        .then(res => {
+            if(res.data.error){
+                throw new Error(res.data.error)
+            }
+            const card = res.data
             console.log("lmlmlml")
             console.log(card)
             dispatch({type: LOAD_CARD, payload: [card]})
@@ -117,6 +172,9 @@ export const loadCard = props => async (dispatch, getState) => {
         })
         
     }
+
+    dispatch({type: SET_LOADING, payload: false})
+
 }
 
 
@@ -131,6 +189,9 @@ export const deleteCard = (card) => async (dispatch, getState) => {
     }}
     ).then(res => {
         console.log(res.data)
+        if(res.data.error){
+            throw new Error(res.data.error)
+        }
         let alert = {severity: "success", text: "successfully deleted card"}
         dispatch({type: SET_ALERT, payload: alert})  
         dispatch({type: DELETE_CARD, payload: card})        

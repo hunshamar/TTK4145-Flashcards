@@ -5,8 +5,8 @@ import axios from "axios";
 import { Button, Link } from "@material-ui/core";
 import { styled } from '@material-ui/core/styles';
 import { useDispatch  } from 'react-redux';
-import { PageWrapper } from "../static/wrappers";
-import { SET_ALERT } from "../store/actionTypes";
+import { PageWrapper } from "../../static/wrappers";
+import { SET_ALERT } from "../../store/actionTypes";
 
 
 const StyledLink = styled(Link)({
@@ -48,17 +48,17 @@ const ManualLogin = () => {
           console.log("redirecting")
           setManualredirect(true)
         } else {
-          alert(data.status)
+          throw(data.error) 
         }
       })
       .catch(err => {
         let alert = {severity: "error", text: err}
-        dispatch({type: SET_ALERT, alert}) 
+        dispatch({type: SET_ALERT, payload: alert}) 
   
       })
     } else {
       let alert = {severity: "error", text: "Missing credentials for login"}
-      dispatch({type: SET_ALERT, alert}) 
+      dispatch({type: SET_ALERT, payload: alert}) 
     }
 
   }

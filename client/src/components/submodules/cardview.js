@@ -4,10 +4,12 @@ import { Card, IconButton, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
-import { useDispatch} from "react-redux"
+import { useDispatch, useSelector} from "react-redux"
 import { Grid } from '@material-ui/core/';
 import { deleteCard } from '../../store/actions/cardActions';
 import FlashcardForm from '../dialogs/flashcardForm';
+import loadingReducer from '../../store/reducers/loadingReducer';
+import Loading from '../notifications/loading';
 
 
 
@@ -16,6 +18,7 @@ const CardView = props => {
     const dispatch = useDispatch();
     const [editCard, setEditCard] = useState({})
     const [open, setOpen] = useState(false);
+    const loading = useSelector(state => state.loadingReducer.loading)
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -73,7 +76,11 @@ const CardView = props => {
     </Grid>))
     }
 
-  
+    
+    if (loading){
+        return <Loading />
+    }
+
     return (
         
         <div>

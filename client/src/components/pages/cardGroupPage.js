@@ -1,12 +1,15 @@
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { loadCards } from '../store/actions/cardActions';
-import CardView from './submodules/cardview';
-import { loadCardgroup } from '../store/actions/cardgroupActions';
+import { loadCardGroupUserFlashcards } from '../../store/actions/cardActions';
+import CardView from '../submodules/cardview';
+import { loadCardgroup } from '../../store/actions/cardgroupActions';
 import { Button, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
-import CreateCardDialog from './dialogs/createCardDialog';
-import {PageWrapper} from "../static/wrappers"
+import CreateCardDialog from '../dialogs/createCardDialog';
+import {PageWrapper} from "../../static/wrappers"
+import authReducer from '../../store/reducers/authReducer';
+import loadingReducer from '../../store/reducers/loadingReducer';
+import Loading from '../notifications/loading';
 
 const useStyles = makeStyles(theme => ({
     addButton: {
@@ -27,6 +30,8 @@ const useStyles = makeStyles(theme => ({
 
 
 const CardGroupPage = props => {
+    console.log("prop")
+    console.log(props.match.params)
 
     const classes = useStyles()
 
@@ -34,11 +39,12 @@ const CardGroupPage = props => {
 
     const cards = useSelector(state => state.cardReducer.cards)
     const cardgroup = useSelector(state => state.cardgroupReducer.cardgroups[0])
+    const user = useSelector(state => state.authReducer.loggedInUser)
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
 
     const percentage = Math.round(100*(cards.length / cardgroup.numberOfCardsDue))
-
+    const loading = useSelector(state => state.loadingReducer.loading)
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -52,8 +58,10 @@ const CardGroupPage = props => {
     console.log(cardgroup)
     
     useEffect(() => {
-        console.log("stuff and things")
-        dispatch(loadCards(props.match.params.id))       
+        console.log("stuff and things") 
+        console.log(cardgroup)
+        console.log(user)
+        dispatch(loadCardGroupUserFlashcards(props.match.params.id, user.id))       
         dispatch(loadCardgroup(props.match.params.id))
     }, [dispatch, props.match.params.id])   
 
@@ -62,12 +70,16 @@ const CardGroupPage = props => {
     console.log("aa", a)
 
 
+    if (loading){
+        return (
+            <PageWrapper>
+                <Loading />
+            </PageWrapper>    
+        )
+    }
     return(
         <PageWrapper>
-            <CreateCardDialog open={open} onClose={handleClose} cardgroupId={props.match.params.id} />
-
-
-            
+            <CreateCardDialog open={open} onClose={handleClose} cardgroupId={props.match.params.id} />           
 
             <Grid container spacing={6}>
                 <Grid item xs={8}>
