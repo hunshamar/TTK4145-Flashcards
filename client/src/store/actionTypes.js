@@ -15,6 +15,7 @@ export const LOG_IN_STATUS   = "LOG_IN_STATUS"
 
 /* User actions */
 export const GET_USERS = "GET_USERS"
+export const UPDATE_USER = "UPDATE_USER"
 export const GET_DELIVERY_STATUS = "GET_DELIVERY_STATUS"
 
 /* Cardgroup actions */

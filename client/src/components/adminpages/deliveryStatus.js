@@ -2,10 +2,11 @@ import { PageWrapper } from "../../static/wrappers"
 import { useDispatch, useSelector } from 'react-redux';
 import userReducer from '../../store/reducers/userReducer';
 import { useEffect } from 'react';
-import { getUsers, getUsersStatus } from '../../store/actions/userActions';
+import {  getUsersStatus } from '../../store/actions/userActions';
 import { DataGrid } from '@material-ui/data-grid';
 import CardgroupSelect from '../submodules/cardgroupselect';
 import { useState } from 'react';
+import { Typography } from "@material-ui/core";
 
 
  const DeliveryStatus = () => {
@@ -36,8 +37,7 @@ import { useState } from 'react';
           type: 'number',
           width: 130,
         },
-        { field: 'complete', headerName: 'Complete', type: "number", width: 130 },
-      
+        { field: 'complete', headerName: 'Complete', type: "number", width: 130 },      
     ]      
 
     let rows = status.map(s => (
@@ -53,13 +53,21 @@ import { useState } from 'react';
     
       
     
-
+    const dateToString = date => {
+        let a = new Date(date.year, date.month-1, date.date, date.hour, date.minute)
+            console.log("aa", a)
+            // return a.getUTCMonth()
+            return a.toString()
+      }
     
     console.log("cgid", cardGroupId)
     return (
         <PageWrapper>       
             <div style={{marginBottom: "15px"}} >
                 <CardgroupSelect onChange={setCardGroupId} />
+                <Typography variant="subtitle2" style={{marginTop: "20px"}}>
+                {status[0] ? "Due: " + dateToString(status[0].cardgroup.dueDate) : "Due:"}
+                </Typography>
             </div>
 
                 <div style={{ height: 400, width: '100%' }}>

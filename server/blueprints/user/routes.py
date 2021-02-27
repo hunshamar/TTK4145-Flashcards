@@ -14,6 +14,10 @@ jwt = JWTManager()
 import requests
 import json
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 userBlueprint = Blueprint("user", __name__)
 
 from .invalid_token import *
@@ -34,31 +38,57 @@ def admin_only(f):
             return jsonify({"error": "Not admin"})
     return wrapper
 
+def password_protected(f):
+    @wraps(f)
+    def wrapper(*args, **kwds):
+        if (request.json["admin_password"] == str(os.environ.get("ADMIN_PASSWORD"))):
+            return f(*args, **kwds)
+        else:
+            raise Exception("Wrong password")
+            return jsonify({"error not correct pw"})
+    return wrapper
+
+
+@userBlueprint.route("/api/manualaddadmin/", methods=["POST"])
+@password_protected
+def manual_add_admin():
+    try:
+        email = request.json["email"]
+        username = request.json["username"]
+        if not (username and email):
+            raise Exception("Missing credentials for username and or email")
+
+        adminUser = makeAdmin(getUserId(email, username))
+        return jsonify(adminUser)
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
+
+
 @userBlueprint.route("/api/addadmin/<uid>")
+@jwt_required
+@admin_only
 def add_admin(uid):
     sleep(DELAY_S)
     try:
-        makeAdmin(int(uid))
-        return jsonify("success")
+        adminUser = makeAdmin(int(uid))
+        return jsonify(adminUser)
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
 
 
 
-@userBlueprint.route("/api/adminonly")
+
+
+@userBlueprint.route("/api/removeadmin/<uid>")
 @jwt_required
 @admin_only
-def admin_page():
+def remove_admin(uid):
     sleep(DELAY_S)
     try:
-        print("signed in ???")
-        return jsonify({"status": "you successfully accessed because you are an admin. gz"})
-
-            # if "Admin" in current_user.roles:
-            # else:
-            #     flash("You need to be an admin to view this page.")
-            #     return jsonify({error: "error with admin elns"})
+        adminUser = removeAdmin(int(uid))
+        return jsonify(adminUser)
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
@@ -78,7 +108,9 @@ def get_current_user():
 
 
 
-@userBlueprint.route("/api/users")
+@userBlueprint.route("/api/users/all")
+@jwt_required
+@admin_only
 def users():
     sleep(DELAY_S)
     try:
@@ -87,11 +119,35 @@ def users():
         print(e)
         return jsonify({"error": str(e)})
 
+
+@userBlueprint.route("/api/users/role=<role>")
+@jwt_required
+@admin_only
+def users_filter(role):
+    sleep(DELAY_S)
+    try:
+        return jsonify(getUsersWithRole(role))
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
+
+@userBlueprint.route("/api/users/search/role=<role>/searchphrase=<searchphrase>")
+@jwt_required
+@admin_only
+def users_search(role, searchphrase):
+    sleep(DELAY_S)
+    try:
+        return jsonify(searchUsers(role, searchphrase))
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
+
 @userBlueprint.route("/api/logintoken")
 def login_token():
     sleep(DELAY_S)
     try:
-        token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey=3b41006f342e166d2320b82059c35784")
+        apiKey = os.environ.get("FEIDE_API_KEY")
+        token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+str(apiKey))
         token_string = token.text
         return jsonify({"token": token_string})
     except Exception as e:

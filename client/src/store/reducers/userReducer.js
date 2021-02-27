@@ -1,4 +1,4 @@
-import { GET_USERS, GET_DELIVERY_STATUS } from "../actionTypes"
+import { GET_USERS, GET_DELIVERY_STATUS, UPDATE_USER } from "../actionTypes"
 
 
 
@@ -21,6 +21,19 @@ const userReducer = (state = initState, action) => {
             return{
                 ...state,
                 status: action.payload
+            }
+
+        case UPDATE_USER:
+            console.log("updated user")
+            return{
+                ...state,
+                users: state.users.map(user => {
+                    if (user.id == action.payload.id ) {
+                        return action.payload;
+                    } else {
+                        return user;
+                    }
+                })
             }
             
         default:

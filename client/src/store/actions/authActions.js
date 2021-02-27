@@ -71,8 +71,8 @@ export const checkLogInStatus = () => async (dispatch, getState) => {
                 throw new Error(res.data.error)
             }
             console.log("found user?", res.data)
-            console.log("true? ", res.data.roles.includes("Admin"))
-            let payload = {loggedIn: true, loggedInUser: res.data, isAdmin: res.data.roles.includes("Admin")}
+            console.log("true? ", res.data.role === "Admin")
+            let payload = {loggedIn: true, loggedInUser: res.data, isAdmin: res.data.role == "Admin"}
             dispatch({type: LOG_IN_STATUS, payload})
         }).catch(err => {
             console.log("error..", err)

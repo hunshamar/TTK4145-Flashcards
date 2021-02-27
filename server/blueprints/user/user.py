@@ -22,42 +22,19 @@ from functools import wraps
 #     return wrap
 
 
-
-class UserRoles(db.Model):
-    __tablename__ = "user_roles"
-    __table_args__ = {'extend_existing': True}
-    id = db.Column(db.Integer(), primary_key=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
-    role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
-
-
-class Role(db.Model):
-    __tablename__ = "roles"
-    id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(50), unique=True)
-
-    def to_dict(self):
-        return{
-            "name": self.name
-        }
-
 class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key = True) # primary_key makes it so that this value is unique and can be used to identify this record.
     username = db.Column(db.String(24), unique=True)
     email = db.Column(db.String(64), unique=True)
     name = db.Column(db.String(64))
+    role = db.Column(db.String(16))
 
-    active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
+    # active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
 
-    roles = db.relationship('Role', secondary='user_roles')
 
     def is_admin(self):
-
-        roles = [x.name for x in self.roles]
-        print(roles)
-
-        return "Admin" in roles
+        return self.role == "Admin"
 
     def to_dict(self):
         return {
@@ -65,7 +42,7 @@ class User(db.Model):
             "username": self.username,
             "email": self.email,
             "name": self.name,
-            "roles": [x.name for x in self.roles ]
+            "role": self.role
         }
 
     # Constructor
@@ -73,6 +50,7 @@ class User(db.Model):
         self.username = username
         self.email = email
         self.name = name
+        self.role = "User"
 
 
 def addUser(username, email, name):
@@ -84,9 +62,18 @@ def addUser(username, email, name):
 def makeAdmin(id):
     # id = getUserId(email, username)
     user = getUser(id)
-    user.roles.append(Role(name='Admin'))        
+    user.role = "Admin" 
+    print("updated", user.to_dict())
     db.session.commit()
-    return user.to_dict
+    return user.to_dict()
+
+def removeAdmin(id):
+    # id = getUserId(email, username)
+    user = getUser(id)
+    user.role = "User" 
+    print("updated", user.to_dict())
+    db.session.commit()
+    return user.to_dict()
   
     
 def usernameRegistred(username):
@@ -98,8 +85,9 @@ def emailRegistred(email):
     return email
 
 
-def userRegistred(email, username):    
+def userRegistred(email, username): 
     user_list = User.query.filter_by(email=email, username=username).all()
+    print(user_list)
     if (len(user_list) > 1):
         raise Exception("Error. Multiple users registered with email and username")
     if (len(user_list) == 0):
@@ -108,13 +96,26 @@ def userRegistred(email, username):
 
 def getUserId(email, username):
     if not userRegistred(email, username):
-        return False
+        raise Exception("Could not find user registered with email", email,"and username", username)
     else:
         return User.query.filter_by(email=email, username=username).first().id
 
 def getAllUsers():
     users = User.query.all()
     return [i.to_dict() for i in users]
+
+def getUsersWithRole(role):
+    users = User.query.filter_by(role=role)
+    return [i.to_dict() for i in users]
+
+def searchUsers(role, phrase):
+    if role=="all":
+        users = User.query.filter_by(username=phrase)
+    else:
+        users = User.query.filter_by(role=role, username=phrase)
+
+    return [i.to_dict() for i in users]
+
 
 def getUser(uid):
     if not uid:

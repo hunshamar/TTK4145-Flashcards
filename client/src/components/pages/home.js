@@ -57,7 +57,7 @@ const Home = () => {
 
     return (
         // <div style={{maxWidth: "600px", marginTop: "65px", marginLeft: "auto", marginRight: "auto"}}>
-        <PageWrapper>
+        <PageWrapper>   
 
         <Grid container spacing={2}>
             <Grid item xs={8}  >
