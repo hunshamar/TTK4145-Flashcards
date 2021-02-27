@@ -4,11 +4,16 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 import datetime
 from ..user.user import User, getUser
 from .cardgroup import *
+from ..user.routes import admin_only
 
 cardgroupBlueprint = Blueprint("cardgroup", __name__)
 
+from time import sleep #test test
+from ..values import DELAY_S
+
 @cardgroupBlueprint.route("/api/cardgroups")
 def cardgroups():    
+    sleep(DELAY_S)
     try:
         return jsonify(getAllCardgroups())
     except Exception as e:
@@ -17,9 +22,10 @@ def cardgroups():
 
 
 @cardgroupBlueprint.route("/api/cardgroup/<cgid>", methods=["GET"])
-def cardgroup(cgid):    
+def cardgroup(cgid):   
+    sleep(DELAY_S) 
     try:
-        return jsonify(getCardgroup(cgid).to_dict())
+        return jsonify(getCardgroup(int(cgid)).to_dict())
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
@@ -27,7 +33,9 @@ def cardgroup(cgid):
 
 @cardgroupBlueprint.route("/api/addcardgroup", methods=["POST"])
 @jwt_required
+@admin_only
 def add_cardgroup():
+    sleep(DELAY_S)
     try:
         title = request.json["title"]
         number_of_cards_due = request.json["numberOfCardsDue"]

@@ -1,11 +1,16 @@
 import { CardActionArea, Divider, Grid, Typography } from '@material-ui/core';
 import { useState } from 'react';
 import { Redirect } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import loadingReducer from '../../store/reducers/loadingReducer';
+import Loading from '../notifications/loading';
 
 
 
 
 const GroupView = ({cardgroups}) => {
+
+    const loading = useSelector(state => state.loadingReducer.loading)
 
     const [redirectToGroupWithId, setredirectToGroupWithId] = useState(-1)
 
@@ -48,7 +53,10 @@ const GroupView = ({cardgroups}) => {
         </Grid>
     ))
 
-    if (redirectToGroupWithId > 0) {
+    if (loading){
+        return <Loading />
+    }
+    else if (redirectToGroupWithId > 0) {
         return( 
           <Redirect to={{
             pathname: "/cardgroup/" +redirectToGroupWithId

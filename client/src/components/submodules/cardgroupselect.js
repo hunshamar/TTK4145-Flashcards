@@ -2,8 +2,8 @@ import React, {useEffect} from "react"
 import { FormControl, InputLabel, Select, makeStyles, MenuItem } from "@material-ui/core"
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { loadCards } from "../store/actions/cardActions";
-import { loadCardgroups } from "../store/actions/cardgroupActions";
+import { loadCards } from "../../store/actions/cardActions";
+import { loadCardgroups } from "../../store/actions/cardgroupActions";
 
 
 
@@ -24,20 +24,24 @@ const CardgroupSelect = props => {
         dispatch(loadCardgroups())
     }, [])   
 
+
+
     let cardgroupMenuitems = []
 
     cardgroups.map((cardgroup, index) => (
 
-        cardgroupMenuitems[index] = <MenuItem key={index} value={cardgroup.id}>{cardgroup.title}</MenuItem>
+        cardgroupMenuitems[index] = <MenuItem key={index} value={cardgroup.id}>{cardgroup.title} </MenuItem>
             
     ))
   
-    const [age, setAge] = React.useState('');
+    const [group, setGroup] = React.useState('');
     
 
     const handleChange = (event) => {
-      setAge(event.target.value);
-      props.onChange(event.target.value)
+      setGroup(event.target.value);
+      if (props.onChange){
+        props.onChange(event.target.value)
+      }
     };
   
 
@@ -49,9 +53,9 @@ const CardgroupSelect = props => {
             color="secondary"
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
-            value={age}
+            value={group}
             onChange={handleChange}
-            label="Age"
+            label="group"
             >
             
             {cardgroupMenuitems.length ? cardgroupMenuitems : <MenuItem value="">

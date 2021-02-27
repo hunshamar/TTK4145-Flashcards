@@ -7,9 +7,12 @@ import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT, SET_ALERT } from '../actionTyp
 
 export const signInCallack = () => async (dispatch) => {
     axios.get("/api/login/callback", { withCredentials: true })
-        .then(response => {
-            let user_token = response.data.user_token
-            let refresh_token = response.data.refresh_token
+        .then(res => {
+            if(res.data.error){
+                throw new Error(res.data.error)
+            }
+            let user_token = res.data.user_token
+            let refresh_token = res.data.refresh_token
             console.log("action, usertoken", user_token)
             console.log("action, refresh", refresh_token)
             localStorage.setItem("user_token", user_token)
@@ -22,6 +25,31 @@ export const signInCallack = () => async (dispatch) => {
             const alert = {severity: "error", text: err.toString()}
             dispatch({type: SET_ALERT, payload: alert})
         })
+}
+
+export const adminOnly = () => async (dispatch) => {
+    axios.get("/api/adminonly", {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("user_token")}`
+        }
+    })
+    .then(res => {
+        console.log("from admin test")
+        if(res.data.error){
+            throw new Error(res.data.error)
+        }
+        console.log(res.data)       
+        const alert = {severity: "success", text: res.data.status}
+        dispatch({type: SET_ALERT, payload: alert})
+ 
+
+        // dispatch({type: LOG_IN_CALLBACK, payload})
+    })
+    .catch(err => {
+        console.log("Error in signInCallback", err)
+        const alert = {severity: "error", text: err.toString()}
+        dispatch({type: SET_ALERT, payload: alert})
+    })
 }
 
 export const checkLogInStatus = () => async (dispatch, getState) => {
@@ -39,8 +67,12 @@ export const checkLogInStatus = () => async (dispatch, getState) => {
                 Authorization: `Bearer ${localStorage.getItem("user_token")}`
             }
         }).then(res => {
+            if(res.data.error){
+                throw new Error(res.data.error)
+            }
             console.log("found user?", res.data)
-            let payload = {loggedIn: true, loggedInUser: res.data}
+            console.log("true? ", res.data.role === "Admin")
+            let payload = {loggedIn: true, loggedInUser: res.data, isAdmin: res.data.role == "Admin"}
             dispatch({type: LOG_IN_STATUS, payload})
         }).catch(err => {
             console.log("error..", err)
@@ -82,8 +114,8 @@ export const signOut = () => async (dispatch, getState) => {
                 Authorization: `Bearer ${refreshToken}`
             }
         }).then(res => {
-            if (res.data.error) {
-                console.error(res.data.error)
+            if(res.data.error){
+                throw new Error(res.data.error)
             } else {
                 localStorage.removeItem("refresh_token")
             }

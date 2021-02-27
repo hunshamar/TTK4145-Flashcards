@@ -117,6 +117,7 @@ const Navbar = props => {
     const classes = useStyles();
     const [redirectLogIn, setRedirectLogin] = useState(false)       
     const loggedIn = useSelector(state => state.authReducer.loggedIn)
+    const isAdmin = useSelector(state => state.authReducer.isAdmin)
 
     
     if (redirectLogIn && !loggedIn) {
@@ -151,9 +152,10 @@ const Navbar = props => {
                 <ListItem>
                     <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/"> {loggedIn ? "Home" : "Log in"}</NavLink>
                 </ListItem>
+                {isAdmin ? 
                 <ListItem>
-                    <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/allcards"> All Cards</NavLink>
-                </ListItem>
+                    <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/adminpage"> Admin Page</NavLink>
+                </ListItem> : <div></div> }
             </React.Fragment>
             :
             <div></div>

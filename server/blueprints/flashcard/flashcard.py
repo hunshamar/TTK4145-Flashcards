@@ -2,6 +2,8 @@ from db import db
 from ..user.user import User, getUser
 from ..cardgroup.cardgroup import Cardgroup, getCardgroup, delCardgroup
 
+
+
 class Flashcard(db.Model):
     __tablename__ = "flashcard"
     #member variables
@@ -11,10 +13,10 @@ class Flashcard(db.Model):
 
     # dependencies
     userid = db.Column(db.Integer, db.ForeignKey("user.id"))
-    user = db.relationship('User', foreign_keys=userid)
+    user = db.relationship('User', foreign_keys=userid, lazy='subquery')
     
     cardgroupid = db.Column(db.Integer, db.ForeignKey("cardgroup.id"))
-    cardgroup = db.relationship('Cardgroup', foreign_keys=cardgroupid)
+    cardgroup = db.relationship('Cardgroup', foreign_keys=cardgroupid, lazy='subquery')
     
 
     def to_dict(self):            
@@ -61,6 +63,15 @@ def addFlashcard(front, back, userid, cardgroupid):
         if (not cardgroup):
             raise Exception(f"Error. cardgroup with id {cardgroupid} not found")
 
+        # Number of flashcards already added
+        numberOfFlashcardsAlreadyAdded = len(getCardGroupFlashCardsUser(cardgroupid, userid))
+        print("num", numberOfFlashcardsAlreadyAdded)
+
+        if numberOfFlashcardsAlreadyAdded+1 > cardgroup.number_of_cards_due:
+            raise Exception("Error. All cards delivered")
+
+
+
         flashcard = Flashcard(front, back, user, cardgroup)
         db.session.add(flashcard)
         db.session.commit()
@@ -79,6 +90,27 @@ def deleteFlashcard(cid):
     db.session.delete(card)
     db.session.commit()
     return card.to_dict()
+
+def getCardGroupFlashCardsUser(cgid, uid):
+    cards = Flashcard.query.filter_by(cardgroupid=cgid, userid=uid)
+    if (not cards):
+        raise Exception(f"cards from cardgroup not found")
+    return [i.to_dict() for i in cards]
+
+def getCardgroupDeliveryStatus(cgid):
+    #add error stuff
+    users = User.query.all()
+    cardgroup = getCardgroup(cgid)
+    statusDicts = []    
+    for user in users:
+        statusDicts.append({
+            "user": user.to_dict(),
+            "cardgroup": cardgroup.to_dict(),
+            "delivered": len(getCardGroupFlashCardsUser(cgid, user.id)),
+        })
+
+    return statusDicts
+
 
 def editFlashcard(cardId, newFront, newBack):
     flashcard = getFlashcard(cardId)
