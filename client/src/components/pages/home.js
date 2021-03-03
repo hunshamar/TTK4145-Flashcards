@@ -62,7 +62,7 @@ const Home = () => {
         <Grid container spacing={2}>
             <Grid item xs={8}  >
                 <Typography variant="h4" gutterBottom >
-                    Cardgroups    
+                    Card Groups    
                 </Typography>
             </Grid>
             <Grid item xs={4}>

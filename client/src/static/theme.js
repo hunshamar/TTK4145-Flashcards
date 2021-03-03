@@ -25,7 +25,10 @@ export const darkTheme = createMuiTheme({
       success: {
         main: "#078900",
         dark: "#0ab500"
-      } 
+      }, 
+      error: {
+        main: "#000" 
+      }
     },
     hover: "f0f0f0",
   },
@@ -58,7 +61,11 @@ export const theme = createMuiTheme({
       success: {
         main: "#078900",
         dark: "#0ab500"
-      } 
+      },
+      error: {
+        main: "#931A00" ,
+        dark: "#60190B"
+      }
     },
     hover: "f0f0f0",
   },

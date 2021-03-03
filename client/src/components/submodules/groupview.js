@@ -20,6 +20,8 @@ const GroupView = ({cardgroups}) => {
         setredirectToGroupWithId(groupId)
     }
 
+    let admin = true
+
     const dateToString = date => {
         console.log("ddatee")
         console.log(date)

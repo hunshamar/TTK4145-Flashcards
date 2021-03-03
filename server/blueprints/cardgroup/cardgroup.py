@@ -73,7 +73,7 @@ def getCardgroup(cdid):
     return cardgroup
 
 def delCardgroup(cdid):
-    cardgroup = getCardgroup
+    cardgroup = getCardgroup(cdid)
     db.session.delete(cardgroup)
     db.session.commit()
     return True

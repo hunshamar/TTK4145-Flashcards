@@ -7,14 +7,14 @@ from blueprints.user.user import User
 from db import db
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-from flask_user import UserManager
+# from flask_user import UserManager
 
 #key stuff
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="build", static_url_path="/")
 CORS(app, supports_credentials=True) # Support credentials to allow sessions in blueprints
 
 
@@ -40,6 +40,15 @@ def init():
     db.create_all()
     return jsonify(app.secret_key)
 
+
+@app.route("/<a>")
+def react_routes(a):
+    return app.send_static_file("index.html")
+
+
+@app.route("/")
+def react_index():
+    return app.send_static_file("index.html")
 
 
 

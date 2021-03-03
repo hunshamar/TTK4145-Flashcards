@@ -79,8 +79,8 @@ export const checkLogInStatus = () => async (dispatch, getState) => {
             let payload = {loading: false, loggedInUser: {}}
             dispatch({type: LOG_IN_STATUS, payload})
 
-            const alert = {severity: "error", text: err.toString()}
-            dispatch({type: SET_ALERT, payload: alert})
+            // const alert = {severity: "error", text: err.toString()}
+            // dispatch({type: SET_ALERT, payload: alert})
         })
     }
     else {

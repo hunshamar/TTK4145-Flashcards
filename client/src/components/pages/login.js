@@ -96,7 +96,7 @@ function Login() {
   const feideLogin = () => {    
     axios.get("/api/logintoken", { withCredentials: true })
     .then(res => {
-      window.open("https://www.itk.ntnu.no/api/feide.php?token="+res.data.token+"&returnURL=http://localhost:5000/api/userdata", "_self")
+      window.open("https://www.itk.ntnu.no/api/feide.php?token="+res.data.token+"&returnURL=https://asgeirdemo.herokuapp.com/api/userdata", "_self")
     })
     .catch(err => {
       console.log("err", err)

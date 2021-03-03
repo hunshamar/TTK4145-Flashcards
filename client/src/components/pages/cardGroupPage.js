@@ -3,13 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { loadCardGroupUserFlashcards } from '../../store/actions/cardActions';
 import CardView from '../submodules/cardview';
-import { loadCardgroup } from '../../store/actions/cardgroupActions';
+import { deleteCardgroup, loadCardgroup } from '../../store/actions/cardgroupActions';
 import { Button, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
 import CreateCardDialog from '../dialogs/createCardDialog';
 import {PageWrapper} from "../../static/wrappers"
 import authReducer from '../../store/reducers/authReducer';
 import loadingReducer from '../../store/reducers/loadingReducer';
 import Loading from '../notifications/loading';
+import userReducer from '../../store/reducers/userReducer';
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     addButton: {
@@ -19,6 +21,15 @@ const useStyles = makeStyles(theme => ({
         align: "center",
         '&:hover': {
             background: theme.palette.button.success.dark,
+          }
+    },
+    delButton: {
+        backgroundColor: theme.palette.button.error.main,
+        color: "white",
+        border: "none",
+        align: "center",
+        '&:hover': {
+            background: theme.palette.button.error.dark,
           }
     },
     progressBar: {
@@ -33,9 +44,10 @@ const CardGroupPage = props => {
     console.log("prop")
     console.log(props.match.params)
 
+    const [redirectHome, setRedirectHome] = useState(false)
     const classes = useStyles()
 
-    
+    const isAdmin = useSelector(state => state.authReducer.isAdmin)
 
     const cards = useSelector(state => state.cardReducer.cards)
     const cardgroup = useSelector(state => state.cardgroupReducer.cardgroups[0])
@@ -54,6 +66,14 @@ const CardGroupPage = props => {
         setOpen(false);
       };
 
+    const handleDelete = () => {
+        if (window.confirm("Are you sure you want to delete cardgroup with all cards?")){ 
+            dispatch(deleteCardgroup(cardgroup))
+            setRedirectHome(true)
+        }
+
+    }
+
     console.log("cardgr.:")
     console.log(cardgroup)
     
@@ -69,7 +89,13 @@ const CardGroupPage = props => {
     let a = new Date(date.year, date.month-1, date.date, date.hour, date.minute)
     console.log("aa", a)
 
-
+    if (redirectHome){
+        return (
+            <Redirect to={{
+                pathname: "/"
+              }}/>  
+        )
+    }   
     if (loading){
         return (
             <PageWrapper>
@@ -110,6 +136,10 @@ const CardGroupPage = props => {
                             <LinearProgress className={classes.progressBar} variant="determinate" value={percentage} />
                         </Grid>
                     </Grid>
+                    {isAdmin ? 
+                    <Button fullWidth style={{height: "80px"}} className={classes.delButton} variant="outlined" onClick={handleDelete}>
+                        Delete cardgroup and all cards
+                    </Button> : <div></div>}
                 </Grid>
                 <Grid item xs={7}>
                     

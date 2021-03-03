@@ -139,9 +139,7 @@ def delete_group(cgid):
         delCardgroup(cgid)
         return jsonify({"success": "deleted all cards and groups"})
     except Exception as e:
-        
-
-        print("errr")
+        print(e)
         return jsonify({"error": str(e)})
 
 

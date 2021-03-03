@@ -37,11 +37,10 @@ const Routes = () => {
     const dispatch = useDispatch();     
     
     useEffect(() => {
-        if (loggedIn){
-            dispatch(checkLogInStatus())
-            console.log("is logged", loggedIn)
-            console.log("is admin", isAdmin)
-        }
+        dispatch(checkLogInStatus())
+        console.log("is logged", loggedIn)
+        console.log("is admin", isAdmin)            
+        
     }, [loggedIn, dispatch])   
 
     // get log in status
