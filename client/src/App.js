@@ -41,7 +41,7 @@ const App = () => {
       <MuiThemeProvider theme={darkMode ? darkTheme : theme}>
         <CssBaseline />
         <Router>
-          <Navbar loggedin={true} setDarkMode={toggleDarkMode}/>
+          <Navbar  setDarkMode={toggleDarkMode}/>
           <Alerter /> 
           <Routes />   
         </Router>

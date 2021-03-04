@@ -1,7 +1,7 @@
 
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
 import { makeStyles } from '@material-ui/core/styles';
-import  { Redirect, NavLink, Link } from 'react-router-dom'
+import  { Redirect, NavLink, Link, useHistory } from 'react-router-dom'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
@@ -30,47 +30,54 @@ const useStyles = makeStyles(theme => ({
         width: "200px",
         height: "50px",
     }
-}));
-
-
-
+})); 
 
 
 const AdminNavbar = props => {
 
-    const classes = useStyles()
+    const classes = useStyles()    
+    const [alignment, setAlignment] = React.useState(0);
+    const history = useHistory() 
+    const urls=[
+        {
+            url: "/adminpage/users",
+            label: "Admin Page"
+        },
+        {
+            url: "/adminpage/deliverystatus",
+            label: "Delivery Status"
+        },
+        {
+            url: "/adminpage/allcards",
+            label: "All Cards"
+        },
+    ]
+
+    useEffect(() => {
+        setAlignment(urls.findIndex(x => x.url === history.location.pathname))
+    }, [history.location.pathname])
+
+
     
-    const [alignment, setAlignment] = React.useState(1);
-
-
-    const handleAlignment = (event, newAlignment) => {
-        setAlignment(newAlignment);
-      };
-
     return( 
         <PageWrapper>
 
             <Typography variant="h4" style={{flexGrow: 0}}>
-        Amin Page
-        </Typography>
+                Amin Page
+            </Typography>
 
-                    <Toolbar style={{padding: 0}}>                        
-           
-                    <ToggleButtonGroup
+            <Toolbar style={{padding: 0}}>                        
+                <ToggleButtonGroup
                     fullWidth
-      value={alignment}
-      exclusive
-      onChange={handleAlignment}    
-      aria-label="text alignment"
-    >
-            <ToggleButton component={Link} value={1} to="/adminpage/users" className={classes.button} variant="outlined"> Users </ToggleButton>
-            <ToggleButton component={Link} value={2} to="/adminpage/deliverystatus" className={classes.button} variant="outlined"> Delivery status </ToggleButton>
-            <ToggleButton component={Link} value={3} to="/adminpage/allcards" className={classes.button} variant="outlined"> All Cards </ToggleButton>
-            
-
-            </ToggleButtonGroup>  
-        
-        </Toolbar>
+                    value={alignment}
+                    exclusive  
+                    aria-label="text alignment"
+                >
+                    {urls.map((url, index) => 
+                        <ToggleButton component={Link} value={index} to={url.url} className={classes.button} variant="outlined">{url.label}</ToggleButton> 
+                    )}        
+                </ToggleButtonGroup>  
+            </Toolbar>
         </PageWrapper>
     )
 }

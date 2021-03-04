@@ -11,7 +11,7 @@ import { useState } from 'react';
 import UserDialog from "../dialogs/userDialog";
 
 
- const Users = () => {
+ const Users = (props) => {
 
     const [show, setShow] = useState('all');
 

@@ -5,6 +5,7 @@ from db import db
 import datetime
 from ..user.user import User, getUser
 
+MAX_NUMBER_OF_CARDS = 50
 
 class Cardgroup(db.Model):
     __tablename__ = "cardgroup"
@@ -54,7 +55,10 @@ def addCardgroup(title, due_date, number_of_cards_due):
         if due_date < datetime.datetime.today():
             raise Exception("Due date can not be in the past")
         if int(number_of_cards_due) < 1:
-            raise Exception("Number of cards due must be larger than 1")
+            raise Exception("Number of cards due must be larger than 0")
+
+        if int(number_of_cards_due) > MAX_NUMBER_OF_CARDS:
+            raise Exception("Number of cards are limited to "+str(MAX_NUMBER_OF_CARDS))
 
         cardgroup = Cardgroup(title, due_date, number_of_cards_due)
         db.session.add(cardgroup)

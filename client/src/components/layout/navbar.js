@@ -1,7 +1,7 @@
 
 import React, {useState} from "react"
 import { makeStyles } from '@material-ui/core/styles';
-import  { Redirect, NavLink, Link } from 'react-router-dom'
+import  { Redirect, NavLink, Link, useHistory } from 'react-router-dom'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
@@ -36,11 +36,11 @@ const useStyles = makeStyles(theme => ({
 
 const UserMenu  = (props) => {
     const classes = useStyles()
-
     const user = useSelector(state => state.authReducer.loggedInUser)
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const history = useHistory()
     const dispatch = useDispatch();    
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -54,21 +54,12 @@ const UserMenu  = (props) => {
         console.log("out")
         dispatch(signOut())
         handleClose();
+        history.push("/")
+        
     }
 
     const handleMode = () => {
         props.setDarkMode()
-    }
-
-    console.log(user)
-    if (!user.username){
-        console.log("true")    
-
-        return(
-            <Redirect 
-                to="/"
-            /> 
-        )
     }
     
     if (user.username) {return(
@@ -115,21 +106,13 @@ const UserMenu  = (props) => {
 const Navbar = props => {
 
     const classes = useStyles();
-    const [redirectLogIn, setRedirectLogin] = useState(false)       
     const loggedIn = useSelector(state => state.authReducer.loggedIn)
     const isAdmin = useSelector(state => state.authReducer.isAdmin)
-
     
-    if (redirectLogIn && !loggedIn) {
-        setRedirectLogin(false)
-        return( 
-          <Redirect to={{
-            pathname: "/"
-          }}/>  
-        )
-      }
 
-    else return(
+   
+
+    return(
 
         <AppBar position="static" style={{}}>
        

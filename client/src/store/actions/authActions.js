@@ -1,12 +1,13 @@
 
 import axios from 'axios';
-import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT, SET_ALERT } from '../actionTypes';
+import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT, SET_ALERT, SET_LOADING } from '../actionTypes';
 
 
 
 
 export const signInCallack = () => async (dispatch) => {
-    axios.get("/api/login/callback", { withCredentials: true })
+    dispatch({type: SET_LOADING, payload: true})
+    await axios.get("/api/login/callback", { withCredentials: true })
         .then(res => {
             if(res.data.error){
                 throw new Error(res.data.error)
@@ -25,6 +26,7 @@ export const signInCallack = () => async (dispatch) => {
             const alert = {severity: "error", text: err.toString()}
             dispatch({type: SET_ALERT, payload: alert})
         })
+    dispatch({type: SET_LOADING, payload: false})
 }
 
 export const adminOnly = () => async (dispatch) => {

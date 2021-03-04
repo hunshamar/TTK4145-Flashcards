@@ -144,64 +144,28 @@ def users_search(role, searchphrase):
 
 @userBlueprint.route("/api/logintoken")
 def login_token():
-    sleep(DELAY_S)
     try:
-        apiKey = os.environ.get("FEIDE_API_KEY")
-        token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+str(apiKey))
-        token_string = token.text
-        return jsonify({"token": token_string})
-    except Exception as e:
-        print(e)
-        return jsonify({"error": str(e)})
+        apiKey = os.environ.get("FEIDE_API_KEY") ## From .env file
+        token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+str(apiKey)) ## Get token for FEIDE API 
+        token_string = token.text 
 
-@userBlueprint.route("/api/login/callback")
-def login_callback():
-    sleep(DELAY_S)
-    try:
-        if session.get("userdata"):
-            userdata = session["userdata"]
-            username = userdata["username"]
-            email = userdata["email"]
-            name = userdata["name"]
-
-            print(username, email, name)
-
-            if not usernameRegistred(username):
-                addUser(username, email, name)
-
-            # user = userRegistred(email, username)[0]
-
-            if not userRegistred(email, username):
-                raise Exception("error fetching user")
-            
-            user = getUser(getUserId(email, username))
-
-
-            token = create_access_token(identity=user.id)        
-            refresh_token = create_refresh_token(identity=user.id)
-            if not (token and refresh_token):
-                raise Exception("Error creating tokens")
-            return jsonify({"user_token": token, "refresh_token": refresh_token})
-        else:   
-            raise Exception("Login callback session error")
+        ## Return feide url to client side. 
+        url = "https://www.itk.ntnu.no/api/feide.php?token="+token_string+"&returnURL=http://localhost:5000/api/userdata"
         
+        return jsonify({"url": url})        
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
 
-
-
+# Avoid this being hacked...
 @userBlueprint.route("/api/userdata", methods=["POST", "GET"])
-def user_data():
-    sleep(DELAY_S)
+def user_data():    
     try: 
-        if request.method == "GET": # External login
-            print("FROM FEIDE")
+        if request.method == "GET": # External login from feide
             userdata =  request.args.getlist('userdata')[0]
             userdata_dict = json.loads(userdata)
-            print(type(userdata_dict))
             session["userdata"] = userdata_dict
-            print("added to session:")      
+            print("added userdata to session:")       
             return redirect("http://localhost:3000/loginfunc/")
 
 
@@ -229,7 +193,42 @@ def user_data():
         print(e)
         return jsonify({"error": str(e)})
 
- 
+
+@userBlueprint.route("/api/login/callback")
+def login_callback():
+    sleep(DELAY_S)
+    try:
+        if session.get("userdata"):
+            userdata = session["userdata"]
+            username = userdata["username"]
+            email = userdata["email"]
+            name = userdata["name"]
+
+            print(username, email, name)
+
+            if not usernameRegistred(username):
+                addUser(username, email, name)
+
+            # user = userRegistred(email, username)[0]
+
+            if not userRegistred(email, username):
+                raise Exception("error fetching user")
+            
+            user = getUser(getUserId(email, username))
+
+            token = create_access_token(identity=user.id)        
+            refresh_token = create_refresh_token(identity=user.id)
+            if not (token and refresh_token):
+                raise Exception("Error creating tokens")
+            return jsonify({"user_token": token, "refresh_token": refresh_token})
+        else:   
+            raise Exception("Login callback session error")
+        
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
+
+
 
 @jwt.token_in_blacklist_loader
 def check_if_blacklisted_token(decrypted_token):

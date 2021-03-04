@@ -57,7 +57,6 @@ const CreateCardDialog = (props) => {
     }
 
     const handleClose = () => {
-
         onClose(selectedValue);
     };
   
@@ -104,9 +103,11 @@ const CreateCardDialog = (props) => {
                         variant="outlined"
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={6}>
+                    <Button variant="contained" onClick={handleClose} fullWidth color="primary"  > Back</Button>
+                </Grid>
+                <Grid item xs={6}>
                 <Button type="submit" fullWidth style={{backgroundColor: front && back ? "green" : "grey", color: "white"}}>Submit</Button>
-                
                 </Grid>
 
             </Grid>

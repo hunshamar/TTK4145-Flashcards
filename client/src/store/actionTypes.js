@@ -7,6 +7,7 @@ export const STOP_LOADING       = "STOP_LOADING"
 
 /* Loading actions */ 
 export const SET_ALERT       = "SET_ALERT"
+export const CLEAR_ALERT       = "CLEAR_ALERT"
 
 /* Authentication actions */
 export const LOG_IN_CALLBACK = "LOG_IN_CALLBACK"

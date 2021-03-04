@@ -29,6 +29,13 @@ const useStyles = makeStyles(theme => ({
 
 })); 
 
+const FML = () => {
+
+    return (
+        <div>FML</div>
+    )
+}
+
 const Routes = () => {
 
     const classes = useStyles()
@@ -45,14 +52,17 @@ const Routes = () => {
 
     // get log in status
 
+   
+
     return(
         <div className={classes.pages}>
             <Switch>
                 <Route path="/" exact component={loggedIn ? Home : Login}/>
                 <Route path="/loginfunc" exact component={logInFunc}/>
                 <Route path="/cardgroup/:id" exact component={CardGroupPage} />
+                <Route path="/about" exact component={ FML} />
 
-                {loggedIn ? 
+                {/* {loggedIn ?  */}
                 <React.Fragment>
                     <Route path="/userprofile/:username" exact component={UserProfile} />
                     {isAdmin ? 
@@ -76,10 +86,10 @@ const Routes = () => {
                     <React.Fragment>
                     </React.Fragment>}
                 </React.Fragment>
-                :
-                <Redirect to={{
-                    pathname: "/"
-                }} /> }  
+                {/* // :
+                // <Redirect to={{
+                //     pathname: "/"
+                // }} /> }   */}
             </Switch>
         </div>
     )

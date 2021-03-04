@@ -3,6 +3,8 @@ import React, {useEffect} from "react"
 import {Alert} from '@material-ui/lab/';
 import { useSelector } from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
+import { useDispatch } from 'react-redux';
+import { CLEAR_ALERT } from "../../store/actionTypes";
 
 
 
@@ -10,14 +12,17 @@ const Alerter = () => {
 
     const severity = useSelector(state => state.alertReducer.severity)
     const text = useSelector(state => state.alertReducer.text)
+    const newAlert = useSelector(state => state.alertReducer.newAlert)
     
     const [open, setOpen] = React.useState(false);
+    const dispatch = useDispatch()
 
     useEffect(() => {
-      if (text){
+      if (newAlert){
         setOpen(true)
+        dispatch({type: CLEAR_ALERT})
       }
-    }, [text])
+    }, [newAlert])
   
     const handleClose = (event, reason) => {
       if (reason === 'clickaway') {

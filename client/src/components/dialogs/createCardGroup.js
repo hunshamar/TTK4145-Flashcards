@@ -21,6 +21,7 @@ import { addCardgroup } from '../../store/actions/cardgroupActions';
 import {  useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import ConfirmDialog from "./confirmDialog"
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
     dialog: {
@@ -38,6 +39,8 @@ const CreateCardGroup = (props) => {
     const [title, setTitle] = useState("");
     const [numberOfCards, setNumberOfCards] = useState(0)
     const [time, setTime] = useState("23:59")
+    const formSubmitCallback = useSelector(state => state.alertReducer.severity)
+    const newStatus = useSelector(state => state.alertReducer.newAlert)
 
     const classes = useStyles()
 
@@ -48,8 +51,12 @@ const CreateCardGroup = (props) => {
     };
 
     useEffect(() => {
-        console.log(time)
-    },[time])
+        console.log("stformSubmitCallback")
+        if (formSubmitCallback==="success"){
+            handleClose()
+        }
+
+    },[newStatus])
 
     const submit = e => {
         e.preventDefault()        
@@ -78,8 +85,7 @@ const CreateCardGroup = (props) => {
                     second
                 },
                 numberOfCardsDue: numberOfCards        
-            }))         
-            handleClose()            
+            }))              
         }
         else{
         }

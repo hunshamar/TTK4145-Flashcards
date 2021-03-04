@@ -7,6 +7,7 @@ import {PageWrapper} from "../../static/wrappers"
 import CreateCardGroup from "../dialogs/createCardGroup";
 import { adminOnly } from "../../store/actions/authActions";
 import authReducer from '../../store/reducers/authReducer';
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     addButton: {
@@ -30,7 +31,7 @@ const Home = () => {
    
     const cardgroups = useSelector(state => state.cardgroupReducer.cardgroups)
     const isAdmin = useSelector(state => state.authReducer.isAdmin)
-    
+
     useEffect(() => {
         dispatch(loadCardgroups())
     }, [dispatch])   

@@ -2,11 +2,13 @@ import React, { useState} from "react"
 import  { Redirect } from 'react-router-dom'
 import TextField from '@material-ui/core/TextField';
 import axios from "axios";
-import { Button, Link } from "@material-ui/core";
+import { Button, Icon, Link } from "@material-ui/core";
 import { styled } from '@material-ui/core/styles';
 import { useDispatch  } from 'react-redux';
 import { PageWrapper } from "../../static/wrappers";
-import { SET_ALERT } from "../../store/actionTypes";
+import { SET_ALERT, SET_LOADING } from "../../store/actionTypes";
+import Loading from "../notifications/loading";
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
 
 const StyledLink = styled(Link)({
@@ -90,19 +92,21 @@ const ManualLogin = () => {
 function Login() {
 
   const [AlternativeLogin, setAlternativeLogin] = useState(false)
-
-
   const dispatch = useDispatch()
+  let loading = false;
   const feideLogin = () => {    
+    loading = !loading
+    dispatch({type: SET_LOADING, payload: loading}) 
     axios.get("/api/logintoken", { withCredentials: true })
     .then(res => {
-      window.open("https://www.itk.ntnu.no/api/feide.php?token="+res.data.token+"&returnURL=http://localhost:5000/api/userdata", "_self")
-    })
+      window.open(res.data.url, "_self")
+    })  
     .catch(err => {
       console.log("err", err)
       let alert = {severity: "error", text: "External login failed"}
       dispatch({type: SET_ALERT, payload: alert}) 
     })
+    dispatch({type: SET_LOADING, payload: true})
   } 
 
 
@@ -112,7 +116,7 @@ function Login() {
     <PageWrapper style={{textAlign: "center", marginTop: "15%"}}>
 
       <Button color="primary" variant="contained" onClick={feideLogin} style={{width: "300px", height: "80px"}}>
-        Log in with Feide
+        Log in with Feide<Loading style={{marginLeft: "10px", height: "26px", }} size={24} alternative={<VpnKeyIcon />} /> 
       </Button> <br/>
       <div style={{padding: "10px"}}> 
         <StyledLink href="#" onClick={e => setAlternativeLogin(!AlternativeLogin)}>Alternative login</StyledLink>

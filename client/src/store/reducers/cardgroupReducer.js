@@ -2,6 +2,7 @@
 import { CREATE_CARDGROUP, CREATE_CARDGROUP_ERROR, DELETE_CARDGROUP, LOAD_CARDGROUPS, DELETE_CARDGROUP_ERROR, LOAD_CARDGROUP } from '../actionTypes';
 
 const initState = {
+    success: null,
     cardgroups: [
        
     ]
@@ -15,7 +16,7 @@ const cardgroupReducer = (state = initState, action) => {
             console.log(state)
             console.log({ 
                 ...state,
-                cardgroups: [...state.cardgroups, action.payload]                
+                cardgroups: [...state.cardgroups, action.payload]   
             })
 
             return { 
