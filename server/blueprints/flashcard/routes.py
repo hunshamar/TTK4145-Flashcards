@@ -8,6 +8,8 @@ from ..user.routes import admin_only
 
 from time import sleep
 from ..values import DELAY_S
+
+
 @flashcardBlueprint.route("/api/flashcards")
 def flashcards():    
     sleep(DELAY_S)

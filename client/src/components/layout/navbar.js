@@ -22,8 +22,13 @@ import { NavBarWrapper } from "../../static/wrappers";
 
 const useStyles = makeStyles(theme => ({ 
     link: {
-        color: theme.palette.textColor,
+        color: "inherit",
         textDecoration: "none"
+    },
+
+    navlink: {
+        color: "white",
+        whiteSpace: "nowrap"
     },
     navbar: {
         backgroundColor: theme.palette.primary.main,
@@ -98,7 +103,7 @@ const UserMenu  = (props) => {
         </div>
     )}
     else return (
-        <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/"> Log in</NavLink>
+        <NavLink className={classes.navlink} to="/"> Log in</NavLink>
     )
     
 }
@@ -119,37 +124,40 @@ const Navbar = props => {
 
         <NavBarWrapper className={classes.navbar}>
                     <Toolbar style={{padding: 0}}>
-                        
-        <Typography variant="h6" style={{flexGrow: 0}}>
+
+        <Link to="/" className={classes.link}>  
+        <Typography variant="h6" style={{flexGrow: 0}} onClick={() => console.log("asdsad")}>
         TTK4145 Flashcards
         </Typography>
-        
+        </Link>
 
 
-        <List style={{textColor: "white", display: "flex"}}>
+        <List style={{textColor: "white", display: "flex", marginLeft: "auto"}}>
             
 
             {loggedIn ?  
 
             <React.Fragment>
                 <ListItem>
-                    <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/"> {loggedIn ? "Home" : "Log in"}</NavLink>
+                    <NavLink className={classes.navlink}  to="/"> Add Cards</NavLink>
+                </ListItem>
+                <ListItem>
+                    <NavLink className={classes.navlink}  to="/peerreview"> Peer Review</NavLink>
+                </ListItem>
+                <ListItem>
+                    <NavLink className={classes.navlink}  to="/study"> Study </NavLink>
                 </ListItem>
                 {isAdmin ? 
                 <ListItem>
-                    <NavLink style={{color: "white", whiteSpace: "nowrap"}} to="/adminpage"> Admin Page</NavLink>
+                    <NavLink className={classes.navlink}  to="/adminpage"> Admin Page</NavLink>
                 </ListItem> : <div></div> }
             </React.Fragment>
             :
             <div></div>
             }
 
-        </List>
-
-
-            <div style={{marginLeft: "auto"}}>                
-                <UserMenu setDarkMode={props.setDarkMode}></UserMenu>
-            </div>
+        </List>      
+            <UserMenu setDarkMode={props.setDarkMode}></UserMenu>
         </Toolbar>
         </NavBarWrapper>
          </AppBar>

@@ -17,6 +17,9 @@ import Users from "./components/adminpages/users";
 import AdminNavbar from './components/layout/adminNavbar';
 import AdminPage from "./components/adminpages/adminPage";
 import DeliveryStatus from './components/adminpages/deliveryStatus';
+import PeerReview from "./components/pages/peerreview";
+import PeerReviewGroup from "./components/pages/peerReviewGroup";
+import Study from "./components/pages/study";
 
 const useStyles = makeStyles(theme => ({
     // pages: {
@@ -59,11 +62,15 @@ const Routes = () => {
             <Switch>
                 <Route path="/" exact component={loggedIn ? Home : Login}/>
                 <Route path="/loginfunc" exact component={logInFunc}/>
-                <Route path="/cardgroup/:id" exact component={CardGroupPage} />
-                <Route path="/about" exact component={ FML} />
 
-                {/* {loggedIn ?  */}
+                {loggedIn ? 
                 <React.Fragment>
+
+                    <Route path="/cardgroup/:id" exact component={CardGroupPage} />
+                    <Route path="/peerreview" exact component={PeerReview}/>
+                    <Route path="/peerreview/group/:id" exact component={PeerReviewGroup}/>
+                    <Route path="/study" exact component={Study}/>
+                    <Route path="/about" exact component={ FML} />
                     <Route path="/userprofile/:username" exact component={UserProfile} />
                     {isAdmin ? 
                     <React.Fragment>
@@ -85,11 +92,7 @@ const Routes = () => {
                      :    
                     <React.Fragment>
                     </React.Fragment>}
-                </React.Fragment>
-                {/* // :
-                // <Redirect to={{
-                //     pathname: "/"
-                // }} /> }   */}
+                </React.Fragment> : <div></div>}
             </Switch>
         </div>
     )

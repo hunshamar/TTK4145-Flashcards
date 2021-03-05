@@ -55,7 +55,7 @@ const CardGroupPage = props => {
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
 
-    const percentage = Math.round(100*(cards.length / cardgroup.numberOfCardsDue))
+    const percentage = Math.round(cards.length && cardgroup ?  100*(cards.length / cardgroup.numberOfCardsDue) : 0)
     const loading = useSelector(state => state.loadingReducer.loading)
 
     const handleClickOpen = () => {
@@ -85,9 +85,16 @@ const CardGroupPage = props => {
         dispatch(loadCardgroup(props.match.params.id))
     }, [dispatch, props.match.params.id])   
 
-    const date = cardgroup.dueDate
-    let a = new Date(date.year, date.month-1, date.date, date.hour, date.minute)
-    console.log("aa", a)
+    // const date = cardgroup.dueDate
+    // let a = new Date(date.year, date.month-1, date.date, date.hour, date.minute)
+    // console.log("aa", a)
+
+    const dateToString = date => {
+        let a = new Date(date.year, date.month-1, date.date, date.hour, date.minute)
+            console.log("aa", a)
+            // return a.getUTCMonth()
+            return a.toString()
+      }
 
     if (redirectHome){
         return (
@@ -103,15 +110,16 @@ const CardGroupPage = props => {
             </PageWrapper>    
         )
     }
-    return(
+    else return(
         <PageWrapper>
             <CreateCardDialog open={open} onClose={handleClose} cardgroupId={props.match.params.id} />           
 
+            {cardgroup ? 
             <Grid container spacing={6}>
                 <Grid item xs={8}>
                     <Typography variant="h4">{cardgroup.title}</Typography>
                     <Typography variant="body2">{cardgroup.numberOfCardsDue} cards are due 
-                     {" "+a.toString()}
+                     {dateToString(cardgroup.dueDate)}
                      </Typography>
 
                     <div style={{marginTop: "40px"}}>
@@ -145,7 +153,7 @@ const CardGroupPage = props => {
                     
                 </Grid>
 
-            </Grid>
+            </Grid> : <div>suo</div> }
 
 
 

@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
         textDecoration: "none"
     },
     button: {
-        width: "200px",
+        width: "250px",
         height: "50px",
     }
 })); 

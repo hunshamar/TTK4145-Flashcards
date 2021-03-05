@@ -142,24 +142,31 @@ def users_search(role, searchphrase):
         print(e)
         return jsonify({"error": str(e)})
 
-@userBlueprint.route("/api/logintoken")
+@userBlueprint.route("/api/logintoken", methods=["GET"])
 def login_token():
     try:
-        apiKey = os.environ.get("FEIDE_API_KEY") ## From .env file
-        token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+str(apiKey)) ## Get token for FEIDE API 
-        token_string = token.text 
+        apiKey = os.environ.get("FEIDE_API_KEY") 
+        feide_token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+str(apiKey)) 
 
-        ## Return feide url to client side. 
-        url = "https://www.itk.ntnu.no/api/feide.php?token="+token_string+"&returnURL=http://localhost:5000/api/userdata"
+        print("--- feide token ---")
+        print(feide_token.text)
+
+        ## Return feide url to client side for external login. 
+        url = "https://www.itk.ntnu.no/api/feide.php?token="+feide_token.text+"&returnURL=http://localhost:5000/api/userdata"
         
         return jsonify({"url": url})        
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
 
-# Avoid this being hacked...
+# Protect this route... 
 @userBlueprint.route("/api/userdata", methods=["POST", "GET"])
 def user_data():    
+
+    print(request.headers)
+
+
+
     try: 
         if request.method == "GET": # External login from feide
             userdata =  request.args.getlist('userdata')[0]

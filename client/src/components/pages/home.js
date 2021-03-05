@@ -51,19 +51,24 @@ const Home = () => {
       setOpen(false);
     };
 
+    const history = useHistory() 
+    const handleRedirectToGroup = groupId => {
+        history.push("/cardgroup/" +groupId)
+    }
 
-  
 
 
 
     return (
         // <div style={{maxWidth: "600px", marginTop: "65px", marginLeft: "auto", marginRight: "auto"}}>
         <PageWrapper>   
+        {/* <img src="../../static/download.jpeg"  width="500" height="600" /> */}
+
 
         <Grid container spacing={2}>
             <Grid item xs={8}  >
                 <Typography variant="h4" gutterBottom >
-                    Card Groups    
+                    Add Card    
                 </Typography>
             </Grid>
             <Grid item xs={4}>
@@ -74,12 +79,12 @@ const Home = () => {
                 <div></div>}
             </Grid> 
             <Grid item xs={12}>
-                <GroupView cardgroups={cardgroups}/>
+                <GroupView cardgroups={cardgroups} showDueDate onClick={handleRedirectToGroup}/>
             </Grid> 
         </Grid>
     
         
-    <CreateCardGroup open={open} onClose={handleClose} />
+    <CreateCardGroup open={open} onClose={handleClose}  />
     </PageWrapper>
         
     )

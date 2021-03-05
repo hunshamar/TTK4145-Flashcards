@@ -1,7 +1,7 @@
 import { Box, makeStyles, withStyles } from "@material-ui/core";
 
 
-const siteWidth = "600px"
+export const siteWidth = "750px"
 
 export const wrappers = makeStyles(theme => ({
     pageWrapper: {
@@ -17,6 +17,7 @@ export const PageWrapper = withStyles({
         maxWidth: siteWidth,
         minWidth: siteWidth,
         marginTop: "50px", 
+        minHeight: "100vh"
     }
 })(Box)
 

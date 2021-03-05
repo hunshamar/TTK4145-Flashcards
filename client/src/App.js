@@ -7,6 +7,7 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import {theme, darkTheme} from "./static/theme"
 import { BrowserRouter as Router } from "react-router-dom";
 import Alerter from './components/notifications/alerter';
+import Footer from "./components/layout/footer";
 
 
 const App = () => {
@@ -44,6 +45,7 @@ const App = () => {
           <Navbar  setDarkMode={toggleDarkMode}/>
           <Alerter /> 
           <Routes />   
+          {/* <Footer /> */}
         </Router>
         {/* <Feedback /> */}
     </MuiThemeProvider>
