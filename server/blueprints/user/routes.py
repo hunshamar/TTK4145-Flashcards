@@ -173,7 +173,7 @@ def user_data():
             userdata_dict = json.loads(userdata)
             session["userdata"] = userdata_dict
             print("added userdata to session:")       
-            return redirect("http://localhost:3000/loginfunc/")
+            return redirect("/loginfunc")
 
 
         if request.method == "POST": # Alternative login
