@@ -60,7 +60,7 @@ const UserMenu  = (props) => {
         dispatch(signOut())
         handleClose();
         history.push("/")
-        
+        window.location.reload();        
     }
 
     const handleMode = () => {

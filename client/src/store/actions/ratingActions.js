@@ -1,0 +1,76 @@
+
+import axios from 'axios';
+import { CREATE_RATING, SET_ALERT, SET_LOADING } from '../actionTypes';
+
+export const saveRating = ({rating, cardNumber}) => async( dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})        
+    await axios.post("/api/addrating", {
+            difficulty: rating.difficulty,
+            quality: rating.quality,
+            cardId: rating.cardId
+        }, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("user_token")
+            }
+        })
+        .then(res => {
+            if(res.data.error){
+                throw new Error(res.data.error)
+            }
+            console.log("returned")
+            console.log(res.data)
+            
+           
+            const createdRating = res.data
+
+            console.log("was created, ", createdRating)
+            let alert = {severity: "success", text: "Ratings saved successfully"}
+            dispatch({type: SET_ALERT, payload: alert})
+            dispatch({type: CREATE_RATING, payload: createdRating})
+        })
+        .catch(err => {
+            console.log("This is an error yes plz")
+            let alert = {severity: "error", text: err.toString()}
+            dispatch({type: SET_ALERT, payload: alert})
+            // dispatch({type: CREATE_CARDGROUP_ERROR, err})
+        })
+
+    console.log("async call up in hier", rating)
+    dispatch({type: SET_LOADING, payload: false})
+    
+};
+
+export const getRating = (cardId) => async( dispatch, getState) => {
+        
+    await axios.get("/api/getrating/"+cardId, 
+         {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("user_token")
+            }
+        })
+        .then(res => {
+            if(res.data.error){
+                throw new Error(res.data.error)
+            }
+            console.log("returned")
+            console.log(res.data)
+            
+           
+            const foundRating = res.data
+
+            console.log("was found, ", foundRating)
+            // let alert = {severity: "success", text: "Saved rating on card: "+cardNumber}
+            // dispatch({type: SET_ALERT, payload: alert})
+            dispatch({type: CREATE_RATING, payload: foundRating})
+        })
+        .catch(err => {
+            console.log("Not found")
+            // let alert = {severity: "error", text: err.toString()}
+            // dispatch({type: SET_ALERT, payload: alert})
+            // dispatch({type: CREATE_CARDGROUP_ERROR, err})
+        })
+
+    // console.log("async call up in hier", rating)
+    
+};
+

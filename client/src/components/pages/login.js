@@ -6,7 +6,7 @@ import { Button, Icon, Link } from "@material-ui/core";
 import { styled } from '@material-ui/core/styles';
 import { useDispatch  } from 'react-redux';
 import { PageWrapper } from "../../static/wrappers";
-import { SET_ALERT, SET_LOADING } from "../../store/actionTypes";
+import { CLEAR_LOADING, SET_ALERT, SET_LOADING } from "../../store/actionTypes";
 import Loading from "../notifications/loading";
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
@@ -96,7 +96,7 @@ function Login() {
   let loading = false;
   const feideLogin = () => {    
     loading = !loading
-    dispatch({type: SET_LOADING, payload: loading}) 
+    dispatch({type: SET_LOADING, payload: {loading: true}}) 
     axios.get("/api/logintoken", { withCredentials: true })
     .then(res => {
       window.open(res.data.url, "_self")
@@ -106,7 +106,7 @@ function Login() {
       let alert = {severity: "error", text: "External login failed"}
       dispatch({type: SET_ALERT, payload: alert}) 
     })
-    dispatch({type: SET_LOADING, payload: true})
+    dispatch({type: CLEAR_LOADING, payload: {loading: true}})
   } 
 
 

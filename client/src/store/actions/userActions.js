@@ -3,8 +3,6 @@ import axios from 'axios';
 import { GET_DELIVERY_STATUS, GET_USERS, SET_ALERT, SET_LOADING , UPDATE_USER} from '../actionTypes';
 
 
-
-
 export const getAllUsers = () => async (dispatch) => {
     axios.get("/api/users/all", {
         headers: {

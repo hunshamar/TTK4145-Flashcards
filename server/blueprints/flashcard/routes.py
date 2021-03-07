@@ -5,6 +5,7 @@ from .flashcard import *
 
 flashcardBlueprint = Blueprint("flashcard", __name__)
 from ..user.routes import admin_only
+from ..cardrating.cardrating import deleteCardRatings
 
 from time import sleep
 from ..values import DELAY_S
@@ -98,6 +99,7 @@ def delete_card(cid):
         if getFlashcard(cardId).user.id != userId:
             raise Exception("Error. Can not delete other users flashcards")
         deleteFlashcard(cid)
+        deleteCardRatings(cid)
         return jsonify({"success": "true"})
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -138,6 +140,8 @@ def delete_group(cgid):
         for card in cards:
             print("card", card["id"])
             deleteFlashcard(card["id"])
+            deleteCardRatings(card["id"])
+
         delCardgroup(cgid)
         return jsonify({"success": "deleted all cards and groups"})
     except Exception as e:

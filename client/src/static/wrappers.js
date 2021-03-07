@@ -17,7 +17,6 @@ export const PageWrapper = withStyles({
         maxWidth: siteWidth,
         minWidth: siteWidth,
         marginTop: "50px", 
-        minHeight: "100vh"
     }
 })(Box)
 

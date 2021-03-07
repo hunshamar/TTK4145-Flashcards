@@ -17,7 +17,7 @@ const Loading = (props) => {
     return (
         <div style={props.style} className={classes.loader}>
             {loading ?
-                <CircularProgress size={props.size ? props.size : 40} color="secondary" /> 
+                <CircularProgress size={props.size ? props.size : 40} color={props.color ? props.color : "secondary"} /> 
             : props.alternative ? props.alternative : <div></div>} 
         </div>
     )

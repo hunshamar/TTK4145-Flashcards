@@ -2,8 +2,6 @@ from db import db
 from ..user.user import User, getUser
 from ..cardgroup.cardgroup import Cardgroup, getCardgroup, delCardgroup
 
-
-
 class Flashcard(db.Model):
     __tablename__ = "flashcard"
     #member variables
@@ -89,7 +87,7 @@ def deleteFlashcard(cid):
     card = Flashcard.query.get(cid)
     db.session.delete(card)
     db.session.commit()
-    return card.to_dict()
+    # return card.to_dict()
 
 def getCardGroupFlashCardsUser(cgid, uid):
     cards = Flashcard.query.filter_by(cardgroupid=cgid, userid=uid)

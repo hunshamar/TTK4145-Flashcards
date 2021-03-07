@@ -81,10 +81,10 @@ const Routes = () => {
                             render={({ match: { url } }) => (
                             <>
                                 <AdminNavbar />    
-                                <Route path={`${url}/`} component={AdminPage} exact />
-                                <Route path={`${url}/users`} component={Users} />
-                                <Route path={`${url}/deliverystatus`} component={DeliveryStatus} />
-                                <Route path={`${url}/allcards`} component={AllCards} />
+                                <Route path={`${url}/`} exact component={AdminPage}  />
+                                <Route path={`${url}/users`} exact component={Users} />
+                                <Route path={`${url}/deliverystatus`} exact component={DeliveryStatus} />
+                                <Route path={`${url}/allcards`} exact component={AllCards} />
                             </>
                             )}
                         />

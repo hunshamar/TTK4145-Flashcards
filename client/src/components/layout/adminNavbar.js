@@ -41,7 +41,7 @@ const AdminNavbar = props => {
     const urls=[
         {
             url: "/adminpage/users",
-            label: "Admin Page"
+            label: "All Users"
         },
         {
             url: "/adminpage/deliverystatus",

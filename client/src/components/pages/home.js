@@ -68,8 +68,11 @@ const Home = () => {
         <Grid container spacing={2}>
             <Grid item xs={8}  >
                 <Typography variant="h4" gutterBottom >
-                    Add Card    
+                    Add Cards    
                 </Typography>
+                <Typography variant="body2" color="textSecondary">
+                    Each cardgroup has a set number of cards to submit and a duedate.
+                    </Typography>
             </Grid>
             <Grid item xs={4}>
                 {isAdmin ?                 

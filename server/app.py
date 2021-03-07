@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from blueprints.user.routes import userBlueprint, jwt
 from blueprints.flashcard.routes import flashcardBlueprint
 from blueprints.cardgroup.routes import cardgroupBlueprint
+from blueprints.cardrating.routes import cardratingBlueprint
 from blueprints.user.user import User
 from db import db
 from flask_cors import CORS
@@ -33,6 +34,7 @@ db.init_app(app)
 app.register_blueprint(userBlueprint)
 app.register_blueprint(flashcardBlueprint)
 app.register_blueprint(cardgroupBlueprint)
+app.register_blueprint(cardratingBlueprint)
 
 @app.route("/init")
 def init():
