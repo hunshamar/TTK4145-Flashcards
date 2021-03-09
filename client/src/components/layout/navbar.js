@@ -127,11 +127,11 @@ const Navbar = props => {
 
         <Link to="/" className={classes.link}>  
         <Typography variant="h6" style={{flexGrow: 0}} onClick={() => console.log("asdsad")}>
-        TTK4145 Flashcards
+        LOGIN TEST
         </Typography>
         </Link>
 
-
+{/* 
         <List style={{textColor: "white", display: "flex", marginLeft: "auto"}}>
             
 
@@ -156,8 +156,10 @@ const Navbar = props => {
             <div></div>
             }
 
-        </List>      
+        </List>       */}
+        <div style={{marginLeft: "auto"}}>
             <UserMenu setDarkMode={props.setDarkMode}></UserMenu>
+            </div>
         </Toolbar>
         </NavBarWrapper>
          </AppBar>

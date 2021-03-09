@@ -71,7 +71,7 @@ const Routes = () => {
                     <Route path="/peerreview/group/:id" exact component={PeerReviewGroup}/>
                     <Route path="/study" exact component={Study}/>
                     <Route path="/about" exact component={ FML} />
-                    <Route path="/userprofile/:username" exact component={UserProfile} />
+                    <Route path="/userprofile/" exact component={UserProfile} />
                     {isAdmin ? 
                     <React.Fragment>
                         {/* <Route path="/adminpage" exact component={AdminPage} /> */}
