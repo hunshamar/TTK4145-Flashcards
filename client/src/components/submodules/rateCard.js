@@ -44,7 +44,7 @@ const RateCard = ({card, index, save}) => {
     const [quality, setQuality] = useState(0)
     const dispatch = useDispatch() 
 
-    const rating = useSelector(state => state.ratingReducer.ratings.find(rating => rating.card.id == card.id))
+    const rating = useSelector(state => state.ratingReducer.ratings.find(rating => rating.card_id == card.id))
     
     
 

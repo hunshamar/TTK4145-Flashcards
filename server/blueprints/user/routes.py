@@ -144,71 +144,6 @@ def users_search(role, searchphrase):
         print(e)
         return jsonify({"error": str(e)})
 
-# @userBlueprint.route("/api/logintoken", methods=["GET"])
-# def login_token():
-#     try:
-#         apiKey = str(os.environ.get("FEIDE_API_KEY"))
-#         feide_token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+apiKey)
-
-
-#         tokenstring = apiKey+feide_token.text    
-#         authenticityToken = hashlib.sha1(tokenstring.encode('utf-8')).hexdigest() ## Encrypt with sha1
-#         session["authenticityToken"] = authenticityToken
-
-#         ## Return feide url to client side for external login. 
-#         url = "https://www.itk.ntnu.no/api/feide.php?token="+feide_token.text+"&returnURL=http://localhost:5000/api/userdata"
-        
-#         return jsonify({"url": url})        
-#     except Exception as e:
-#         print(e)
-#         return jsonify({"error": str(e)})
-
-# # Protect this route... 
-# @userBlueprint.route("/api/userdata", methods=["POST", "GET"])
-# def user_data():    
-
-#     print(request.headers)
-#     try: 
-#         if request.method == "GET": # External login from feide
-#             userdata =  request.args.getlist('userdata')[0]
-#             userdata_dict = json.loads(userdata)
-#             print(userdata_dict)
-            
-#             if (userdata_dict["authenticityToken"] == session["authenticityToken"]): 
-#                 print("Authenticity token OK")
-#                 session["userdata"] = userdata_dict
-#                 print("added userdata to session:")       
-
-#                 return redirect("http://localhost:3000/loginfunc")
-
-#             else:
-#                 return redirect(jsonify("Bad authenticityToken"))
-
-
-#         if request.method == "POST": # Alternative login
-        
-#             userdata = request.json
-#             username = userdata["username"]
-#             email = userdata["email"]
-#             name = userdata["name"]
-
-#             if userRegistred(email, username):
-#                 print("added to session exists", session.get("userdata"))
-
-#             elif usernameRegistred(username) or emailRegistred(email):
-#                 raise Exception("duplicate. Username and email must either belong to a existing user or be unique")
-            
-#             else:
-#                 print("added to session new", session.get("userdata"))
-
-
-#             session["userdata"] = userdata
-#             return jsonify({"status": "success"})
-            
-#     except Exception as e:
-#         print(e)
-#         return jsonify({"error": str(e)})
-
 @userBlueprint.route("/api/logintoken", methods=["GET"])
 def login_token():
     try:
@@ -229,26 +164,51 @@ def login_token():
         return jsonify({"error": str(e)})
 
 # Protect this route... 
-@userBlueprint.route("/api/userdata", methods=["GET"])
+@userBlueprint.route("/api/userdata", methods=["POST", "GET"])
 def user_data():    
+
+    print(request.headers)
     try: 
-        authenticityToken = session.pop("authenticityToken", None)
-        userdata =  request.args.getlist('userdata')[0]
-        userdata_dict = json.loads(userdata)
-                
-        if (userdata_dict["authenticityToken"] == authenticityToken): 
-            print("Authenticity token OK")
-            session["userdata"] = userdata_dict
-            print("added userdata to session:")       
+        if request.method == "GET": # External login from feide
+            userdata =  request.args.getlist('userdata')[0]
+            userdata_dict = json.loads(userdata)
+            print(userdata_dict)
+            
+            if (userdata_dict["authenticityToken"] == session["authenticityToken"]): 
+                print("Authenticity token OK")
+                session["userdata"] = userdata_dict
+                print("added userdata to session:")       
 
-            return redirect("http://localhost:3000/loginfunc")
+                return redirect("http://localhost:3000/loginfunc")
 
-        else:
-            return redirect(jsonify("Bad authenticityToken"))
+            else:
+                return redirect(jsonify("Bad authenticityToken"))
+
+
+        if request.method == "POST": # Alternative login
+        
+            userdata = request.json
+            username = userdata["username"]
+            email = userdata["email"]
+            name = userdata["name"]
+
+            if userRegistred(email, username):
+                print("added to session exists", session.get("userdata"))
+
+            elif usernameRegistred(username) or emailRegistred(email):
+                raise Exception("duplicate. Username and email must either belong to a existing user or be unique")
+            
+            else:
+                print("added to session new", session.get("userdata"))
+
+
+            session["userdata"] = userdata
+            return jsonify({"status": "success"})
             
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
+
 
 
 @userBlueprint.route("/api/login/callback")

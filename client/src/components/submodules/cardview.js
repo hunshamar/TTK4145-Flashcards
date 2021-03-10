@@ -12,7 +12,6 @@ import loadingReducer from '../../store/reducers/loadingReducer';
 import Loading from '../notifications/loading';
 
 
-
 const CardView = props => {
 
     const dispatch = useDispatch();

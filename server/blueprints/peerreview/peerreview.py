@@ -3,21 +3,23 @@ from db import db
 import datetime
 
 # import parents
-from ..flashcard.flashcard import Flashcard, getFlashcard
-from ..user.user import User, getUser
+# from ..flashcard.flashcard import Flashcard, getFlashcard
+# from ..user.user import User, getUser
 
-class Cardrating(db.Model):
-    __tablename__ = "cardrating"
+class Peerreview(db.Model):
+    __tablename__ = "peerreview"
+
     #member variables
-    id = db.Column(db.Integer, primary_key=True)
-    difficulty = db.Column(db.Integer)
-    quality_rating = db.Column(db.Integer)
 
-    savedatestring = db.Column(db.String(2048))
+    id = db.Column(db.Integer, primary_key=True)
+
 
     # parent
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    card_id = db.Column(db.Integer, db.ForeignKey("flashcard.id"))
+    # user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    # card_id = db.Column(db.Integer, db.ForeignKey("flashcard.id"))
+
+    cardgroup = relationship("Cardgroup", back_populates="peerreview")
+
 
     def to_dict(self):            
         return {

@@ -1,6 +1,9 @@
 from db import db
-from ..user.user import User, getUser
-from ..cardgroup.cardgroup import Cardgroup, getCardgroup, delCardgroup
+
+#import parents
+from ..user.user import User 
+from ..cardgroup.cardgroup import Cardgroup
+
 
 class Flashcard(db.Model):
     __tablename__ = "flashcard"
@@ -9,29 +12,29 @@ class Flashcard(db.Model):
     front = db.Column(db.String(2048))
     back = db.Column(db.String(2048))
 
-    # dependencies
-    userid = db.Column(db.Integer, db.ForeignKey("user.id"))
-    user = db.relationship('User', foreign_keys=userid, lazy='subquery')
-    
-    cardgroupid = db.Column(db.Integer, db.ForeignKey("cardgroup.id"))
-    cardgroup = db.relationship('Cardgroup', foreign_keys=cardgroupid, lazy='subquery')
-    
+    # children
+    ratings = db.relationship("Cardrating", cascade="all, delete-orphan", backref="flashcard")
+
+    # Parents
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    cardgroup_id = db.Column(db.Integer, db.ForeignKey("cardgroup.id"))
+
 
     def to_dict(self):            
         return {
             "id": self.id, 
             "front": self.front,
             "back": self.back,
-            "user": self.user.to_dict(),
-            "cardgroup": self.cardgroup.to_dict()
+            "user": self.user_id,
+            "cardgroup": self.cardgroup_id,
         }
     # Constructor
-    def __init__(self, front, back, user, cardgroup):
-        print(f"Creating flashcard front '{front}' back '{back}' user '{user.to_dict()}' cardgroup '{cardgroup.to_dict()}'")
-        self.front = front
-        self.back = back
-        self.user = user
-        self.cardgroup = cardgroup
+    # def __init__(self, front, back, user, cardgroup):
+    #     print(f"Creating flashcard front '{front}' back '{back}' user '{user.to_dict()}' cardgroup '{cardgroup.to_dict()}'")
+    #     self.front = front
+    #     self.back = back
+    #     self.user = user
+    #     self.cardgroup = cardgroup
 
 def getAllFlashcards():
     flashcards = Flashcard.query.all()
@@ -70,7 +73,7 @@ def addFlashcard(front, back, userid, cardgroupid):
 
 
 
-        flashcard = Flashcard(front, back, user, cardgroup)
+        flashcard = Flashcard(front=front, back=back, user=user, cardgroup=cardgroup)
         db.session.add(flashcard)
         db.session.commit()
         return flashcard.to_dict()
@@ -78,7 +81,7 @@ def addFlashcard(front, back, userid, cardgroupid):
         raise Exception("Error. Invalid form for adding flashcard")
         
 def getCardgroupFlashcards(cgid):
-    cards = Flashcard.query.filter_by(cardgroupid=cgid)
+    cards = Flashcard.query.filter_by(cardgroup_id=cgid)
     if (not cards):
         raise Exception(f"cards from cardgroup not found")
     return [i.to_dict() for i in cards]
@@ -90,7 +93,7 @@ def deleteFlashcard(cid):
     # return card.to_dict()
 
 def getCardGroupFlashCardsUser(cgid, uid):
-    cards = Flashcard.query.filter_by(cardgroupid=cgid, userid=uid)
+    cards = Flashcard.query.filter_by(cardgroup_id=cgid, user_id=uid)
     if (not cards):
         raise Exception(f"cards from cardgroup not found")
     return [i.to_dict() for i in cards]

@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from db import db
 import datetime
-from ..user.user import User, getUser
+
 
 MAX_NUMBER_OF_CARDS = 50
 
@@ -14,28 +14,32 @@ class Cardgroup(db.Model):
     due_date = db.Column(db.DateTime)
     number_of_cards_due = db.Column(db.Integer)
 
+    # children
+    flashcards = db.relationship("Flashcard", cascade="all, delete-orphan", backref="cardgroup")
+
+
+    peerreview = db.relationship("Peerreview", uselist=False, cascade="all, delete-orphan", backref="cardgroup")
+
     def to_dict(self):
+
+    
+
         return{
             "id": self.id, 
             "title": self.title,
-            "dueDate": {
-                "year": self.due_date.year,
-                "month": self.due_date.month,
-                "date": self.due_date.day,
-                "hour": self.due_date.hour,
-                "minute": self.due_date.minute,
-                "second": self.due_date.second
-            },
-            "numberOfCardsDue": self.number_of_cards_due
+            "dueDate": self.due_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
+
+            "numberOfCardsDue": self.number_of_cards_due,
+            # "flashcards": [i.to_dict() for i in self.flashcards]
         }
 
     # Constructor
-    def __init__(self, title, due_date, number_of_cards_due):
+    # def __init__(self, title, due_date, number_of_cards_due):
 
-        print(f"creating cardgroup with title: '{title}' due {due_date} with #cards {number_of_cards_due}")
-        self.title = title
-        self.due_date = due_date
-        self.number_of_cards_due = number_of_cards_due
+    #     print(f"creating cardgroup with title: '{title}' due {due_date} with #cards {number_of_cards_due}")
+    #     self.title = title
+    #     self.due_date = due_date
+    #     self.number_of_cards_due = number_of_cards_due
 
 
 
@@ -47,12 +51,13 @@ def getAllCardgroups():
 
 
 def addCardgroup(title, due_date, number_of_cards_due):
-    ## todo add verification
+
+    current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
       
     if (title and due_date and number_of_cards_due):        
         if (len(title) < 3):
             raise Exception("Title must be longer than 2 characters") 
-        if due_date < datetime.datetime.today():
+        if due_date < current_gmt_time: 
             raise Exception("Due date can not be in the past")
         if int(number_of_cards_due) < 1:
             raise Exception("Number of cards due must be larger than 0")
@@ -60,7 +65,7 @@ def addCardgroup(title, due_date, number_of_cards_due):
         if int(number_of_cards_due) > MAX_NUMBER_OF_CARDS:
             raise Exception("Number of cards are limited to "+str(MAX_NUMBER_OF_CARDS))
 
-        cardgroup = Cardgroup(title, due_date, number_of_cards_due)
+        cardgroup = Cardgroup(title=title, due_date=due_date, number_of_cards_due=number_of_cards_due)
         db.session.add(cardgroup)
         db.session.commit()
         return cardgroup.to_dict()

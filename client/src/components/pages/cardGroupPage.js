@@ -12,6 +12,8 @@ import loadingReducer from '../../store/reducers/loadingReducer';
 import Loading from '../notifications/loading';
 import userReducer from '../../store/reducers/userReducer';
 import { Redirect } from 'react-router-dom';
+import { dateJSONToString } from '../../utils/datehandling';
+
 
 const useStyles = makeStyles(theme => ({
     addButton: {
@@ -84,18 +86,6 @@ const CardGroupPage = props => {
         dispatch(loadCardGroupUserFlashcards(props.match.params.id, user.id))       
         dispatch(loadCardgroup(props.match.params.id))
     }, [dispatch, props.match.params.id])   
-
-    // const date = cardgroup.dueDate
-    // let a = new Date(date.year, date.month-1, date.date, date.hour, date.minute)
-    // console.log("aa", a)
-
-    const dateToString = date => {
-        let a = new Date(date.year, date.month-1, date.date, date.hour, date.minute)
-            console.log("aa", a)
-            // return a.getUTCMonth()
-            return a.toString()
-      }
-
     if (redirectHome){
         return (
             <Redirect to={{
@@ -118,8 +108,7 @@ const CardGroupPage = props => {
             <Grid container spacing={6}>
                 <Grid item xs={8}>
                     <Typography variant="h4">{cardgroup.title}</Typography>
-                    <Typography variant="body2">{cardgroup.numberOfCardsDue} cards are due 
-                     {dateToString(cardgroup.dueDate)}
+                    <Typography variant="body2">{cardgroup.numberOfCardsDue} cards are due {dateJSONToString(cardgroup.dueDate)}
                      </Typography>
 
                     <div style={{marginTop: "40px"}}>

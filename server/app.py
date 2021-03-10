@@ -37,8 +37,7 @@ app.register_blueprint(cardgroupBlueprint)
 app.register_blueprint(cardratingBlueprint)
 
 @app.route("/init")
-def init():
-    
+def init():   
     db.create_all()
     return jsonify(app.secret_key)
 

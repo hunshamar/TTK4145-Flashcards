@@ -1,11 +1,12 @@
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+
+
 from .flashcard import *
 
 flashcardBlueprint = Blueprint("flashcard", __name__)
 from ..user.routes import admin_only
-from ..cardrating.cardrating import deleteCardRatings
 
 from time import sleep
 from ..values import DELAY_S
@@ -99,7 +100,6 @@ def delete_card(cid):
         if getFlashcard(cardId).user.id != userId:
             raise Exception("Error. Can not delete other users flashcards")
         deleteFlashcard(cid)
-        deleteCardRatings(cid)
         return jsonify({"success": "true"})
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -127,26 +127,7 @@ def cardgroup_user_cards(cgid, uid):
 
 
 
-@flashcardBlueprint.route("/api/deletegroup/<cgid>", methods=["DELETE"])
-@jwt_required
-def delete_group(cgid):
-    sleep(DELAY_S)
-    print(cgid, "is deleted yes")
-    # return jsonify({"error": "here"})
-    try:   
-        cards = getCardgroupFlashcards(int(cgid))
-        print("len", len(cards))
 
-        for card in cards:
-            print("card", card["id"])
-            deleteFlashcard(card["id"])
-            deleteCardRatings(card["id"])
-
-        delCardgroup(cgid)
-        return jsonify({"success": "deleted all cards and groups"})
-    except Exception as e:
-        print(e)
-        return jsonify({"error": str(e)})
 
 
 

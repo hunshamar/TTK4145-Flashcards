@@ -94,10 +94,10 @@ function Login() {
   const [AlternativeLogin, setAlternativeLogin] = useState(false)
   const dispatch = useDispatch()
   let loading = false;
-  const feideLogin = () => {    
+  const feideLogin = async () => {    
     loading = !loading
-    dispatch({type: SET_LOADING, payload: {loading: true}}) 
-    axios.get("/api/logintoken", { withCredentials: true })
+    dispatch({type: SET_LOADING, payload: true}) 
+    await axios.get("/api/logintoken", { withCredentials: true })
     .then(res => {
       window.open(res.data.url, "_self")
     })  
@@ -106,7 +106,7 @@ function Login() {
       let alert = {severity: "error", text: "External login failed"}
       dispatch({type: SET_ALERT, payload: alert}) 
     })
-    dispatch({type: CLEAR_LOADING, payload: {loading: true}})
+    dispatch({type: SET_LOADING, payload: false}) 
   } 
 
 

@@ -4,24 +4,6 @@ from db import db
 from sqlalchemy import and_
 from functools import wraps
 
-# def admin_required(f):
-#     @wraps(f)
-#     def wrap(*args, **kwargs):
-#         print(current_user)
-#         if not current_user:
-#             return jsonify({error: "error with admin elns"})
-
-#         for r in current_user:
-#             print("role", r.name)
-
-#         if "Admin" in current_user: 
-#             return f(*args, **kwargs)
-#         else:
-#             flash("You need to be an admin to view this page.")
-#             return jsonify({error: "error with admin elns"})
-#     return wrap
-
-
 class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key = True) # primary_key makes it so that this value is unique and can be used to identify this record.
@@ -32,6 +14,9 @@ class User(db.Model):
 
     # active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
 
+    # children
+    cardratings = db.relationship("Cardrating", cascade="all, delete-orphan", backref="user")
+    flashcards =  db.relationship("Flashcard", cascade="all, delete-orphan", backref="user")
 
     def is_admin(self):
         return self.role == "Admin"
