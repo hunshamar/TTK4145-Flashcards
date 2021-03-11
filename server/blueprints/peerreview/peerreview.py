@@ -1,10 +1,14 @@
 
 from db import db
 import datetime
+from flask import jsonify
 
 # import parents
 # from ..flashcard.flashcard import Flashcard, getFlashcard
 # from ..user.user import User, getUser
+
+from ..cardgroup.cardgroup import Cardgroup
+from ..user.user import User
 
 class Peerreview(db.Model):
     __tablename__ = "peerreview"
@@ -13,78 +17,55 @@ class Peerreview(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
+    due_date = db.Column(db.DateTime)
+    reviews_per_student = db.Column(db.Integer)
 
     # parent
-    # user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    # card_id = db.Column(db.Integer, db.ForeignKey("flashcard.id"))
+    cardgroup_id = db.Column(db.Integer, db.ForeignKey("cardgroup.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
-    cardgroup = relationship("Cardgroup", back_populates="peerreview")
+    # children
+      # 20 cards
+    
+    flashcard_ids = db.Column(db.ARRAY(db.Integer)
 
+    
 
     def to_dict(self):            
         return {
             "id": self.id, 
-            "difficulty": self.difficulty,
-            "quality_rating": self.quality_rating,
-            "savedatestring": self.savedatestring,
-            "card_id": self.card_id,
-            "user_id": self.user_id,
+            "dueDate": self.due_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            "reviewsPerStudent": self.reviews_per_student,
+            "cardgroupId": self.cardgroup_id
         }
-    # Constructor
-    # def __init__(self, difficulty, quality_rating, card, user):
-    #     print(f"Creating rating difficulty '{difficulty}' quality '{quality_rating}' card: '{card.id} by user {user.username}")
-    #     self.difficulty = difficulty
-    #     self.quality_rating = quality_rating
-    #     self.card = card
-    #     self.user = user
-    #     self.savedatestring = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-def addRating(user_id, flashcard_id, difficulty, quality_rating):
-    if not(user_id, flashcard_id and difficulty and quality_rating):
-        raise Exception("Missing parameter for addRating function")
-
-    if (difficulty < 1 or difficulty > 10) or (quality_rating < 1 or quality_rating > 10):
-        raise Exception("Error: Rating must be between 1 and 10")
-
-    else:
-        flashcard = getFlashcard(flashcard_id)
-        user = getUser(user_id)
-
-        
-        rating = getRating(user_id, flashcard_id)        
-        if rating:
-            rating.difficulty = difficulty
-            rating.quality_rating = quality_rating
-            rating.savedatestring = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        else:
-            rating = Cardrating(difficulty=difficulty, quality_rating=quality_rating, flashcard=flashcard, user=user)
-            rating.savedatestring = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            db.session.add(rating)
-
-        
-        db.session.commit()              
-
-        return rating.to_dict()
-
-def getRating(user_id, flashcard_id):
-    rating = Cardrating.query.filter_by(card_id=flashcard_id, user_id=user_id).first()
-    print(rating)
-    return rating
+    ## constructor, add 20 random cards from cardgroup for each student
+    def __init__(self, cardgroup, user, due_date, reviews_per_student):
+        print(f"Creating peer review for '{cardgroup.title}' for user '{user.username}'")
+        self.gardgroup_id = cardgroup.id
+        self.user_id = user.id
+        self.due_date = due_date
+        self.reviews_per_student = reviews_per_student
+        self.flashcard_ids = cardgroup.get_n_random_card_ids(reviews_per_student)
 
 
-def getAllRatings():
-    ratings = Cardrating.query.all()
-    if not ratings:
-        raise Exception("Error finding ratings. No ratings")
-    return [i.to_dict() for i in ratings]
+def addPeerReview(cardgroup_id, user_id, due_date, reviews_per_student): 
 
-            
-def deleteCardRatings(cid):
-
-    ratings = Cardrating.query.filter_by(card_id=cid).all()    
-    for rating in ratings:
-        db.session.delete(rating)
+    user = User.query.get(user_id)
+    cardgroup = Cardgroup.query.get(cardgroup_id)  
+    peerreview = Peerreview(cardgroup, user, due_date, reviews_per_student)
+    db.session.add(peerreview)
     db.session.commit()
 
+def r_20_cards():
+    peer = Peerreview.query.get(2)
 
-    
+    group = Cardgroup.query.get(peer.cardgroup_id)
+
+    cards = group.get_n_random_card_ids(3)
+
+    # for i in cards:
+    #     print(i.to_dict())
+
+    return cards
+    # return jsonify({"succ": "my_balls"})

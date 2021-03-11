@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from db import db
 import datetime
-
+import random 
 
 MAX_NUMBER_OF_CARDS = 50
 
@@ -20,9 +20,20 @@ class Cardgroup(db.Model):
 
     peerreview = db.relationship("Peerreview", uselist=False, cascade="all, delete-orphan", backref="cardgroup")
 
+    def get_n_random_card_ids(self, n):
+        
+        ## temp løsning
+        id_arr = [] 
+        for i in self.flashcards:
+            id_arr.append(i.id)
+
+        return random.sample(id_arr, n)
+
     def to_dict(self):
 
-    
+        for i in self.flashcards:
+            # d =  i.to_dict()
+            print(i.to_dict())
 
         return{
             "id": self.id, 

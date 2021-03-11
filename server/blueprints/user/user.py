@@ -17,6 +17,7 @@ class User(db.Model):
     # children
     cardratings = db.relationship("Cardrating", cascade="all, delete-orphan", backref="user")
     flashcards =  db.relationship("Flashcard", cascade="all, delete-orphan", backref="user")
+    peerreviews = db.relationship("Peerreview", backref="user")
 
     def is_admin(self):
         return self.role == "Admin"
