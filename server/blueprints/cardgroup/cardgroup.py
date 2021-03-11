@@ -20,14 +20,11 @@ class Cardgroup(db.Model):
 
     peerreview = db.relationship("Peerreview", uselist=False, cascade="all, delete-orphan", backref="cardgroup")
 
-    def get_n_random_card_ids(self, n):
+    def get_n_random_cards(self, n):
         
-        ## temp løsning
-        id_arr = [] 
-        for i in self.flashcards:
-            id_arr.append(i.id)
+        ## temp løsning ?       
 
-        return random.sample(id_arr, n)
+        return random.sample(flashcards, n)
 
     def to_dict(self):
 

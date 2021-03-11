@@ -15,6 +15,7 @@ class Flashcard(db.Model):
     # children
     ratings = db.relationship("Cardrating", cascade="all, delete-orphan", backref="flashcard")
 
+
     # Parents
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     cardgroup_id = db.Column(db.Integer, db.ForeignKey("cardgroup.id"))

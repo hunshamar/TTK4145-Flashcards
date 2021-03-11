@@ -10,6 +10,12 @@ from flask import jsonify
 from ..cardgroup.cardgroup import Cardgroup
 from ..user.user import User
 
+peer_review_cards = db.Table('peer_review_cards', 
+    db.Column('id', db.Integer, primary_key=True),
+    db.Column('flashcardcard_id', db.Integer, db.ForeignKey('flashcard.id')),
+    db.Column('peerreview_id', db.Integer, db.ForeignKey('peerreview.id'))
+)
+
 class Peerreview(db.Model):
     __tablename__ = "peerreview"
 
@@ -25,9 +31,9 @@ class Peerreview(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     # children
-      # 20 cards
+    flashcards = db.relationship("Flashcard", secondary=peer_review_cards, backref="flashcard")
     
-    flashcard_ids = db.Column(db.ARRAY(db.Integer)
+    # flashcard_ids = db.Column(db.ARRAY(db.Integer)
 
     
 
@@ -46,7 +52,7 @@ class Peerreview(db.Model):
         self.user_id = user.id
         self.due_date = due_date
         self.reviews_per_student = reviews_per_student
-        self.flashcard_ids = cardgroup.get_n_random_card_ids(reviews_per_student)
+        self.flashcards = cardgroup.get_n_random_cards(reviews_per_student)
 
 
 def addPeerReview(cardgroup_id, user_id, due_date, reviews_per_student): 
