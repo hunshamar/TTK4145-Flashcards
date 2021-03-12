@@ -24,7 +24,7 @@ class Cardgroup(db.Model):
         
         ## temp løsning ?       
 
-        return random.sample(flashcards, n)
+        return random.sample(self.flashcards, n)
 
     def to_dict(self):
 
@@ -38,7 +38,7 @@ class Cardgroup(db.Model):
             "dueDate": self.due_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
 
             "numberOfCardsDue": self.number_of_cards_due,
-            # "flashcards": [i.to_dict() for i in self.flashcards]
+            "flashcards": [i.to_dict() for i in self.flashcards]
         }
 
     # Constructor

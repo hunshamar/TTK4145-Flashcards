@@ -39,8 +39,8 @@ import CardDialog from "../dialogs/cardDialog";
     let rows = cards.map(c => (
         {
             id: c.id,
-            name: c.user.name,
-            username: c.user.username,
+            name: c.user ? c.user.name: "",
+            username: c.user ? c.user.username: "",
             front: c.front,
             back: c.back
         }

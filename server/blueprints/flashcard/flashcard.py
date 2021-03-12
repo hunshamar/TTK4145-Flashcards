@@ -2,7 +2,7 @@ from db import db
 
 #import parents
 from ..user.user import User 
-from ..cardgroup.cardgroup import Cardgroup
+from ..cardgroup.cardgroup import Cardgroup, getCardgroup
 
 
 class Flashcard(db.Model):
@@ -26,7 +26,15 @@ class Flashcard(db.Model):
             "id": self.id, 
             "front": self.front,
             "back": self.back,
-            "user": self.user_id,
+            "user": User.query.get(self.user_id).to_dict(),
+            "cardgroup": self.cardgroup_id,
+        }
+
+    def public_to_dict(self):
+        return{
+            "id": self.id, 
+            "front": self.front,
+            "back": self.back,
             "cardgroup": self.cardgroup_id,
         }
     # Constructor

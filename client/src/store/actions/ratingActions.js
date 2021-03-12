@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { CREATE_RATING, SET_ALERT, SET_LOADING } from '../actionTypes';
+import { CREATE_RATING, LOAD_RATINGS, SET_ALERT, SET_LOADING } from '../actionTypes';
 
 export const saveRating = ({rating, cardNumber}) => async( dispatch, getState) => {
     dispatch({type: SET_LOADING, payload: true})        
@@ -54,14 +54,57 @@ export const getRating = (cardId) => async( dispatch, getState) => {
             }
             console.log("returned")
             console.log(res.data)
+
+            if (res.data.status !== "no rating")
+            {
+           
+                const foundRating = res.data
+
+                console.log("was found, ", foundRating)
+                // let alert = {severity: "success", text: "Saved rating on card: "+cardNumber}
+                // dispatch({type: SET_ALERT, payload: alert})
+                dispatch({type: CREATE_RATING, payload: foundRating})
+            }
+        })
+        .catch(err => {
+            console.log("Not found")
+            // let alert = {severity: "error", text: err.toString()}
+            // dispatch({type: SET_ALERT, payload: alert})
+            // dispatch({type: CREATE_CARDGROUP_ERROR, err})
+        })
+
+    // console.log("async call up in hier", rating)
+    
+};
+
+
+export const getRatingsInPeerreview = (peerreviewid) => async( dispatch, getState) => {
+    console.log("Is this aused")
+    await axios.get("/api/ratingsinpeerreview/"+peerreviewid, 
+         {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("user_token")
+            }
+        })
+        .then(res => {
+
+            console.log("hes")
+
+            if(res.data.error){
+                throw new Error(res.data.error)
+            }
+            console.log("returned")
+            console.log(res.data)
+
             
            
-            const foundRating = res.data
+            const foundRatings = res.data
 
-            console.log("was found, ", foundRating)
+            console.log("was found getratingsinpeererview, ", foundRatings)
             // let alert = {severity: "success", text: "Saved rating on card: "+cardNumber}
             // dispatch({type: SET_ALERT, payload: alert})
-            dispatch({type: CREATE_RATING, payload: foundRating})
+            dispatch({type: LOAD_RATINGS, payload: foundRatings})
+            
         })
         .catch(err => {
             console.log("Not found")

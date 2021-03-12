@@ -149,6 +149,29 @@ export const loadCardgroupFlashcards = (cardgroupId) => async (dispatch, getStat
 
 }
 
+export const loadPeerReviewFlashcards = (peerreviewid) => async (dispatch, getState) => {
+
+    dispatch({type: SET_LOADING, payload: true})
+
+    await axios.get("/api/peerreviewflashcards/"+peerreviewid,
+    {headers: { 
+        Authorization: "Bearer " +localStorage.getItem("user_token") 
+    }}
+    ).then(response => {
+        const cards = response.data
+        console.log("lmlmlml")
+        console.log(cards)
+        dispatch({type: LOAD_CARDS, payload: cards})
+    })
+    .catch(err => {
+        let alert = {severity: "error", text: err.toString() + " when attemting to get card"}
+        dispatch({type: SET_ALERT, payload: alert})  
+    })
+
+    dispatch({type: SET_LOADING, payload: false})
+
+}
+
 
 
 export const loadCard = props => async (dispatch, getState) => {

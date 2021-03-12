@@ -9,6 +9,9 @@ from flask import jsonify
 
 from ..cardgroup.cardgroup import Cardgroup
 from ..user.user import User
+from ..cardrating.cardrating import Cardrating
+
+MAX_NUMBER_OF_REVIEWS = 40
 
 peer_review_cards = db.Table('peer_review_cards', 
     db.Column('id', db.Integer, primary_key=True),
@@ -37,18 +40,24 @@ class Peerreview(db.Model):
 
     
 
-    def to_dict(self):            
+    def to_dict(self):     
         return {
             "id": self.id, 
             "dueDate": self.due_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            "reviewsPerStudent": self.reviews_per_student,
-            "cardgroupId": self.cardgroup_id
+            "cardgroup": Cardgroup.query.get(self.cardgroup_id).to_dict(),
+            "userId": self.user_id,
+            "reviewsDue": self.reviews_per_student
         }
 
-    ## constructor, add 20 random cards from cardgroup for each student
+    def get_flashcards(self):
+        return [f.public_to_dict() for f in self.flashcards]
+        
+
+
+    # constructor, add 20 random cards from cardgroup for each student
     def __init__(self, cardgroup, user, due_date, reviews_per_student):
         print(f"Creating peer review for '{cardgroup.title}' for user '{user.username}'")
-        self.gardgroup_id = cardgroup.id
+        self.cardgroup_id = cardgroup.id
         self.user_id = user.id
         self.due_date = due_date
         self.reviews_per_student = reviews_per_student
@@ -60,18 +69,87 @@ def addPeerReview(cardgroup_id, user_id, due_date, reviews_per_student):
     user = User.query.get(user_id)
     cardgroup = Cardgroup.query.get(cardgroup_id)  
     peerreview = Peerreview(cardgroup, user, due_date, reviews_per_student)
+    print("done")
+
+    # flashcards = cardgroup.get_n_random_cards(reviews_per_student)
+
+    # for f in flashcards:
+    #     peerreview.flashcards.append(f)
+
+
     db.session.add(peerreview)
     db.session.commit()
 
-def r_20_cards():
-    peer = Peerreview.query.get(2)
+def getPeerReview(pid):
+    return Peerreview.query.get(pid).to_dict()
 
-    group = Cardgroup.query.get(peer.cardgroup_id)
 
-    cards = group.get_n_random_card_ids(3)
+def addPeerReviewForAllStudents(cardgroup_id, due_date, reviews_per_student):
 
-    # for i in cards:
-    #     print(i.to_dict())
 
-    return cards
-    # return jsonify({"succ": "my_balls"})
+    current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+      
+    if (cardgroup_id and due_date and reviews_per_student):        
+        if due_date < current_gmt_time: 
+            raise Exception("Due date can not be in the past")
+        if int(reviews_per_student) < 1:
+            raise Exception("Number of reviews must be larger than 0")
+        if int(reviews_per_student) > MAX_NUMBER_OF_REVIEWS:
+            raise Exception("Number of reviews are limited to "+str(MAX_NUMBER_OF_REVIEWS))
+
+    print(cardgroup_id)
+
+    cardgroup = Cardgroup.query.get(cardgroup_id)
+
+    print(cardgroup.id)
+
+    users = User.query.all()
+    for user in users:
+
+        if(Peerreview.query.filter_by(user_id=user.id, cardgroup_id=cardgroup.id)).first():
+            print("Peer review already exists for this group, for this student with id", user.id)
+        else:
+            peerreview = Peerreview(cardgroup, user, due_date, reviews_per_student)
+            db.session.add(peerreview)
+
+    print("added to sesh")
+    db.session.commit()
+
+
+def getAllPeerreviews():
+    peerreviews = Peerreview.query.all()
+
+    return [i.to_dict() for i in peerreviews]
+
+def getUserPeerreviews(uid):
+    peerreviews = Peerreview.query.filter_by(user_id=uid).all()
+    if not len(peerreviews):
+        raise Exception("No peer review found for user")
+
+    return [p.to_dict() for p in peerreviews]
+
+def deleteAllPeerReviews():
+    re = Peerreview.query.all()
+    for r in re:
+        db.session.delete(r)
+
+    db.session.commit()
+
+def getPeerreviewCards(pid):
+    peerreview = Peerreview.query.get(pid)
+    if not peerreview:
+        raise Exception("Peer review not found with id", pid)
+    return peerreview.get_flashcards()
+
+def getRatingsInPeerreview(pid, uid):
+    flashcards = Peerreview.query.get(pid).flashcards
+    print("getting")
+
+    ratings = []
+    for f in flashcards:
+        rating = Cardrating.query.filter_by(user_id=uid, card_id=f.id).first()
+        print(rating.to_dict())
+        ratings.append(rating)
+
+    
+    return [r.to_dict() for r in ratings]

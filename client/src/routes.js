@@ -68,7 +68,7 @@ const Routes = () => {
 
                     <Route path="/cardgroup/:id" exact component={CardGroupPage} />
                     <Route path="/peerreview" exact component={PeerReview}/>
-                    <Route path="/peerreview/group/:id" exact component={PeerReviewGroup}/>
+                    <Route path="/peerreview/:id" exact component={PeerReviewGroup}/>
                     <Route path="/study" exact component={Study}/>
                     <Route path="/about" exact component={ FML} />
                     <Route path="/userprofile/" exact component={UserProfile} />

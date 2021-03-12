@@ -13,6 +13,7 @@ import Loading from '../notifications/loading';
 import userReducer from '../../store/reducers/userReducer';
 import { Redirect } from 'react-router-dom';
 import { dateJSONToString } from '../../utils/datehandling';
+import Progress from '../submodules/progress';
 
 
 const useStyles = makeStyles(theme => ({
@@ -34,11 +35,7 @@ const useStyles = makeStyles(theme => ({
             background: theme.palette.button.error.dark,
           }
     },
-    progressBar: {
-        "& .MuiLinearProgress-barColorPrimary" : {
-            backgroundColor: theme.palette.button.success.main
-        }
-    }
+ 
 }))
 
 
@@ -57,7 +54,6 @@ const CardGroupPage = props => {
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
 
-    const percentage = Math.round(cards.length && cardgroup ?  100*(cards.length / cardgroup.numberOfCardsDue) : 0)
     const loading = useSelector(state => state.loadingReducer.loading)
 
     const handleClickOpen = () => {
@@ -121,18 +117,10 @@ const CardGroupPage = props => {
                     <Button fullWidth style={{height: "80px"}} className={classes.addButton} variant="outlined" onClick={handleClickOpen}>
                     + Add Flashcard
                     </Button> 
-                    <Grid container style={{margin: "30px 0", border: "0px solid black"}}>
-                        <Grid item xs={8}>
-                            <Typography variant="body1">You've created</Typography>
-                            <Typography variant="body1">{cards.length} of {cardgroup.numberOfCardsDue}</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                           <Typography variant="h4">{percentage}%</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <LinearProgress className={classes.progressBar} variant="determinate" value={percentage} />
-                        </Grid>
-                    </Grid>
+
+                    <Progress x={cards.length} y={cardgroup.numberOfCardsDue} body="You've created" style={{marginTop: "40px"}} />
+
+
                     {isAdmin ? 
                     <Button fullWidth style={{height: "80px"}} className={classes.delButton} variant="outlined" onClick={handleDelete}>
                         Delete cardgroup and all cards

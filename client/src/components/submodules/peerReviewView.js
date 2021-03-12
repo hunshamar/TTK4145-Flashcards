@@ -9,7 +9,7 @@ import { dateJSONToString } from '../../utils/datehandling';
 
 
 
-const GroupView = ({cardgroups, showDueDate, onClick}) => {
+const PeerreviewView = ({peerreviews, showDueDate, onClick}) => {
 
     const loading = useSelector(state => state.loadingReducer.loading)   
 
@@ -23,24 +23,23 @@ const GroupView = ({cardgroups, showDueDate, onClick}) => {
                 <Grid container spacing={0}>
                     <Divider   /> 
 
-                    {cardgroups.length ? 
-                    cardgroups.map((cardgroup) => (
-                        <Grid item xs={12} key={cardgroup.id}> 
-                            <CardActionArea onClick={() => onClick(cardgroup.id)} style={{padding: "10px", minHeight: "100px"}}>
+                    {peerreviews.length ? 
+                    peerreviews.map((peerreview) => (
+                        <Grid item xs={12} key={peerreview.id}> 
+                            <CardActionArea onClick={() => onClick(peerreview.id)} style={{padding: "10px", minHeight: "100px"}}>
                                 <Grid container spacing={2} >
                                     <Grid item xs={12}>                        
                                         <Typography variant="subtitle1" component="h2">
-                                            {cardgroup.title}     
+                                            Peer Review of cards in {peerreview.cardgroup.title}     
                                         </Typography>
-                                        {showDueDate ? 
                                             <Typography variant="body2" color="textSecondary" component="h2">
-                                                {cardgroup.numberOfCardsDue} cards are due: {dateJSONToString.call(this, cardgroup.dueDate)}     
-                                            </Typography> : <div></div>}
+                                                {peerreview.reviewsDue} Cards are due for peer review: {dateJSONToString.call(this, peerreview.dueDate)} from this chapter   
+                                            </Typography> 
                                     </Grid>
                                 </Grid>
                             </CardActionArea> 
                             <Divider   /> 
-                        </Grid>)) : <Typography variant="subtitle1"> No groups</Typography> } 
+                        </Grid>)) : <Typography variant="subtitle1"> No peer reviews due</Typography> } 
                 
                 </Grid>
             </div>
@@ -48,4 +47,4 @@ const GroupView = ({cardgroups, showDueDate, onClick}) => {
     }
 }
 
-export default GroupView
+export default PeerreviewView

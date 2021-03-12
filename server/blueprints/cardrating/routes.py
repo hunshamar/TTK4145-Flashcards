@@ -38,9 +38,10 @@ def get_rating(cid):
         cid = int(cid)
         uid = uid = get_jwt_identity()
         rating = getRating(uid, cid)
-
-        return jsonify(rating.to_dict())
-
+        if rating: 
+            return jsonify(rating.to_dict())
+        else:
+            return jsonify({"status":"no rating"})
     except Exception as e:
         print(e)
         return(jsonify({"error": str(e)}))    

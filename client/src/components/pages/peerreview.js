@@ -9,39 +9,78 @@ import { useSelector } from 'react-redux';
 import { loadCardgroups } from "../../store/actions/cardgroupActions";
 import { useEffect } from 'react';
 import { useHistory } from "react-router-dom";
+import { useState } from 'react';
+import CreatePeerreview from "../dialogs/createPeerreview";
+import { getUserPeerreviews } from "../../store/actions/peerreviewActions";
+import PeerreviewView from "../submodules/peerReviewView";
 
 
 const useStyles = makeStyles(theme => ({
+    addButton: {
+        backgroundColor: theme.palette.button.success.main,
+        color: "white",
+        border: "none",
+        align: "center",
+        '&:hover': {
+            background: theme.palette.button.success.dark,
+          }
 
+    }
 }))
 
 const PeerReview = () => {
     const classes = useStyles() 
     const dispatch = useDispatch();  
+    const [open, setOpen] = useState(false);
    
-    const cardgroups = useSelector(state => state.cardgroupReducer.cardgroups)
+    const peerreviews = useSelector(state => state.peerreviewReducer.peerreviews)
     const isAdmin = useSelector(state => state.authReducer.isAdmin)
+    const [cardgroups, setCardgroups] = useState([])
 
     useEffect(() => {
-        dispatch(loadCardgroups())
+        dispatch(getUserPeerreviews())
+        
     }, [dispatch])   
 
     const history = useHistory()
 
-    const handleRedirect = groupId => {
-        history.push("/peerreview/group/"+groupId)
+    const handleRedirect = peerreviewid => {
+        history.push("/peerreview/"+peerreviewid)
     }
+    
+    useEffect(() => {
+        if (peerreviews.length){
+            setCardgroups(  
+                peerreviews.map(p => {
+                    return p.cardgroup
+                })
+            )
+        }
+    }, [peerreviews])
 
-    return(
+    return( 
         <PageWrapper>
+            <CreatePeerreview open={open} onClose={() => setOpen(false)}  />
 
             <Grid container spacing={5}>  
                 <Grid item xs={12}>
                     <Grid container spacing={2}>  
-                        <Grid item xs={12}  >
+                        <Grid item xs={8}  >
                             <Typography variant="h4" gutterBottom >
                                 Peer Review of Cards
                             </Typography>
+                        </Grid>
+                        <Grid item xs={4}  >
+                            {isAdmin ?                 
+                            <Button fullWidth className={classes.addButton} variant="outlined" onClick={() => setOpen(true)}>
+                                + Add Peer Review Session
+                            </Button> :
+                            <div></div>}
+                        </Grid>
+                        <Grid item xs={12}  >
+
+
+
                             <Typography variant="body2" color="textSecondary">
                                 Todo:
                                 <ul>
@@ -61,7 +100,7 @@ const PeerReview = () => {
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <GroupView cardgroups={cardgroups} onClick={handleRedirect} />
+                            <PeerreviewView peerreviews={peerreviews} onClick={handleRedirect} />
                         </Grid> 
 
                     </Grid>

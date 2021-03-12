@@ -111,8 +111,8 @@ def get_current_user():
 
 
 @userBlueprint.route("/api/users/all")
-@jwt_required
-@admin_only
+# @jwt_required
+# @admin_only
 def users():
     sleep(DELAY_S)
     try:

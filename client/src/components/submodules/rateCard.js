@@ -79,7 +79,7 @@ const RateCard = ({card, index, save}) => {
     const submitRating = () => {
 
         if (difficulty && quality){
-            console.log("rate")
+            console.log("rate this card")
             const rating = {
                 difficulty,
                 quality,

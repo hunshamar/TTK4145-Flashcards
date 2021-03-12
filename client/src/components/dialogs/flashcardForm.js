@@ -90,7 +90,6 @@ const FlashcardForm = (props) => {
         <form onSubmit={submit} style={{margin: "40px"}}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-
                     <Typography variant="h5">Edit a flashcard </Typography>
                 </Grid>
                 {/* <Grid item xs={12}>
@@ -123,7 +122,10 @@ const FlashcardForm = (props) => {
                         variant="outlined"
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={6}>
+                    <Button variant="contained" onClick={handleClose} fullWidth color="primary"  > Back</Button>
+                </Grid>
+                <Grid item xs={6}>
                 <Button type="submit" fullWidth style={{backgroundColor: front && back ? "green" : "grey", color: "white"}}>{props.card ? "edit" : "submit"}</Button>
                 
                 </Grid>
