@@ -3,6 +3,7 @@ from db import db
 #import parents
 from ..user.user import User 
 from ..cardgroup.cardgroup import Cardgroup, getCardgroup
+import datetime
 
 
 class Flashcard(db.Model):
@@ -15,6 +16,7 @@ class Flashcard(db.Model):
     # children
     ratings = db.relationship("Cardrating", cascade="all, delete-orphan", backref="flashcard")
 
+    average_rating = db.Column(db.Integer)
 
     # Parents
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -58,6 +60,12 @@ def getFlashcard(cid):
         raise Exception(f"Card with id {cid} not found")
     return Flashcard.query.get(cid)
 
+def calculateCardAverageRating():
+    for flashcard in Flashcard.query.all():
+        print(f"flashcard: {flashcard.id}")
+        for ratings in flashcard.ratings:
+            print(f"q: {rating.quality_rating}, d: {rating.difficulty} ")
+
 
 # def getUserFlashcards():
 #     flashcards = Flashcard.querry.all()
@@ -80,6 +88,10 @@ def addFlashcard(front, back, userid, cardgroupid):
         if numberOfFlashcardsAlreadyAdded+1 > cardgroup.number_of_cards_due:
             raise Exception("Error. All cards delivered")
 
+        current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+        if current_gmt_time > cardgroup.due_date:
+            raise Exception("Error. Due date exceeded")
+
 
 
         flashcard = Flashcard(front=front, back=back, user=user, cardgroup=cardgroup)
@@ -96,8 +108,16 @@ def getCardgroupFlashcards(cgid):
     return [i.to_dict() for i in cards]
 
 def deleteFlashcard(cid):
-    card = Flashcard.query.get(cid)
-    db.session.delete(card)
+    flashcard = Flashcard.query.get(cid)
+
+    cardgroup = Cardgroup.query.get(flashcard.cardgroup_id)
+    if (not cardgroup):
+        raise Exception(f"Error. cardgroup with id {cardgroupid} not found")
+    current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+    if current_gmt_time > cardgroup.due_date:
+        raise Exception("Error. Due date exceeded")
+
+    db.session.delete(flashcard)
     db.session.commit()
     # return card.to_dict()
 
@@ -124,6 +144,13 @@ def getCardgroupDeliveryStatus(cgid):
 
 def editFlashcard(cardId, newFront, newBack):
     flashcard = getFlashcard(cardId)
+    cardgroup = Cardgroup.query.get(flashcard.cardgroup_id)
+    if (not cardgroup):
+        raise Exception(f"Error. cardgroup with id {cardgroupid} not found")
+    current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+    if current_gmt_time > cardgroup.due_date:
+        raise Exception("Error. Due date exceeded")
+
     flashcard.front = newFront
     flashcard.back = newBack
     db.session.commit()

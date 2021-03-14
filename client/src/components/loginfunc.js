@@ -18,7 +18,7 @@ const LogInFunc = () => {
 
     const history = useHistory()
     if (loggedIn){
-      history.push("/userprofile")
+      history.push("/")
     }
 
 

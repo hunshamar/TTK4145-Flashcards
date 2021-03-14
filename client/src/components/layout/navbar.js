@@ -115,7 +115,7 @@ const Navbar = props => {
     const isAdmin = useSelector(state => state.authReducer.isAdmin)
     
 
-   
+    const history = useHistory()
 
     return(
 
@@ -126,8 +126,8 @@ const Navbar = props => {
                     <Toolbar style={{padding: 0}}>
 
         <Link to="/" className={classes.link}>  
-        <Typography variant="h6" style={{flexGrow: 0}} onClick={() => console.log("asdsad")}>
-        TTK4155 Flashcards
+        <Typography variant="h6" style={{flexGrow: 0}} onClick={() => history.push("/home")}>
+        TTK4145 Flashcards
         </Typography>
         </Link>
 
@@ -139,7 +139,7 @@ const Navbar = props => {
 
             <React.Fragment>
                 <ListItem>
-                    <NavLink className={classes.navlink}  to="/"> Add Cards</NavLink>
+                    <NavLink className={classes.navlink}  to="/addcards"> Add Cards</NavLink>
                 </ListItem>
                 <ListItem>
                     <NavLink className={classes.navlink}  to="/peerreview"> Peer Review</NavLink>

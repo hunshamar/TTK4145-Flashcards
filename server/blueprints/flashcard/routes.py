@@ -85,6 +85,12 @@ def add_Flashcard():
         return jsonify({"error": str(e)})
 
 
+@flashcardBlueprint.route("/api/ratingss", methods=["GET"])
+def ratings():
+    calculateCardAverageRating()
+    return jsonify({"ratings": "true"})
+
+
 @flashcardBlueprint.route("/api/deleteflashcard/<cid>", methods=["DELETE"])
 @jwt_required
 def delete_card(cid):
@@ -102,7 +108,7 @@ def delete_card(cid):
         deleteFlashcard(cid)
         return jsonify({"success": "true"})
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return jsonify({"error": str(e)})   
 
 @flashcardBlueprint.route("/api/cardgroupflashcards/<cgid>", methods=["GET"])
 # @jwt_required

@@ -4,6 +4,7 @@ from db import db
 from sqlalchemy import and_
 from functools import wraps
 
+
 class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key = True) 
@@ -100,7 +101,6 @@ def searchUsers(role, phrase):
         users = User.query.filter_by(role=role, username=phrase)
 
     return [i.to_dict() for i in users]
-
 
 def getUser(uid):
     if not uid:

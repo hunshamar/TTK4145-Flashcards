@@ -82,21 +82,7 @@ const PeerReview = () => {
 
 
                             <Typography variant="body2" color="textSecondary">
-                                Todo:
-                                <ul>
-                                    <li>Admin "create" peer review. Choose cardgroup, duedate for peer review and number of 
-                                        cards to review per student
-                                    </li>
-                                    <li>
-                                        Styling of this page.. Duedate and progress on peer review
-                                    </li>
-                                    <li>
-                                        Implement "mark as duplicated"
-                                    </li>
-                                    <li>
-                                        Collect random cards for each student to rate. Now, every card appears
-                                    </li>
-                                </ul>
+                                Liten readme her
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>

@@ -128,6 +128,8 @@ def users():
 def users_filter(role):
     sleep(DELAY_S)
     try:
+
+            
         return jsonify(getUsersWithRole(role))
     except Exception as e:
         print(e)
@@ -150,7 +152,6 @@ def login_token():
         apiKey = str(os.environ.get("FEIDE_API_KEY"))
         feide_token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+apiKey)
 
-
         tokenstring = apiKey+feide_token.text    
         authenticityToken = hashlib.sha1(tokenstring.encode('utf-8')).hexdigest() ## Encrypt with sha1
         session["authenticityToken"] = authenticityToken
@@ -170,11 +171,11 @@ def user_data():
     print(request.headers)
     try: 
         if request.method == "GET": # External login from feide
+            authenticityToken = session.pop("authenticityToken", None)
             userdata =  request.args.getlist('userdata')[0]
             userdata_dict = json.loads(userdata)
-            print(userdata_dict)
-            
-            if (userdata_dict["authenticityToken"] == session["authenticityToken"]): 
+                
+            if (userdata_dict["authenticityToken"] == authenticityToken): 
                 print("Authenticity token OK")
                 session["userdata"] = userdata_dict
                 print("added userdata to session:")       
@@ -183,6 +184,7 @@ def user_data():
 
             else:
                 return redirect(jsonify("Bad authenticityToken"))
+
 
 
         if request.method == "POST": # Alternative login

@@ -2,7 +2,7 @@
 import React, {useEffect} from "react"
 import { BrowserRouter as Redirect, Route, Switch } from "react-router-dom";
 
-import Home from "./components/pages/home"
+import AddCards from "./components/pages/addCards"
 import Login from "./components/pages/login"
 import AllCards from './components/adminpages/allCards';
 // import CreateCardgroup from "./components/createCardgroup"
@@ -20,10 +20,13 @@ import DeliveryStatus from './components/adminpages/deliveryStatus';
 import PeerReview from "./components/pages/peerreview";
 import PeerReviewGroup from "./components/pages/peerReviewGroup";
 import Study from "./components/pages/study";
+import Home from './components/pages/home';
+
+
 
 const useStyles = makeStyles(theme => ({
     // pages: {
-    //     paddingLeft: "auto",
+    //     paddingLeft: "auto",H
     //     paddingRight: "auto",
     //     alignItems: "center",
     //     display: "flex",
@@ -66,12 +69,13 @@ const Routes = () => {
                 {loggedIn ? 
                 <React.Fragment>
 
+                    <Route path="/addcards" exact component={AddCards}/>
                     <Route path="/cardgroup/:id" exact component={CardGroupPage} />
                     <Route path="/peerreview" exact component={PeerReview}/>
                     <Route path="/peerreview/:id" exact component={PeerReviewGroup}/>
                     <Route path="/study" exact component={Study}/>
                     <Route path="/about" exact component={ FML} />
-                    <Route path="/userprofile/" exact component={UserProfile} />
+                    <Route path="/userprofile/:username" exact component={UserProfile} />
                     {isAdmin ? 
                     <React.Fragment>
                         {/* <Route path="/adminpage" exact component={AdminPage} /> */}

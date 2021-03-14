@@ -123,9 +123,6 @@ def getAllPeerreviews():
 
 def getUserPeerreviews(uid):
     peerreviews = Peerreview.query.filter_by(user_id=uid).all()
-    if not len(peerreviews):
-        raise Exception("No peer review found for user")
-
     return [p.to_dict() for p in peerreviews]
 
 def deleteAllPeerReviews():
@@ -147,9 +144,10 @@ def getRatingsInPeerreview(pid, uid):
 
     ratings = []
     for f in flashcards:
+        print("flsahcard", f.front)
         rating = Cardrating.query.filter_by(user_id=uid, card_id=f.id).first()
-        print(rating.to_dict())
-        ratings.append(rating)
+        if rating:
+            ratings.append(rating)
 
     
     return [r.to_dict() for r in ratings]

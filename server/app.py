@@ -11,6 +11,9 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 # from flask_user import UserManager
 
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
+
 #key stuff
 import os
 from dotenv import load_dotenv
@@ -19,6 +22,11 @@ load_dotenv()
 app = Flask(__name__, static_folder="build", static_url_path="/")
 CORS(app, supports_credentials=True) # Support credentials to allow sessions in blueprints
 
+# Migration
+migrate = Migrate(app, db)
+manager = Manager(app)
+
+manager.add_command("db", MigrateCommand)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydb.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -56,5 +64,6 @@ def react_index():
 
 
 if __name__ == "__main__":
+    manager.run()
     app.run(debug=True)
     

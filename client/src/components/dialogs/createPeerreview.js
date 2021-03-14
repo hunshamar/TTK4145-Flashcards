@@ -126,7 +126,7 @@ const CreatePeerreview = (props) => {
                     fullWidth
                     color="secondary"
                     id="outlined-number"
-                    label="Number of flashcards for delivery pr student"
+                    label="Number of flashcards to review pr student"
                     type="number"
                     required
                     onChange={e => setNumberOfReviews(e.target.value)} 

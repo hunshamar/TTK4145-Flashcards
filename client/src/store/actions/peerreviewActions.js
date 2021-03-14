@@ -73,9 +73,9 @@ export const getUserPeerreviews = () => async( dispatch, getState) => {
 
             const peerReviews = res.data
             console.log("was found, ",  peerReviews)
-            let alert = {severity: "success", text: "successfully got peerreviews: "+peerReviews}
             dispatch({type: LOAD_PEERREVIEWS, payload: peerReviews})
-            dispatch({type: SET_ALERT, payload: alert})
+            // let alert = {severity: "success", text: "successfully got peerreviews: "+peerReviews}
+            // dispatch({type: SET_ALERT, payload: alert})
             // dispatch({type: CREATE_PEERREVIEW, payload: createdCardgroup})
         })
         .catch(err => {
@@ -117,9 +117,9 @@ export const loadPeerreview = (pid) => async( dispatch, getState) => {
 
             const peerreview = res.data
             console.log("was found, ",  peerreview)
-            let alert = {severity: "success", text: "successfully got peerreviews: "+peerreview}
             dispatch({type: LOAD_PEERREVIEWS, payload: [peerreview]})
-            dispatch({type: SET_ALERT, payload: alert})
+            // let alert = {severity: "success", text: "successfully got peerreviews: "+peerreview}
+            // dispatch({type: SET_ALERT, payload: alert})
             // dispatch({type: CREATE_PEERREVIEW, payload: createdCardgroup})
         })
         .catch(err => {

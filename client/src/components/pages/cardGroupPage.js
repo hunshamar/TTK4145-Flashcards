@@ -14,6 +14,7 @@ import userReducer from '../../store/reducers/userReducer';
 import { Redirect } from 'react-router-dom';
 import { dateJSONToString } from '../../utils/datehandling';
 import Progress from '../submodules/progress';
+import { useHistory } from 'react-router-dom';
 
 
 const useStyles = makeStyles(theme => ({
@@ -43,7 +44,6 @@ const CardGroupPage = props => {
     console.log("prop")
     console.log(props.match.params)
 
-    const [redirectHome, setRedirectHome] = useState(false)
     const classes = useStyles()
 
     const isAdmin = useSelector(state => state.authReducer.isAdmin)
@@ -64,10 +64,11 @@ const CardGroupPage = props => {
         setOpen(false);
       };
 
+    const  history = useHistory()
     const handleDelete = () => {
         if (window.confirm("Are you sure you want to delete cardgroup with all cards?")){ 
             dispatch(deleteCardgroup(cardgroup))
-            setRedirectHome(true)
+            history.push("/addcards")
         }
 
     }
@@ -82,13 +83,7 @@ const CardGroupPage = props => {
         dispatch(loadCardGroupUserFlashcards(props.match.params.id, user.id))       
         dispatch(loadCardgroup(props.match.params.id))
     }, [dispatch, props.match.params.id])   
-    if (redirectHome){
-        return (
-            <Redirect to={{
-                pathname: "/"
-              }}/>  
-        )
-    }   
+ 
     if (loading){
         return (
             <PageWrapper>
@@ -103,7 +98,7 @@ const CardGroupPage = props => {
             {cardgroup ? 
             <Grid container spacing={6}>
                 <Grid item xs={8}>
-                    <Typography variant="h4">{cardgroup.title}</Typography>
+                    <Typography variant="h4">Add Flashcards to {cardgroup.title}</Typography>
                     <Typography variant="body2">{cardgroup.numberOfCardsDue} cards are due {dateJSONToString(cardgroup.dueDate)}
                      </Typography>
 
@@ -111,6 +106,7 @@ const CardGroupPage = props => {
                      <CardView cards={cards}/>
                      </div>
                 </Grid>
+
                 
                 
                 <Grid item xs={4}>
@@ -118,7 +114,7 @@ const CardGroupPage = props => {
                     + Add Flashcard
                     </Button> 
 
-                    <Progress x={cards.length} y={cardgroup.numberOfCardsDue} body="You've created" style={{marginTop: "40px"}} />
+                    <Progress x={cards.length} y={cardgroup.numberOfCardsDue} body="You've created" style={{margin: "40px 0px"}} />
 
 
                     {isAdmin ? 
