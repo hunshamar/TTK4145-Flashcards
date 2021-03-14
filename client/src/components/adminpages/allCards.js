@@ -34,6 +34,8 @@ import CardDialog from "../dialogs/cardDialog";
         { field: 'username', headerName: 'Username', width: 130 },
         { field: 'front', headerName: 'Card Front', width: 130 },
         { field: 'back', headerName: 'Card Back', width: 130 },
+        { field: 'nRatings', headerName: 'N Ratings', width: 130 },
+        { field: 'averageRating', headerName: 'Avg Rating', width: 130 },
     ]      
 
     let rows = cards.map(c => (
@@ -42,7 +44,9 @@ import CardDialog from "../dialogs/cardDialog";
             name: c.user ? c.user.name: "",
             username: c.user ? c.user.username: "",
             front: c.front,
-            back: c.back
+            back: c.back,
+            nRatings: c.nRatings,
+            averageRating: c.averageRating
         }
     ))
     

@@ -22,6 +22,18 @@ class Flashcard(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     cardgroup_id = db.Column(db.Integer, db.ForeignKey("cardgroup.id"))
 
+    def calculate_average_rating(self):
+        sum = 0
+        if not len(self.ratings):
+            print("no ratings on card")
+            self.average_rating = None
+        else: 
+            for rating in self.ratings:
+                sum += rating.quality_rating
+            average = sum / len(self.ratings)
+            print(f"rated {len(self.ratings)}, sum={sum}, return av ={average}")
+            self.average_rating = int(average)
+
 
     def to_dict(self):            
         return {
@@ -30,6 +42,8 @@ class Flashcard(db.Model):
             "back": self.back,
             "user": User.query.get(self.user_id).to_dict(),
             "cardgroup": self.cardgroup_id,
+            "nRatings": len(self.ratings),
+            "averageRating": self.average_rating,
         }
 
     def public_to_dict(self):
@@ -62,10 +76,8 @@ def getFlashcard(cid):
 
 def calculateCardAverageRating():
     for flashcard in Flashcard.query.all():
-        print(f"flashcard: {flashcard.id}")
-        for ratings in flashcard.ratings:
-            print(f"q: {rating.quality_rating}, d: {rating.difficulty} ")
-
+        flashcard.calculate_average_rating()
+    db.session.commit()
 
 # def getUserFlashcards():
 #     flashcards = Flashcard.querry.all()

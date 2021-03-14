@@ -4,20 +4,24 @@ import { Button,
     TextField,
     Dialog,
     Typography,
-    makeStyles
+    makeStyles,
+    Input,
+    InputAdornment,
+    IconButton,
+    Tooltip
 } from '@material-ui/core';
 import React, { useState } from 'react';
 
-
 import {  useDispatch } from 'react-redux';
 import { addCard } from '../../store/actions/cardActions';
+import UploadImage from '../submodules/uploadImage';
 
 const useStyles = makeStyles(theme => ({
     dialog: {
         "& .MuiDialog-paperScrollPaper": {
             maxHeight: "100vh",
         },
-    }
+    },
 }))
 
 const CreateCardDialog = (props) => {
@@ -77,16 +81,22 @@ const CreateCardDialog = (props) => {
                     <CardgroupSelect onChange={e => setCardgroupid(e)} />
                 </Grid> */}
                 <Grid item xs={12}>
-                    <TextField 
-                        onChange={e => setFront(e.target.value)} 
-                        fullWidth 
-                        required 
-                        variant="outlined"
-                        color="secondary"
-                        label="Front"
-                        value={front}
-                        multiline
-                        rows={4}/>
+                <TextField
+                    onChange={e => setFront(e.target.value)} 
+                    fullWidth 
+                    required
+                    variant="outlined"
+                    color="secondary"
+                    label="Front"
+                    value={front}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end" style={{margin: "auto 0 15px"}}>
+                            <UploadImage />
+                        </InputAdornment>,
+                    }}
+                    multiline
+                    rows={4}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField 

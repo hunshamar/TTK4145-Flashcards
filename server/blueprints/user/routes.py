@@ -287,6 +287,7 @@ def access_logout():
 def refresh_logout():
     jti = get_raw_jwt()["jti"]
     try:
+        print("logged asd yes")
         invalid_token = InvalidToken(jti=jti)
         invalid_token.save()
         return jsonify({"success": True})

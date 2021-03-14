@@ -1,7 +1,8 @@
 
-import { Grid, Typography, Divider, Link } from '@material-ui/core';
+import { Grid, Typography, Divider, Link, Button } from '@material-ui/core';
 import { PageWrapper } from '../../static/wrappers';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import { tokenCheck } from '../../store/actions/authActions';
 
 const Home = () => {
 
@@ -14,6 +15,7 @@ const Home = () => {
                     <Typography variant="h4" gutterBottom >
                         Home
                     </Typography>
+                    <Button onClick={() => tokenCheck()}>Checktoken</Button>
                 </Grid> 
                 <Grid item xs={12}>
                     <Divider />

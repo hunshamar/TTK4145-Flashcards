@@ -131,3 +131,37 @@ export const signOut = () => async (dispatch, getState) => {
 
 }
 
+export const tokenCheck = async () => {
+    const user_token = localStorage.getItem("user_token")
+    try {
+        /* Will return error if token expire */
+        await axios.post("/api/checkiftokenexpire", {}, {
+            headers: {
+                Authorization: `Bearer ${user_token}`
+            }
+        }).then(res =>{
+            console.log(res.data)
+            window.alert("TOken good")
+            return true
+        })
+    }
+    catch{
+        console.log("Expired. Use refresh")
+        window.alert("Expired. Use refresh")
+        const refresh_token = localStorage.getItem("refresh_token")
+        if (!refresh_token) {
+            localStorage.removeItem("user_token")
+            window.alert("false")
+            return false;
+        }
+        await axios.post("/api/refreshtoken", {}, {
+            headers: {
+                Authorization: `Bearer ${refresh_token}`
+            }
+        }).then(res => {
+            localStorage.setItem("user_token", res.data.token)
+        })
+        window.alert("true")
+        return true;
+    }
+}
