@@ -16,6 +16,7 @@ import { loadPeerreview } from '../../store/actions/peerreviewActions';
 import Progress from '../submodules/progress';
 import ratingReducer from '../../store/reducers/ratingReducer';
 import { getRatingsInPeerreview } from '../../store/actions/ratingActions';
+import CardPreviewDialog from '../dialogs/cardPreviewDialog';
 
 const PeerReviewGroup = (props) =>{
     const peerreviewId = props.match.params.id
@@ -25,6 +26,9 @@ const PeerReviewGroup = (props) =>{
 
     const ratings = useSelector(state => state.ratingReducer.ratings)
     const [save, setSave] = useState(false) 
+
+    const [previewCard, setPreviewCard] = useState({})
+    const [openPreview, setOpenPreview] = useState(false)
 
     const dispatch = useDispatch() 
     useEffect(() => {
@@ -53,6 +57,10 @@ const PeerReviewGroup = (props) =>{
         console.log("test:", props)
     }
 
+    const openPreviewCard = card => {
+        setPreviewCard(card)
+        setOpenPreview(true)   
+    }
     
 
     if (!cards || !peerreview){
@@ -63,17 +71,18 @@ const PeerReviewGroup = (props) =>{
     else {
         return (
             <PageWrapper>
+                <CardPreviewDialog open={openPreview} onClose={() => setOpenPreview(false)} card={previewCard}  />
                 <Typography  variant="h4" >Peer Review of Cards from </Typography>
                 <Typography  variant="h4" >{peerreview.cardgroup.title}</Typography>
                 <Typography variant="body2" color="textSecondary">
                 {peerreview.reviewsDue} cards are due to be rated. Read the question, attempt to answer it to yourself, 
-                then you may reveal the answer. After testing the card, you are to rate it based on three criteria, try to be objective:
-                    <br/> <br/>
-                    <b>Level of Difficulty</b> An objective rating on whether the difficulty of the card is appropriate. Too easy or too hard? Rate the card low. 
-                    Good level of difficulty? Rate the card high. <br/>
+                then you may reveal the answer. After testing the card, you are to rate it based on three criteria, try to be objective<br/> 
+                    If the card is hard to read, press "FULL CARD VIEW"  button for a full preview of the card.
+                    <br/><br/>
+                    <b>Level of Difficulty</b> An objective rating on the difficulty of the card. <br/>
                     <b>Relevance and Quality</b> A rating of how relevant the card is to the course curriculum and the quality of the flashcard. Will studying
                      this card be useful for learning the course material? Is the question well-phrased? Is it too long and complex? Is it original?
-                    the cource material? Is the question well phrased? Is it too long and complex? Is it original?<br/>
+                    <br/>
                     <b>Mark as Duplicate</b>  If two or more cards are very similar or duplicate of each other, press "mark as duplicate" on one of the cards and
                      choose one or more of the other cards.
 
@@ -87,7 +96,7 @@ const PeerReviewGroup = (props) =>{
                 
                 cards.map((card, i) => 
                     <React.Fragment>
-                        <RateCard key={card.id} card={card} index={i+1} save={save}  />
+                        <RateCard key={card.id} card={card} index={i+1} save={save} previewCard={openPreviewCard}  />
                         <Divider />
                     </React.Fragment>
                 ) : <div>empty</div>}

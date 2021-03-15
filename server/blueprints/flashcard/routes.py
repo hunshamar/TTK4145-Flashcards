@@ -13,11 +13,15 @@ from ..values import DELAY_S
 
 
 @flashcardBlueprint.route("/api/flashcards")
+@jwt_required
+@admin_only
 def flashcards():    
     sleep(DELAY_S)
     return jsonify(getAllFlashcards())
 
 @flashcardBlueprint.route("/api/flashcard/<cid>")
+@jwt_required
+@admin_only
 def flashcard(cid):    
     sleep(DELAY_S)
     try:
@@ -85,7 +89,8 @@ def add_Flashcard():
         return jsonify({"error": str(e)})
 
 
-@flashcardBlueprint.route("/api/ratingss", methods=["GET"])
+# temp, expand
+@flashcardBlueprint.route("/api/calculateaverageratings", methods=["GET"])
 def ratings():
     calculateCardAverageRating()
     return jsonify({"ratings": "true"})
@@ -111,7 +116,8 @@ def delete_card(cid):
         return jsonify({"error": str(e)})   
 
 @flashcardBlueprint.route("/api/cardgroupflashcards/<cgid>", methods=["GET"])
-# @jwt_required
+@jwt_required
+@admin_only
 def cardgroup_cards(cgid):
     sleep(DELAY_S)
     print(type(cgid), "find this")
@@ -120,11 +126,12 @@ def cardgroup_cards(cgid):
     except Exception as e:
         return jsonify({"error": str(e)})
 
-@flashcardBlueprint.route("/api/cardgroupuserflashcards/<cgid>/<uid>", methods=["GET"])
+@flashcardBlueprint.route("/api/cardgroupuserflashcards/<cgid>", methods=["GET"])
 @jwt_required
-def cardgroup_user_cards(cgid, uid):
+def cardgroup_user_cards(cgid):
     sleep(DELAY_S)
     print(type(cgid), "find this")
+    uid = get_jwt_identity()
     try:
         return jsonify(getCardGroupFlashCardsUser(int(cgid), int(uid)))
     except Exception as e:

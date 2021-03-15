@@ -79,8 +79,7 @@ const CardGroupPage = props => {
     useEffect(() => {
         console.log("stuff and things") 
         console.log(cardgroup)
-        console.log(user)
-        dispatch(loadCardGroupUserFlashcards(props.match.params.id, user.id))       
+        dispatch(loadCardGroupUserFlashcards(props.match.params.id))       
         dispatch(loadCardgroup(props.match.params.id))
     }, [dispatch, props.match.params.id])   
  

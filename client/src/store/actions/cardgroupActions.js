@@ -1,12 +1,11 @@
 
 import axios from 'axios';
 import { SET_ALERT, CREATE_CARDGROUP, SET_LOADING, LOAD_CARDGROUPS, DELETE_CARDGROUP, DELETE_CARDGROUP_ERROR, LOAD_CARDGROUP } from '../actionTypes';
+import { refreshTokens } from './authActions';
 
-const Sleep = (milliseconds) => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds))
-  }
 
 export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
+    await refreshTokens()
         
     
     console.log("c cardgroup")
@@ -55,6 +54,7 @@ export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
 
 
 export const loadCardgroups = () => async (dispatch, getState) => {
+    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})
 
 
@@ -78,6 +78,7 @@ export const loadCardgroups = () => async (dispatch, getState) => {
 
 
 export const loadCardgroup = (groupId) => async (dispatch) => {
+    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})
 
     await axios.get("/api/cardgroup/"+groupId)
@@ -103,6 +104,7 @@ export const loadCardgroup = (groupId) => async (dispatch) => {
 }
 
 export const deleteCardgroup = (cardgroup) => async (dispatch, getState) => {
+    await refreshTokens()
     console.log("and action")
     console.log(cardgroup.id)
 

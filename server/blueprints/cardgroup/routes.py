@@ -53,7 +53,8 @@ def add_cardgroup():
         return {"error": str(e)}
 
 @cardgroupBlueprint.route("/api/deletegroup/<cgid>", methods=["GET","DELETE"])
-# @jwt_required
+@jwt_required
+@admin_only
 def delete_group(cgid):
     sleep(DELAY_S)
     print(cgid, "is deleted yes")

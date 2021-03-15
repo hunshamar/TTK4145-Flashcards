@@ -1,6 +1,7 @@
 
-import { Button, Card, Grid, IconButton, Tooltip, Typography } from '@material-ui/core';
+import { Button, Card, Tooltip, Grid, IconButton, Typography, Box } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
+
 import SaveIcon from '@material-ui/icons/Save';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
@@ -29,12 +30,40 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const RateCard = ({card, index, save}) => {
+const difficultyLabels = {
+    0.5: 'Extremely Easy',
+    1: 'Very Easy',
+    1.5: 'Easy',
+    2: 'A Little Easy',
+    2.5: 'Ok',
+    3: 'Ok+',
+    3.5: 'A Little Hard',
+    4.0: 'Hard',
+    4.5: 'Very Hard',
+    5: 'Extremely Hard',
+  };
+
+  const qualityLabels = {
+    0.5: 'Useless',
+    1: 'Useless+',
+    1.5: 'Poor',
+    2: 'Poor+',
+    2.5: 'Ok',
+    3: 'Ok+',
+    3.5: 'Good',
+    4: 'Good+',
+    4.5: 'Excellent',
+    5: 'Excellent+',
+  };
+
+const RateCard = ({card, index, save, previewCard}) => {
 
     const classes = useStyles()
     const [flipped, setFlipped] = useState(false);
 
     const [difficulty, setDifficulty] = useState(0)
+    const [hoverDifficulty, setHoverDifficulty] = useState(-1);
+
     const [relevance, setRelevance] = useState(0)
     const [saveDate, setSaveDate] = useState("");
 
@@ -42,6 +71,7 @@ const RateCard = ({card, index, save}) => {
 
 
     const [quality, setQuality] = useState(0)
+    const [hoverQuality, setHoverQuality] = useState(-1);
     const dispatch = useDispatch() 
 
     const rating = useSelector(state => state.ratingReducer.ratings.find(rating => rating.card_id == card.id))
@@ -97,15 +127,19 @@ const RateCard = ({card, index, save}) => {
                         <Typography variant="subtitle2">#</Typography>
                         <Typography variant="body2">{index}</Typography>
                 </Grid>
-                <Grid item xs={3}>       
+                <Grid item xs={4}>       
                         <Typography variant="subtitle2">Question</Typography>
-                        <Typography variant="body2">{card.front}</Typography>
+                        <Typography variant="body2">                      
+                                <div dangerouslySetInnerHTML={{__html: card.front}} style={{overflow: "hidden"}}/>
+                        </Typography>
                 </Grid>
                 
-                <Grid item xs={5}>       
+                <Grid item xs={4} >       
                         <Typography variant="subtitle2">{flipped ? "Answer" : "Reveal Answer"}</Typography>
                         {flipped ? 
-                            <Typography className={classes.body} variant="body2"> {flipped ? card.back : "" }</Typography>
+                            <Typography className={classes.body} variant="body2"> {flipped ?                         
+                                <div dangerouslySetInnerHTML={{__html: card.back}} />
+                                : "" }</Typography>
                         :
                             <div></div>
                         }
@@ -122,24 +156,38 @@ const RateCard = ({card, index, save}) => {
                 <Grid item xs={3}>       
                         <Typography variant="subtitle2">Rate</Typography> 
                         <Typography variant="body2"> Difficulty</Typography> 
-                        <Rating 
-                            value={difficulty/2}
-                            precision={0.5}
-                            size="small"
-                            onChange={(event, newValue) => {
-                                setDifficulty(2*newValue);
-                            }}
-                        />
+
+                        <Tooltip title={difficultyLabels[hoverDifficulty]} placement="right"> 
+                            <Rating 
+                                value={difficulty/2}
+                                precision={0.5}
+                                size="small"
+                                onChange={(event, newValue) => {
+                                    setDifficulty(2*newValue);
+                                }}
+                                onChangeActive={(event, newHover) => {
+                                    setHoverDifficulty(newHover);
+                                }}
+                            />
+                        </Tooltip>
+
+
+                        {/* {difficulty/2 !== null && <Box ml={2}>{difficultyLabels[hovedDifficulty !== -1 ? hovedDifficulty : difficulty/2]}</Box>}  */}
                         
                         <Typography variant="body2">Relevance and Quality</Typography> 
-                        <Rating 
-                            value={quality/2}
-                            precision={0.5}
-                            size="small"
-                            onChange={(event, newValue) => {
-                                setQuality(2*newValue);
-                            }}
-                        />
+                        <Tooltip title={qualityLabels[hoverQuality]} placement="right"> 
+                            <Rating 
+                                value={quality/2}
+                                precision={0.5}
+                                size="small"
+                                onChange={(event, newValue) => {
+                                    setQuality(2*newValue);
+                                }}
+                                onChangeActive={(event, newHover) => {
+                                    setHoverQuality(newHover);
+                                }}
+                            />
+                        </Tooltip>
 
                         {/* <Typography variant="body2">Overall quality</Typography> 
                         <Rating 
@@ -150,15 +198,22 @@ const RateCard = ({card, index, save}) => {
                                 setQuality(newValue);
                             }}
                         /> */}
-                         <Button className={classes.duplicateButton} onClick={markAsDuplicate} variant="contained" color="primary" size="small" endIcon={<MoodBadIcon />} >                           
+                         <Button className={classes.duplicateButton} onClick={markAsDuplicate} variant="contained" color="primary" fullWidth endIcon={<MoodBadIcon />} >                           
                             Mark as duplicate
                         </Button>
 
+
                 </Grid>
 
-                <Grid item xs={12} style={{height: "24px"}}>
+                <Grid item xs={9} >
                     <Typography variant="caption" color="textSecondary" >{saveDate ? "Last saved "+saveDate : ""} </Typography> 
                 </Grid>
+                <Grid item xs={3} >
+                        <Button fullWidth variant="outlined" color="secondary" onClick = {() => previewCard(card)} endIcon={<VisibilityIcon /> }>
+                            Full Card View
+                        </Button>
+                </Grid>
+                        
                 {/* <Grid item xs={2} style={{textAlign: "center"}}>     
                     <Typography variant="subtitle2">Save Rating</Typography>  
                     <IconButton size="small" color="primary" onClick={submitRating}>

@@ -1,8 +1,10 @@
 
 import axios from 'axios';
 import { CREATE_RATING, LOAD_RATINGS, SET_ALERT, SET_LOADING } from '../actionTypes';
+import { refreshTokens } from './authActions';
 
 export const saveRating = ({rating, cardNumber}) => async( dispatch, getState) => {
+    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})        
     await axios.post("/api/addrating", {
             difficulty: rating.difficulty,
@@ -41,6 +43,7 @@ export const saveRating = ({rating, cardNumber}) => async( dispatch, getState) =
 };
 
 export const getRating = (cardId) => async( dispatch, getState) => {
+    await refreshTokens()
         
     await axios.get("/api/getrating/"+cardId, 
          {
@@ -79,6 +82,7 @@ export const getRating = (cardId) => async( dispatch, getState) => {
 
 
 export const getRatingsInPeerreview = (peerreviewid) => async( dispatch, getState) => {
+    await refreshTokens()
     console.log("Is this aused")
     await axios.get("/api/ratingsinpeerreview/"+peerreviewid, 
          {

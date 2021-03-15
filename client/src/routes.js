@@ -21,6 +21,7 @@ import PeerReview from "./components/pages/peerreview";
 import PeerReviewGroup from "./components/pages/peerReviewGroup";
 import Study from "./components/pages/study";
 import Home from './components/pages/home';
+import HTMLGuide from "./components/pages/HTMLGuide";
 
 
 
@@ -65,6 +66,7 @@ const Routes = () => {
             <Switch>
                 <Route path="/" exact component={loggedIn ? Home : Login}/>
                 <Route path="/loginfunc" exact component={logInFunc}/>
+                <Route path="/htmlguide" exact component={ HTMLGuide} />
 
                 {loggedIn ? 
                 <React.Fragment>

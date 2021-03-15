@@ -68,8 +68,8 @@ def manual_add_admin():
 
 
 @userBlueprint.route("/api/addadmin/<uid>")
-# @jwt_required
-# @admin_only
+@jwt_required
+@admin_only
 def add_admin(uid):
     sleep(DELAY_S)
     try:
@@ -111,8 +111,8 @@ def get_current_user():
 
 
 @userBlueprint.route("/api/users/all")
-# @jwt_required
-# @admin_only
+@jwt_required
+@admin_only
 def users():
     sleep(DELAY_S)
     try:

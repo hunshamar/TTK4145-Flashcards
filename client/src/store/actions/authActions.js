@@ -30,6 +30,7 @@ export const signInCallack = () => async (dispatch) => {
 }
 
 export const adminOnly = () => async (dispatch) => {
+    await refreshTokens()
     axios.get("/api/adminonly", {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("user_token")}`
@@ -55,6 +56,7 @@ export const adminOnly = () => async (dispatch) => {
 }
 
 export const checkLogInStatus = () => async (dispatch, getState) => {
+    await refreshTokens()
     
     const user_token = localStorage.getItem("user_token")
     const refresh_token = localStorage.getItem("refresh_token")
@@ -94,6 +96,7 @@ export const checkLogInStatus = () => async (dispatch, getState) => {
 }
 
 export const signOut = () => async (dispatch, getState) => {
+    // await refreshTokens()
 
     if (localStorage.getItem("user_token")) {
         const token = localStorage.getItem("user_token")
@@ -131,7 +134,7 @@ export const signOut = () => async (dispatch, getState) => {
 
 }
 
-export const tokenCheck = async () => {
+export const refreshTokens = async () => {
     const user_token = localStorage.getItem("user_token")
     try {
         /* Will return error if token expire */
@@ -141,17 +144,15 @@ export const tokenCheck = async () => {
             }
         }).then(res =>{
             console.log(res.data)
-            window.alert("TOken good")
             return true
         })
     }
     catch{
         console.log("Expired. Use refresh")
-        window.alert("Expired. Use refresh")
         const refresh_token = localStorage.getItem("refresh_token")
         if (!refresh_token) {
             localStorage.removeItem("user_token")
-            window.alert("false")
+            window.alert("token false error")
             return false;
         }
         await axios.post("/api/refreshtoken", {}, {
@@ -159,9 +160,9 @@ export const tokenCheck = async () => {
                 Authorization: `Bearer ${refresh_token}`
             }
         }).then(res => {
+            console.log("NEW TOKEN")
             localStorage.setItem("user_token", res.data.token)
         })
-        window.alert("true")
         return true;
     }
 }

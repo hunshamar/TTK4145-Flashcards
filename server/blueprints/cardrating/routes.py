@@ -47,7 +47,8 @@ def get_rating(cid):
         return(jsonify({"error": str(e)}))    
 
 @cardratingBlueprint.route("/api/deletecardrating/<cid>", methods=["GET"])
-# @jwt_required
+@jwt_required
+@admin_only
 def delete_card_rating(cid):    
     sleep(DELAY_S)
     try:        

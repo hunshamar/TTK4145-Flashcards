@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { CREATE_PEERREVIEW, LOAD_PEERREVIEWS, SET_LOADING, SET_ALERT, GET_USER_ALL_PEERREVIEWS } from '../actionTypes';
-
+import { refreshTokens } from './authActions';
 
 export const createPeerreviews = ({groupId, dueDate, numberOfReviews}) => async( dispatch, getState) => {
+    await refreshTokens()
         
     
     dispatch({type: SET_LOADING, payload: true})
@@ -46,6 +47,7 @@ export const createPeerreviews = ({groupId, dueDate, numberOfReviews}) => async(
 };
 
 export const getUserPeerreviews = () => async( dispatch, getState) => {
+    await refreshTokens()
         
     
     dispatch({type: SET_LOADING, payload: true})
@@ -90,6 +92,7 @@ export const getUserPeerreviews = () => async( dispatch, getState) => {
 };
 
 export const loadPeerreview = (pid) => async( dispatch, getState) => {
+    await refreshTokens()
         
     
     dispatch({type: SET_LOADING, payload: true})

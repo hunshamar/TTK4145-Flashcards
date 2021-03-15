@@ -1,8 +1,10 @@
 
 import { Grid, Typography, Divider, Link, Button } from '@material-ui/core';
+
+
 import { PageWrapper } from '../../static/wrappers';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import { tokenCheck } from '../../store/actions/authActions';
+import { Link as ReactLink } from 'react-router-dom';
 
 const Home = () => {
 
@@ -15,7 +17,6 @@ const Home = () => {
                     <Typography variant="h4" gutterBottom >
                         Home
                     </Typography>
-                    <Button onClick={() => tokenCheck()}>Checktoken</Button>
                 </Grid> 
                 <Grid item xs={12}>
                     <Divider />
@@ -28,6 +29,8 @@ const Home = () => {
                         During the semester you are tasked with creating 2-5 flashcards for specific parts of the course material. Through peer review, the best flashcards will be selected to be added to the collective deck. 
                         You will be rewarded for creating original, quality flashcards. 
                         <br /> <br/> 
+                        Keep flashcards simple. Flashcards can be written as pure text or with HTML syntax. If you are new to HTML, <ReactLink to="/htmlguide" color="primary"> <Link color="textPrimary">check out this basic guide </Link></ReactLink>
+                        <br /> <br/>                                                                                                
                         <span>You will be able to use the collective deck to study the course material, either a random sample or through spaced repetition, which is recommended. </span>
                          <Link color="textPrimary" href="https://en.wikipedia.org/wiki/Spaced_repetition">Read more about spaced repetition here</Link>  
                         <br/> <br />

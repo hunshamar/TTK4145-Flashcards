@@ -12,12 +12,12 @@ class Cardrating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     difficulty = db.Column(db.Integer)
     quality_rating = db.Column(db.Integer)
-
     savedatestring = db.Column(db.String(2048))
 
     # parent
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     card_id = db.Column(db.Integer, db.ForeignKey("flashcard.id"))
+
 
     def to_dict(self):            
         return {

@@ -1,9 +1,10 @@
 
 import axios from 'axios';
 import { SET_ALERT, CREATE_CARD, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARDS, LOAD_CARD, SET_LOADING } from '../actionTypes';
+import { refreshTokens } from './authActions';
 
 export const addCard = (card) => async( dispatch, getState) => {
-        
+    await refreshTokens()
     
     axios.post("/api/addFlashcard", {
             front: card.front,
@@ -39,6 +40,7 @@ export const addCard = (card) => async( dispatch, getState) => {
 };
 
 export const editCard = (card) => async( dispatch, getState) => {
+    await refreshTokens()
     console.log("carddd", card)
     
     axios.post("/api/editflashcard", {
@@ -77,12 +79,12 @@ export const editCard = (card) => async( dispatch, getState) => {
     
 };
 
-export const loadCardGroupUserFlashcards = (cardgroupId, userId) => async dispatch => {
+export const loadCardGroupUserFlashcards = (cardgroupId) => async dispatch => {
+    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})
-    console.log("userid", userId)
     console.log("cardgroupid", cardgroupId)
 
-    await axios.get("/api/cardgroupuserflashcards/"+cardgroupId+"/"+userId,
+    await axios.get("/api/cardgroupuserflashcards/"+cardgroupId,
         {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("user_token")}`
@@ -104,6 +106,7 @@ export const loadCardGroupUserFlashcards = (cardgroupId, userId) => async dispat
 }
 
 export const loadCards = props => async (dispatch, getState) => {
+    await refreshTokens()
 
     dispatch({type: SET_LOADING, payload: true})
 
@@ -127,13 +130,19 @@ export const loadCards = props => async (dispatch, getState) => {
 }
 
 export const loadCardgroupFlashcards = (cardgroupId) => async (dispatch, getState) => {
+    await refreshTokens()
 
     dispatch({type: SET_LOADING, payload: true})
 
 
     console.log("idd",cardgroupId)
 
-    await axios.get("/api/cardgroupflashcards/"+cardgroupId)
+    await axios.get("/api/cardgroupflashcards/"+cardgroupId,
+    {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("user_token")}`
+        }
+    })
     .then(response => {
         const cards = response.data
         console.log("lmlmlml")
@@ -150,6 +159,7 @@ export const loadCardgroupFlashcards = (cardgroupId) => async (dispatch, getStat
 }
 
 export const loadPeerReviewFlashcards = (peerreviewid) => async (dispatch, getState) => {
+    await refreshTokens()
 
     dispatch({type: SET_LOADING, payload: true})
 
@@ -203,6 +213,7 @@ export const loadCard = props => async (dispatch, getState) => {
 
 
 export const deleteCard = (card) => async (dispatch, getState) => {
+    await refreshTokens()
 
     console.log("del,", card)
 

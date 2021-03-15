@@ -36,9 +36,8 @@ class Cardgroup(db.Model):
             "id": self.id, 
             "title": self.title,
             "dueDate": self.due_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
-
             "numberOfCardsDue": self.number_of_cards_due,
-            "flashcards": [i.to_dict() for i in self.flashcards]
+            # "flashcards": [i.to_dict() for i in self.flashcards]
         }
 
     # Constructor

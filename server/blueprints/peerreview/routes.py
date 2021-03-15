@@ -33,15 +33,17 @@ def add_peerreview_for_all_students():
         return(jsonify({"error": str(e)}))       
 
 @peerreviewBlueprint.route("/api/addpeerreview", methods=["POST", "GET"])
+@jwt_required
+@admin_only
 def add_peerreview():      
-    try:        
+    try:      
+        
 
-        group_id = 1
-        due_date = datetime.datetime.now()
-        reviews = 3
-        user_id = 2
-
-        addPeerReview(group_id, user_id, due_date, reviews)
+        user_id = request.json["useId"]
+        group_id = request.json["groupId"]
+        due_date = request.json["dueDate"]
+        n_reviews = request.json["numberOfReviews"]
+        addPeerReview(group_id, user_id, due_date, n_reviews)
 
         return jsonify({"success": "true"})
 
@@ -49,7 +51,7 @@ def add_peerreview():
         print(e)
         return(jsonify({"error": str(e)}))       
 
-@peerreviewBlueprint.route("/api/peers", methods=["POST", "GET"])
+@peerreviewBlueprint.route("/api/allpeerreviews", methods=["POST", "GET"])
 def get_peerreviews():      
     try:        
         return jsonify(getAllPeerreviews())
@@ -93,10 +95,10 @@ def get_peerreview_flashcards(peerreviewid):
 
 
 
-@peerreviewBlueprint.route("/api/deleteall/", methods=["GET"])
-def delete_peer():      
-    deleteAllPeerReviews()
-    return jsonify("true")
+# @peerreviewBlueprint.route("/api/deleteall/", methods=["GET"])
+# def delete_peer():      
+#     deleteAllPeerReviews()
+#     return jsonify("true")
 
 
 
