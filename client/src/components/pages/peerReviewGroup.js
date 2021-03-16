@@ -38,7 +38,6 @@ const PeerReviewGroup = (props) =>{
     }, [])
 
     console.log("mhmhmhm")
-    console.log(cards)
 
     const loading = useSelector(state => state.loadingReducer.loading)
 
@@ -47,6 +46,11 @@ const PeerReviewGroup = (props) =>{
             setSave(false)
         }
     }, [loading])
+
+    useEffect(() => {
+        console.log("tiss")
+        console.log(ratings)
+    }, [ratings])
 
     const saveAllRatings = () => {
         console.log("save...")

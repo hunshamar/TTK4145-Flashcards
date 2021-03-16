@@ -30,7 +30,7 @@ const PeerreviewView = ({peerreviews, showDueDate, onClick}) => {
                                 <Grid container spacing={2} >
                                     <Grid item xs={12}>                        
                                         <Typography variant="subtitle1" component="h2">
-                                            Peer Review of cards in <i>{peerreview.cardgroup.title} </i>
+                                            Peer Review of cards from <i>{peerreview.cardgroup.title} </i>
                                         </Typography>
                                             <Typography variant="body2" color="textSecondary" component="h2">
                                                 {peerreview.reviewsDue} Cards are due for peer review: {dateJSONToString.call(this, peerreview.dueDate)}    

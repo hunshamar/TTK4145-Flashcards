@@ -165,7 +165,7 @@ const HTMLGuide = () => {
                         
 
 
-                    <Grid item xs={7}>
+                    <Grid item xs={7} >
                     <Typography variant="caption" color="textSecondary">
                             <b>HTML Input:</b> <br/> 
                         </Typography>
@@ -199,7 +199,7 @@ const HTMLGuide = () => {
                     <Typography variant="caption" color="textSecondary">
                             <b>HTML Result:</b> <br/> 
                         </Typography>
-                    <Box border={1} borderColor="secondary.light" borderRadius={5} align="center">
+                    <Box border={1} borderColor="secondary.light" borderRadius={5} align="center" style={{height: "auto", backgroundColor: "white", color: "black"}} >
                         <div dangerouslySetInnerHTML={{__html: HTMLString}} />
                     </Box>
 

@@ -30,7 +30,7 @@ const GroupView = ({cardgroups, showDueDate, onClick}) => {
                                 <Grid container spacing={2} >
                                     <Grid item xs={12}>                        
                                         <Typography variant="subtitle1" component="h2">
-                                            {cardgroup.title}     
+                                            Add cards to <i>{cardgroup.title}    </i> 
                                         </Typography>
                                         {showDueDate ? 
                                             <Typography variant="body2" color="textSecondary" component="h2">

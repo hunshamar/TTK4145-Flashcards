@@ -14,10 +14,23 @@ export const wrappers = makeStyles(theme => ({
 export const PageWrapper = withStyles({
     root: {
         marginLeft: "auto",
-        marginRight: "auto",    
+        marginRight: "auto",  
+        marginBottom: "200px", 
         maxWidth: siteWidth,
         minWidth: siteWidth,
         marginTop: "50px", 
+        
+    }
+})(Box)
+
+export const AdminNavbarWrapper = withStyles({
+    root: {
+        marginLeft: "auto",
+        marginRight: "auto",  
+        maxWidth: siteWidth,
+        minWidth: siteWidth,
+        marginTop: "50px", 
+        
     }
 })(Box)
 

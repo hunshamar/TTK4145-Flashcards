@@ -26,7 +26,7 @@ def add_peerreview_for_all_students():
 
         addPeerReviewForAllStudents(int(group_id), due_date_python_format, int(n_reviews))
 
-        return jsonify({"success": "true"})
+        return jsonify({"status": "success"})
 
     except Exception as e:
         print(e)
@@ -95,19 +95,23 @@ def get_peerreview_flashcards(peerreviewid):
 
 
 
-# @peerreviewBlueprint.route("/api/deleteall/", methods=["GET"])
-# def delete_peer():      
-#     deleteAllPeerReviews()
-#     return jsonify("true")
+@peerreviewBlueprint.route("/api/deleteall/", methods=["GET"])
+def delete_peer():      
+    deleteAllPeerReviews()
+    return jsonify("true")
 
 
 
 @peerreviewBlueprint.route("/api/ratingsinpeerreview/<pid>", methods=["GET"])
-@jwt_required
+# @jwt_required
 def get_ratings_in_peerreview(pid):      
     try:        
         uid = get_jwt_identity()
-        return jsonify(getRatingsInPeerreview(pid, uid))
+        peerreview = Peerreview.query.get(pid)
+
+
+
+        return jsonify(peerreview.get_ratings())
 
     except Exception as e:
         print(e)

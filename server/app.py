@@ -23,7 +23,7 @@ app = Flask(__name__, static_folder="build", static_url_path="/")
 CORS(app, supports_credentials=True) # Support credentials to allow sessions in blueprints
 
 # Migration
-migrate = Migrate(app, db)
+migrate = Migrate(app, db, compare_type=True)
 manager = Manager(app)
 
 manager.add_command("db", MigrateCommand)

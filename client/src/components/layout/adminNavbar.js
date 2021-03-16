@@ -17,7 +17,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import { useDispatch, useSelector } from "react-redux";
 import { signOut } from '../../store/actions/authActions';
-import { NavBarWrapper, PageWrapper } from "../../static/wrappers";
+import { AdminNavbarWrapper } from "../../static/wrappers";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
 
@@ -60,7 +60,7 @@ const AdminNavbar = props => {
 
     
     return( 
-        <PageWrapper>
+        <AdminNavbarWrapper>
 
             <Typography variant="h4" style={{flexGrow: 0}}>
                 Amin Page
@@ -78,7 +78,7 @@ const AdminNavbar = props => {
                     )}        
                 </ToggleButtonGroup>  
             </Toolbar>
-        </PageWrapper>
+        </AdminNavbarWrapper>
     )
 }
 

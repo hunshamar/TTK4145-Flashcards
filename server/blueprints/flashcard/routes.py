@@ -66,6 +66,11 @@ def status(cgid):
         print(e)
         return jsonify({"error": str(e)})
 
+@flashcardBlueprint.route("/api/initcards", methods=["GET"])
+def init_cards():
+    initCards()
+    return jsonify({"success": "true"})
+
 
 @flashcardBlueprint.route("/api/addFlashcard", methods=["POST"])
 @jwt_required

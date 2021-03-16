@@ -29,17 +29,19 @@ export const createPeerreviews = ({groupId, dueDate, numberOfReviews}) => async(
             }
 
 
-            const createdPeerreview = res.data
-            console.log("was created, ",  )
-            let alert = {severity: "success", text: "successfully created peerreviews: "+createdPeerreview}
+            const status = res.data
+            
+            let alert = {severity: "success", text: "successfully created peerreviews"}
             dispatch({type: SET_ALERT, payload: alert})
-            // dispatch({type: CREATE_PEERREVIEW, payload: createdCardgroup})
+            console.log("søk", status)
+            if (res.data.status === "success"){
+                dispatch(getUserPeerreviews())
+            }
         })
         .catch(err => {
             console.log("This is an error yes plz")
             let alert = {severity: "error", text: err.toString()}
             dispatch({type: SET_ALERT, payload: alert})
-            // dispatch({type: CREATE_CARDGROUP_ERROR, err})
         })
 
     dispatch({type: SET_LOADING, payload: false})

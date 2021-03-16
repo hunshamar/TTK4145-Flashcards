@@ -82,7 +82,7 @@ const PeerReview = () => {
 
 
                             <Typography variant="body2" color="textSecondary">
-                                Liten readme her
+                                Review other students' cards
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>

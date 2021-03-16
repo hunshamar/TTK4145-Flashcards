@@ -15,22 +15,33 @@ class Cardgroup(db.Model):
     number_of_cards_due = db.Column(db.Integer)
 
     # children
-    flashcards = db.relationship("Flashcard", cascade="all, delete-orphan", backref="cardgroup")
+    flashcards = db.relationship("Flashcard", cascade="all, delete", backref="cardgroup")
 
 
     peerreview = db.relationship("Peerreview", uselist=False, cascade="all, delete-orphan", backref="cardgroup")
 
     def get_n_random_cards(self, n):
         
-        ## temp løsning ?       
-
+        ## temp løsning ?              
         return random.sample(self.flashcards, n)
+
+    def get_cards_from_ids(self, idarr):
+
+        print("idarr", idarr)
+        fc = [card for card in self.flashcards if card.id in idarr]
+        
+        print([f.id for f in fc])
+
+
+        return fc
+
+
 
     def to_dict(self):
 
-        for i in self.flashcards:
-            # d =  i.to_dict()
-            print(i.to_dict())
+        # for i in self.flashcards:
+        #     # d =  i.to_dict()
+        #     print(i.to_dict())
 
         return{
             "id": self.id, 

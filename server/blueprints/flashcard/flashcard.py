@@ -1,7 +1,7 @@
 from db import db
 
 #import parents
-from ..user.user import User 
+from ..user.user import User, addUser
 from ..cardgroup.cardgroup import Cardgroup, getCardgroup
 import datetime
 
@@ -82,6 +82,31 @@ def calculateCardAverageRating():
 # def getUserFlashcards():
 #     flashcards = Flashcard.querry.all()
 #     return [i.to_dict() for i in filter(lambda i: i.user_id == uid, flashcards)]
+
+def initCards():
+    
+
+
+    # for i in range(100):
+    #     username = "user"+str(i)
+    #     email = "user"+str(i)+"@user.ntnu.no"
+    #     name = "first"+str(i)+" last name"
+    #     addUser(username, email, name)
+    
+    users = User.query.all()
+    
+
+
+
+    for u in users:
+        for i in range(4):
+            print(u.username)
+            front = f" for chapter 2 this is user with username {u.username}'s question nr {i} "
+            back = f" for chapter 2  this is user with username {u.username}'s answer nr {i} "
+
+            addFlashcard(front, back, u.id, 2)
+            
+
 
 def addFlashcard(front, back, userid, cardgroupid):
     if (front and back and userid and cardgroupid):

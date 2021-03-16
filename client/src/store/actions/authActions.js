@@ -152,7 +152,6 @@ export const refreshTokens = async () => {
         const refresh_token = localStorage.getItem("refresh_token")
         if (!refresh_token) {
             localStorage.removeItem("user_token")
-            window.alert("token false error")
             return false;
         }
         await axios.post("/api/refreshtoken", {}, {
