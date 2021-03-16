@@ -22,13 +22,10 @@ const FlashcardForm = (props) => {
     const { onClose, selectedValue, open } = props;
     const dispatch = useDispatch();    
     const classes = useStyles()
-    const cardgroupId = props.cardgroupId
 
     const [front, setFront] = useState("")
     const [back, setBack] = useState("")
-
-    // const card = useSelector(state => state.cardReducer.cards)
-    
+  
 
     
     useEffect(() => {
@@ -44,25 +41,23 @@ const FlashcardForm = (props) => {
 
     const submit = e => {
         e.preventDefault()
-        console.log("id", cardgroupId)
         
-        if (front && back && cardgroupId){
+        if (front && back){
             
             if (props.card){
              dispatch(editCard({
                 front: front,
                 back: back,
-                cardgroupid: cardgroupId,
                 id: props.card.id
                 }))
             }
-            else {
-                dispatch(addCard({
-                    front: front,
-                    back: back,
-                    cardgroupid: cardgroupId
-                    }))
-            }
+            // else {
+            //     dispatch(addCard({
+            //         front: front,
+            //         back: back,
+            //         cardgroupid: cardgroupId
+            //         }))
+            // }
             
 
             handleClose()
@@ -70,7 +65,7 @@ const FlashcardForm = (props) => {
         }
         else{
             alert("fill inn all fields")
-            console.log(front, back, cardgroupId)
+            // console.log(front, back, cardgroupId)
         }
     }
 
@@ -90,7 +85,6 @@ const FlashcardForm = (props) => {
         <form onSubmit={submit} style={{margin: "40px"}}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-
                     <Typography variant="h5">Edit a flashcard </Typography>
                 </Grid>
                 {/* <Grid item xs={12}>
@@ -123,7 +117,10 @@ const FlashcardForm = (props) => {
                         variant="outlined"
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={6}>
+                    <Button variant="contained" onClick={handleClose} fullWidth color="primary"  > Back</Button>
+                </Grid>
+                <Grid item xs={6}>
                 <Button type="submit" fullWidth style={{backgroundColor: front && back ? "green" : "grey", color: "white"}}>{props.card ? "edit" : "submit"}</Button>
                 
                 </Grid>

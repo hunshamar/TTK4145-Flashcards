@@ -1,11 +1,10 @@
 
 import axios from 'axios';
 import { GET_DELIVERY_STATUS, GET_USERS, SET_ALERT, SET_LOADING , UPDATE_USER} from '../actionTypes';
-
-
-
+import { refreshTokens } from './authActions';
 
 export const getAllUsers = () => async (dispatch) => {
+    await refreshTokens()
     axios.get("/api/users/all", {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("user_token")}`
@@ -26,6 +25,7 @@ export const getAllUsers = () => async (dispatch) => {
 }
 
 export const getUsersWithRole = (role) => async (dispatch) => {
+    await refreshTokens()
     axios.get("/api/users/role="+role, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("user_token")}`
@@ -46,6 +46,7 @@ export const getUsersWithRole = (role) => async (dispatch) => {
 }
 
 export const searchUsers = (role, searchPhrase, ) => async (dispatch) => {
+    await refreshTokens()
     axios.get("/api/users/search/role="+role+"/searchphrase="+searchPhrase, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("user_token")}`
@@ -67,6 +68,7 @@ export const searchUsers = (role, searchPhrase, ) => async (dispatch) => {
 
 
 export const getUsersStatus = (cardgroupId) => async (dispatch, getState) => {
+    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})
 
     if (!cardgroupId){
@@ -95,6 +97,7 @@ export const getUsersStatus = (cardgroupId) => async (dispatch, getState) => {
 
 
 export const addAdmin = (user) => async (dispatch, getState) => {
+    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})   
     axios.get("/api/addadmin/"+user.id, {
         headers: {
@@ -115,6 +118,7 @@ export const addAdmin = (user) => async (dispatch, getState) => {
 }
 
 export const removeAdmin = (user) => async (dispatch, getState) => {
+    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})   
     axios.get("/api/removeadmin/"+user.id, {
         headers: {

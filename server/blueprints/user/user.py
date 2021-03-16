@@ -4,34 +4,19 @@ from db import db
 from sqlalchemy import and_
 from functools import wraps
 
-# def admin_required(f):
-#     @wraps(f)
-#     def wrap(*args, **kwargs):
-#         print(current_user)
-#         if not current_user:
-#             return jsonify({error: "error with admin elns"})
-
-#         for r in current_user:
-#             print("role", r.name)
-
-#         if "Admin" in current_user: 
-#             return f(*args, **kwargs)
-#         else:
-#             flash("You need to be an admin to view this page.")
-#             return jsonify({error: "error with admin elns"})
-#     return wrap
-
 
 class User(db.Model):
     __tablename__ = "user"
-    id = db.Column(db.Integer, primary_key = True) # primary_key makes it so that this value is unique and can be used to identify this record.
+    id = db.Column(db.Integer, primary_key = True) 
     username = db.Column(db.String(24), unique=True)
     email = db.Column(db.String(64), unique=True)
     name = db.Column(db.String(64))
     role = db.Column(db.String(16))
 
-    # active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
-
+    # children
+    cardratings = db.relationship("Cardrating", backref="user") ## cardratings are not deleted on user delete
+    flashcards =  db.relationship("Flashcard",  backref="user") # flashcards are not deleted on user delte
+    peerreviews = db.relationship("Peerreview", backref="user") # peerreviews are deleted on user delete, but cardratings are kept. 
 
     def is_admin(self):
         return self.role == "Admin"
@@ -42,7 +27,8 @@ class User(db.Model):
             "username": self.username,
             "email": self.email,
             "name": self.name,
-            "role": self.role
+            "role": self.role,
+            # "peerreviews": [i.to_dict() for i in self.peerreviews]
         }
 
     # Constructor
@@ -115,7 +101,6 @@ def searchUsers(role, phrase):
         users = User.query.filter_by(role=role, username=phrase)
 
     return [i.to_dict() for i in users]
-
 
 def getUser(uid):
     if not uid:

@@ -5,6 +5,8 @@ import cardgroupReducer from "./cardgroupReducer"
 import alertReducer from './alertReducer';
 import loadingReducer from './loadingReducer';
 import userReducer from './userReducer';
+import ratingReducer from './ratingReducer';
+import peerreviewReducer from './peerreviewReducer';
 
 const rootReducer = combineReducers({
     authReducer,
@@ -12,7 +14,9 @@ const rootReducer = combineReducers({
     cardgroupReducer,
     alertReducer,
     loadingReducer,
-    userReducer
+    userReducer,
+    ratingReducer,
+    peerreviewReducer,
 });
 
 export default rootReducer

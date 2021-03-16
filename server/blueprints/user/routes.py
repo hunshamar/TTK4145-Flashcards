@@ -23,6 +23,8 @@ userBlueprint = Blueprint("user", __name__)
 from .invalid_token import *
 from .user import *
 
+import hashlib
+
 def admin_only(f):
     @wraps(f)
     def wrapper(*args, **kwds):
@@ -126,6 +128,8 @@ def users():
 def users_filter(role):
     sleep(DELAY_S)
     try:
+
+            
         return jsonify(getUsersWithRole(role))
     except Exception as e:
         print(e)
@@ -142,31 +146,62 @@ def users_search(role, searchphrase):
         print(e)
         return jsonify({"error": str(e)})
 
-@userBlueprint.route("/api/logintoken")
+@userBlueprint.route("/api/logintoken", methods=["GET"])
 def login_token():
     try:
-        apiKey = os.environ.get("FEIDE_API_KEY") ## From .env file
-        token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+str(apiKey)) ## Get token for FEIDE API 
-        token_string = token.text 
+        apiKey = str(os.environ.get("FEIDE_API_KEY"))
+        feide_token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+apiKey)
 
-        ## Return feide url to client side. 
-        url = "https://www.itk.ntnu.no/api/feide.php?token="+token_string+"&returnURL=http://localhost:5000/api/userdata"
+        # tokenstring = apiKey+feide_token.text    
+        # authenticityToken = hashlib.sha1(tokenstring.encode('utf-8')).hexdigest() ## Encrypt with sha1
+        session["feide_token"] = feide_token.text
+
+        ## Return feide url to client side for external login. 
+        url = "https://www.itk.ntnu.no/api/feide.php?token="+feide_token.text+"&returnURL=http://localhost:5000/api/userdata"
         
         return jsonify({"url": url})        
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
 
-# Avoid this being hacked...
+# Protect this route... 
 @userBlueprint.route("/api/userdata", methods=["POST", "GET"])
 def user_data():    
+
+
+    print(request.headers)
     try: 
         if request.method == "GET": # External login from feide
-            userdata =  request.args.getlist('userdata')[0]
+            
+            userdata = request.values.get("userdata")
+
+            print(repr(userdata))
+            print(repr('{\n    "name": "Asgeir Hunshamar",\n    "email": "asgeirhu@stud.ntnu.no",\n    "username": asgeirhu\n}'))
+
+            sha1 = request.values.get("sha1")
+
+            feide_token = session.pop("feide_token")
+            print(feide_token)
+
+            encryped = hashlib.sha1((feide_token+userdata).encode('utf-8')).hexdigest() ## Encrypt with sha1
+
             userdata_dict = json.loads(userdata)
-            session["userdata"] = userdata_dict
-            print("added userdata to session:")       
-            return redirect("http://localhost:3000/loginfunc/")
+
+            print(userdata_dict)
+
+
+
+                
+            if (encryped == sha1): 
+                print("Authenticity token OK")
+                session["userdata"] = userdata_dict
+                print("added userdata to session:")       
+
+                return redirect("http://localhost:3000/loginfunc")
+
+            else:
+                return redirect(jsonify("Bad authenticityToken"))
+
 
 
         if request.method == "POST": # Alternative login
@@ -192,6 +227,7 @@ def user_data():
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
+
 
 
 @userBlueprint.route("/api/login/callback")
@@ -268,6 +304,7 @@ def access_logout():
 def refresh_logout():
     jti = get_raw_jwt()["jti"]
     try:
+        print("logged asd yes")
         invalid_token = InvalidToken(jti=jti)
         invalid_token.save()
         return jsonify({"success": True})

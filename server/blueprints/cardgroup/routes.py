@@ -31,6 +31,7 @@ def cardgroup(cgid):
         return jsonify({"error": str(e)})
 
 
+
 @cardgroupBlueprint.route("/api/addcardgroup", methods=["POST"])
 @jwt_required
 @admin_only
@@ -39,24 +40,31 @@ def add_cardgroup():
     try:
         title = request.json["title"]
         number_of_cards_due = request.json["numberOfCardsDue"]
-        due_date = request.json["dueDate"]
-        
-        print("year:", due_date["year"])
-        print("month:", due_date["month"])
-        print("day:", due_date)
-        year = int(due_date["year"])
-        month = int(due_date["month"])
-        date = int(due_date["date"])
-        hour = int(due_date["hour"])
-        minute = int(due_date["minute"])
-        second = int(due_date["second"])
-        due_date = datetime.datetime(year, month, date, hour, minute, second)
+        due_date = request.json["dueDate"] ## GMT! 
+        due_date_python_format = datetime.datetime.strptime(due_date, '%Y-%m-%dT%H:%M:%S.%fZ')
 
         if not (title or number_of_cards_due or due_date):
             raise Eception("Invalid form for cardgroup")
 
-        cardgroup = addCardgroup(title, due_date, number_of_cards_due)
+        cardgroup = addCardgroup(title, due_date_python_format, number_of_cards_due)
         return jsonify(cardgroup)
     except Exception as e:
         print(e)
         return {"error": str(e)}
+
+@cardgroupBlueprint.route("/api/deletegroup/<cgid>", methods=["GET","DELETE"])
+@jwt_required
+@admin_only
+def delete_group(cgid):
+    sleep(DELAY_S)
+    print(cgid, "is deleted yes")
+    # return jsonify({"error": "here"})
+    try:         
+
+        delCardgroup(cgid)
+        return jsonify({"success": "deleted all cards and groups"})
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
+
+

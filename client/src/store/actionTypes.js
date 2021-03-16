@@ -2,7 +2,7 @@
 
 /* alert actions */
 export const SET_LOADING       = "SET_LOADING"
-export const STOP_LOADING       = "STOP_LOADING"
+export const CLEAR_LOADING       = "CLEAR_LOADING"
 
 
 /* Loading actions */ 
@@ -35,4 +35,15 @@ export const LOAD_CARDS = "LOAD_CARDS"
 export const EDIT_CARD = "EDIT_CARD"
 export const DELETE_CARD = "DELETE_CARD"
 export const DELETE_CARD_ERROR = "DELETE_CARD_ERROR"
+
+/* Peer review actions */
+export const CREATE_PEERREVIEW = "CREATE_PEERREVIEW"
+export const LOAD_PEERREVIEWS = "LOAD_PEERREVIEWS"
+
+/* Rating actions */
+export const CREATE_RATING = "CREATE_RATING"
+export const LOAD_RATINGS = "LOAD_RATINGS"
+
+
+
 

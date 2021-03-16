@@ -4,20 +4,26 @@ import { Button,
     TextField,
     Dialog,
     Typography,
-    makeStyles
+    makeStyles,
+    Input,
+    InputAdornment,
+    IconButton,
+    Tooltip
 } from '@material-ui/core';
 import React, { useState } from 'react';
 
-
 import {  useDispatch } from 'react-redux';
 import { addCard } from '../../store/actions/cardActions';
+import UploadImage from '../submodules/uploadImage';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     dialog: {
         "& .MuiDialog-paperScrollPaper": {
             maxHeight: "100vh",
         },
-    }
+    },
 }))
 
 const CreateCardDialog = (props) => {
@@ -72,21 +78,37 @@ const CreateCardDialog = (props) => {
                 <Grid item xs={12}>
 
                     <Typography variant="h5">Create a flashcard. This can be edited later </Typography>
+                    <Typography variant="body2" color="textSecondary"> You can write either pure text or use HTML. <Link  to="/htmlguide" target="_blank">HTML Guide</Link> 
+                    <br/>
+                    Make sure the Card looks good in <i>Preview Flashcard</i> if writing in HTML.
+                     </Typography>
                 </Grid>
                 {/* <Grid item xs={12}>
                     <CardgroupSelect onChange={e => setCardgroupid(e)} />
                 </Grid> */}
                 <Grid item xs={12}>
-                    <TextField 
-                        onChange={e => setFront(e.target.value)} 
-                        fullWidth 
-                        required 
-                        variant="outlined"
-                        color="secondary"
-                        label="Front"
-                        value={front}
-                        multiline
-                        rows={4}/>
+                <TextField
+                    onChange={e => setFront(e.target.value)} 
+                    fullWidth 
+                    required
+                    variant="outlined"
+                    color="secondary"
+                    label="Front"
+                    value={front}
+                    // InputProps={{
+                    //     endAdornment: <InputAdornment position="end" style={{margin: "auto 0 15px"}}>
+                    //         <div>
+                    //             <Tooltip title="Preview HTML">
+                    //                 <IconButton onClick={() => setPreviewFront(true)}>
+                    //                     <VisibilityIcon color="secondary" />
+                    //                 </IconButton>
+                    //             </Tooltip>
+                    //         </div>
+                    //     </InputAdornment>,
+                    // }}
+                    multiline
+                    rows={4}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField 

@@ -65,25 +65,18 @@ const CreateCardGroup = (props) => {
 
 
         if (title && selectedDate && numberOfCards && time){
-            console.log(selectedDate)
 
-            let year = selectedDate.getFullYear()
-            let month = selectedDate.getMonth()+1
-            let date = selectedDate.getDate()
-            let hour = time.split(":")[0]
-            let minute = time.split(":")[1]
-            let second = 59
+            console.log("herfra")
+            let dueDate = selectedDate
+
+            dueDate.setMinutes(time.split(":")[1])
+            dueDate.setHours(time.split(":")[0])
+
+
 
             dispatch(addCardgroup({
                 title: title,        
-                dueDate: {
-                    year,
-                    month,
-                    date,
-                    hour,
-                    minute,
-                    second
-                },
+                dueDate: dueDate,
                 numberOfCardsDue: numberOfCards        
             }))              
         }
@@ -96,10 +89,7 @@ const CreateCardGroup = (props) => {
         setSelectedDate(null)
         setTitle("")
         setNumberOfCards(0)
-        setTime("23:59")
-
-        
-
+        setTime("23:59")      
         onClose(selectedValue);
     };
     
@@ -173,6 +163,7 @@ const CreateCardGroup = (props) => {
 
                     </Grid>
                     <Grid item xs={6} >
+
                     <TextField
                             fullWidth
                             id="time"

@@ -27,7 +27,11 @@ const CardDialog = (props) =>  {
     return (
       <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
       <Box style={{width:"400px", height: "auto", margin: 0}} >
+
+
+
           <CardView cards={[card]} />
+
           </Box>
       </Dialog> 
     );

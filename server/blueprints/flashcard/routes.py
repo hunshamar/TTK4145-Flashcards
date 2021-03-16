@@ -1,6 +1,8 @@
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+
+
 from .flashcard import *
 
 flashcardBlueprint = Blueprint("flashcard", __name__)
@@ -8,12 +10,18 @@ from ..user.routes import admin_only
 
 from time import sleep
 from ..values import DELAY_S
+
+
 @flashcardBlueprint.route("/api/flashcards")
+@jwt_required
+@admin_only
 def flashcards():    
     sleep(DELAY_S)
     return jsonify(getAllFlashcards())
 
 @flashcardBlueprint.route("/api/flashcard/<cid>")
+@jwt_required
+@admin_only
 def flashcard(cid):    
     sleep(DELAY_S)
     try:
@@ -58,6 +66,11 @@ def status(cgid):
         print(e)
         return jsonify({"error": str(e)})
 
+@flashcardBlueprint.route("/api/initcards", methods=["GET"])
+def init_cards():
+    initCards()
+    return jsonify({"success": "true"})
+
 
 @flashcardBlueprint.route("/api/addFlashcard", methods=["POST"])
 @jwt_required
@@ -81,6 +94,13 @@ def add_Flashcard():
         return jsonify({"error": str(e)})
 
 
+# temp, expand
+@flashcardBlueprint.route("/api/calculateaverageratings", methods=["GET"])
+def ratings():
+    calculateCardAverageRating()
+    return jsonify({"ratings": "true"})
+
+
 @flashcardBlueprint.route("/api/deleteflashcard/<cid>", methods=["DELETE"])
 @jwt_required
 def delete_card(cid):
@@ -98,10 +118,11 @@ def delete_card(cid):
         deleteFlashcard(cid)
         return jsonify({"success": "true"})
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return jsonify({"error": str(e)})   
 
 @flashcardBlueprint.route("/api/cardgroupflashcards/<cgid>", methods=["GET"])
-# @jwt_required
+@jwt_required
+@admin_only
 def cardgroup_cards(cgid):
     sleep(DELAY_S)
     print(type(cgid), "find this")
@@ -110,11 +131,12 @@ def cardgroup_cards(cgid):
     except Exception as e:
         return jsonify({"error": str(e)})
 
-@flashcardBlueprint.route("/api/cardgroupuserflashcards/<cgid>/<uid>", methods=["GET"])
+@flashcardBlueprint.route("/api/cardgroupuserflashcards/<cgid>", methods=["GET"])
 @jwt_required
-def cardgroup_user_cards(cgid, uid):
+def cardgroup_user_cards(cgid):
     sleep(DELAY_S)
     print(type(cgid), "find this")
+    uid = get_jwt_identity()
     try:
         return jsonify(getCardGroupFlashCardsUser(int(cgid), int(uid)))
     except Exception as e:
@@ -123,24 +145,7 @@ def cardgroup_user_cards(cgid, uid):
 
 
 
-@flashcardBlueprint.route("/api/deletegroup/<cgid>", methods=["DELETE"])
-@jwt_required
-def delete_group(cgid):
-    sleep(DELAY_S)
-    print(cgid, "is deleted yes")
-    # return jsonify({"error": "here"})
-    try:   
-        cards = getCardgroupFlashcards(int(cgid))
-        print("len", len(cards))
 
-        for card in cards:
-            print("card", card["id"])
-            deleteFlashcard(card["id"])
-        delCardgroup(cgid)
-        return jsonify({"success": "deleted all cards and groups"})
-    except Exception as e:
-        print(e)
-        return jsonify({"error": str(e)})
 
 
 

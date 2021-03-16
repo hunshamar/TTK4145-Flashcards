@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Card, IconButton, Typography } from '@material-ui/core';
+import { Card, IconButton, Tooltip, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
@@ -10,34 +10,40 @@ import { deleteCard } from '../../store/actions/cardActions';
 import FlashcardForm from '../dialogs/flashcardForm';
 import loadingReducer from '../../store/reducers/loadingReducer';
 import Loading from '../notifications/loading';
-
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import CardPreviewDialog from '../dialogs/cardPreviewDialog';
 
 
 const CardView = props => {
 
     const dispatch = useDispatch();
     const [editCard, setEditCard] = useState({})
-    const [open, setOpen] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
+    const [openPreview, setOpenPreview] = useState(false);
     const loading = useSelector(state => state.loadingReducer.loading)
 
-    const handleClickOpen = () => {
-        setOpen(true);
-      };
+    
 
-    const handleClose = (value) => {
-        setOpen(false);
-      };
+    
 
+
+    const previewThisCard = card => { 
+        setEditCard(card)
+        setOpenPreview(true)    
+        // dispatch(deleteCard(card))   
+    }
 
     const deleteThisCard = card => {     
-        dispatch(deleteCard(card))   
+        if (window.confirm("Are you sure you want to delete this card?")){ 
+            dispatch(deleteCard(card))   
+        }
     }
 
     
     const editThisCard = card => {
         console.log("edit", card)
-        setEditCard(card)    
-        handleClickOpen()
+        setEditCard(card)
+        setOpenEdit(true);
     }
     console.log("car1ds", props.cards)
     
@@ -47,28 +53,37 @@ const CardView = props => {
         cardItems[index] = 
         <Grid item xs={12}>
         <Card key={card.id} style={{padding: "10px", margin: "5px"}}>
-        <Grid container spacing={0}> 
+        <Grid container spacing={1}> 
             <Grid item xs={11}>
                 <Typography variant="subtitle2" >
                     Front:
                 </Typography>
-                <Typography variant="caption" >
-                    {card.front}
+                <Typography variant="caption"  >
+                    <div dangerouslySetInnerHTML={{__html: card.front}} />
                 </Typography>
                 <Typography variant="subtitle2" >
                     Back:
                 </Typography>
                 <Typography variant="caption" >
-                    {card.back}
+                    <div dangerouslySetInnerHTML={{__html: card.back}} />
                 </Typography>
             </Grid>
-            <Grid item xs={1} style={{padding: "auto"}} >
-                <IconButton onClick = {() => editThisCard(card)}> 
-                    <EditIcon style={{fontSize: "20px"}} /> 
-                </IconButton>
-                <IconButton onClick = {() => deleteThisCard(card)}> 
-                    <DeleteIcon style={{fontSize: "20px"}} /> 
-                </IconButton>
+            <Grid item xs={1}>
+                <Tooltip title="Preview Flashcard" placement="right" style={{margin: "3px"}}>
+                    <IconButton onClick = {() => previewThisCard(card)} size="small"> 
+                        <VisibilityIcon style={{fontSize: "20px"}} /> 
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Edit Flashcard" placement="right" style={{margin: "3px"}}>
+                    <IconButton onClick = {() => editThisCard(card)} size="small"> 
+                        <EditIcon style={{fontSize: "20px"}} /> 
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete Flashcard" placement="right" style={{margin: "3px"}}>
+                    <IconButton onClick = {() => deleteThisCard(card)} size="small">   
+                        <DeleteIcon style={{fontSize: "20px"}} /> 
+                    </IconButton>
+                </Tooltip>
             </Grid>        
         </Grid>
     </Card>
@@ -84,9 +99,9 @@ const CardView = props => {
     return (
         
         <div>
-            {editCard ? 
-            <FlashcardForm open={open} onClose={handleClose} cardgroupId={1} card={editCard}  />
-            : <div> </div> }
+        <CardPreviewDialog open={openPreview} onClose={() => setOpenPreview(false)} card={editCard}  />
+        <FlashcardForm open={openEdit} onClose={() => setOpenEdit(false)}  card={editCard}  />
+      
             
             
             {cardItems.length ? 

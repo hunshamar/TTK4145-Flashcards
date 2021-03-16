@@ -3,11 +3,16 @@ from flask_sqlalchemy import SQLAlchemy
 from blueprints.user.routes import userBlueprint, jwt
 from blueprints.flashcard.routes import flashcardBlueprint
 from blueprints.cardgroup.routes import cardgroupBlueprint
+from blueprints.cardrating.routes import cardratingBlueprint
+from blueprints.peerreview.routes import peerreviewBlueprint
 from blueprints.user.user import User
 from db import db
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 # from flask_user import UserManager
+
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
 
 #key stuff
 import os
@@ -17,6 +22,11 @@ load_dotenv()
 app = Flask(__name__, static_folder="build", static_url_path="/")
 CORS(app, supports_credentials=True) # Support credentials to allow sessions in blueprints
 
+# Migration
+migrate = Migrate(app, db, compare_type=True)
+manager = Manager(app)
+
+manager.add_command("db", MigrateCommand)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydb.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -33,10 +43,11 @@ db.init_app(app)
 app.register_blueprint(userBlueprint)
 app.register_blueprint(flashcardBlueprint)
 app.register_blueprint(cardgroupBlueprint)
+app.register_blueprint(cardratingBlueprint)
+app.register_blueprint(peerreviewBlueprint)
 
 @app.route("/init")
-def init():
-    
+def init():   
     db.create_all()
     return jsonify(app.secret_key)
 
@@ -53,5 +64,6 @@ def react_index():
 
 
 if __name__ == "__main__":
+    manager.run()
     app.run(debug=True)
     

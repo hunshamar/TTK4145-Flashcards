@@ -12,6 +12,10 @@ import loadingReducer from '../../store/reducers/loadingReducer';
 import Loading from '../notifications/loading';
 import userReducer from '../../store/reducers/userReducer';
 import { Redirect } from 'react-router-dom';
+import { dateJSONToString } from '../../utils/datehandling';
+import Progress from '../submodules/progress';
+import { useHistory } from 'react-router-dom';
+
 
 const useStyles = makeStyles(theme => ({
     addButton: {
@@ -32,11 +36,7 @@ const useStyles = makeStyles(theme => ({
             background: theme.palette.button.error.dark,
           }
     },
-    progressBar: {
-        "& .MuiLinearProgress-barColorPrimary" : {
-            backgroundColor: theme.palette.button.success.main
-        }
-    }
+ 
 }))
 
 
@@ -44,7 +44,6 @@ const CardGroupPage = props => {
     console.log("prop")
     console.log(props.match.params)
 
-    const [redirectHome, setRedirectHome] = useState(false)
     const classes = useStyles()
 
     const isAdmin = useSelector(state => state.authReducer.isAdmin)
@@ -55,7 +54,6 @@ const CardGroupPage = props => {
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
 
-    const percentage = Math.round(100*(cards.length / cardgroup.numberOfCardsDue))
     const loading = useSelector(state => state.loadingReducer.loading)
 
     const handleClickOpen = () => {
@@ -66,10 +64,11 @@ const CardGroupPage = props => {
         setOpen(false);
       };
 
+    const  history = useHistory()
     const handleDelete = () => {
         if (window.confirm("Are you sure you want to delete cardgroup with all cards?")){ 
             dispatch(deleteCardgroup(cardgroup))
-            setRedirectHome(true)
+            history.push("/addcards")
         }
 
     }
@@ -80,22 +79,10 @@ const CardGroupPage = props => {
     useEffect(() => {
         console.log("stuff and things") 
         console.log(cardgroup)
-        console.log(user)
-        dispatch(loadCardGroupUserFlashcards(props.match.params.id, user.id))       
+        dispatch(loadCardGroupUserFlashcards(props.match.params.id))       
         dispatch(loadCardgroup(props.match.params.id))
     }, [dispatch, props.match.params.id])   
-
-    const date = cardgroup.dueDate
-    let a = new Date(date.year, date.month-1, date.date, date.hour, date.minute)
-    console.log("aa", a)
-
-    if (redirectHome){
-        return (
-            <Redirect to={{
-                pathname: "/"
-              }}/>  
-        )
-    }   
+ 
     if (loading){
         return (
             <PageWrapper>
@@ -103,39 +90,32 @@ const CardGroupPage = props => {
             </PageWrapper>    
         )
     }
-    return(
+    else return(
         <PageWrapper>
             <CreateCardDialog open={open} onClose={handleClose} cardgroupId={props.match.params.id} />           
 
+            {cardgroup ? 
             <Grid container spacing={6}>
                 <Grid item xs={8}>
-                    <Typography variant="h4">{cardgroup.title}</Typography>
-                    <Typography variant="body2">{cardgroup.numberOfCardsDue} cards are due 
-                     {" "+a.toString()}
+                    <Typography variant="h4">Add Flashcards to {cardgroup.title}</Typography>
+                    <Typography variant="body2">{cardgroup.numberOfCardsDue} cards are due {dateJSONToString(cardgroup.dueDate)}
                      </Typography>
 
                     <div style={{marginTop: "40px"}}>
                      <CardView cards={cards}/>
                      </div>
                 </Grid>
+
                 
                 
                 <Grid item xs={4}>
                     <Button fullWidth style={{height: "80px"}} className={classes.addButton} variant="outlined" onClick={handleClickOpen}>
                     + Add Flashcard
                     </Button> 
-                    <Grid container style={{margin: "30px 0", border: "0px solid black"}}>
-                        <Grid item xs={8}>
-                            <Typography variant="body1">You've created</Typography>
-                            <Typography variant="body1">{cards.length} of {cardgroup.numberOfCardsDue}</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                           <Typography variant="h4">{percentage}%</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <LinearProgress className={classes.progressBar} variant="determinate" value={percentage} />
-                        </Grid>
-                    </Grid>
+
+                    <Progress x={cards.length} y={cardgroup.numberOfCardsDue} body="You've created" style={{margin: "40px 0px"}} />
+
+
                     {isAdmin ? 
                     <Button fullWidth style={{height: "80px"}} className={classes.delButton} variant="outlined" onClick={handleDelete}>
                         Delete cardgroup and all cards
@@ -145,7 +125,7 @@ const CardGroupPage = props => {
                     
                 </Grid>
 
-            </Grid>
+            </Grid> : <div>suo</div> }
 
 
 

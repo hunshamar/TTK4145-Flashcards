@@ -17,7 +17,7 @@ export const darkTheme = createMuiTheme({
       main: "#171717"
     },
     secondary: {
-      main: "#fff"
+      main: "#000"
     },
 
     button: {
