@@ -104,7 +104,7 @@ def initCards():
             front = f" for chapter 2 this is user with username {u.username}'s question nr {i} "
             back = f" for chapter 2  this is user with username {u.username}'s answer nr {i} "
 
-            addFlashcard(front, back, u.id, 2)
+            addFlashcard(front, back, u.id, 1)
             
 
 

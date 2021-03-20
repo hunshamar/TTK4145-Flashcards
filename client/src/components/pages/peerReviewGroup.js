@@ -65,6 +65,11 @@ const PeerReviewGroup = (props) =>{
         setPreviewCard(card)
         setOpenPreview(true)   
     }
+
+    const cardIdToIndex = id => {
+        console.log(id)
+        return cards.map(function(x) {return x.id; }).indexOf(id)+1;
+    }
     
 
     if (!cards || !peerreview){
@@ -83,12 +88,13 @@ const PeerReviewGroup = (props) =>{
                 then you may reveal the answer. After testing the card, you are to rate it based on three criteria, try to be objective<br/> 
                     If the card is hard to read, press "FULL CARD VIEW"  button for a full preview of the card.
                     <br/><br/>
-                    <b>Level of Difficulty</b> An objective rating on the difficulty of the card. <br/>
+                    <b>Level of Difficulty</b> An objective rating on the difficulty of the card. From extremely easy to extremely hard.<br/>
                     <b>Relevance and Quality</b> A rating of how relevant the card is to the course curriculum and the quality of the flashcard. Will studying
                      this card be useful for learning the course material? Is the question well-phrased? Is it too long and complex? Is it original?
                     <br/>
                     <b>Mark as Duplicate</b>  If two or more cards are very similar or duplicate of each other, press "mark as duplicate" on one of the cards and
                      choose one or more of the other cards.
+                     <br/> <br/>
 
                     {/* <b>Overall quality</b> The overall quality of the flashcard. Is the question well phrased? Is it too long and complex? Is it original? This rating can be more subjective. <br/> */}
 
@@ -100,7 +106,7 @@ const PeerReviewGroup = (props) =>{
                 
                 cards.map((card, i) => 
                     <React.Fragment>
-                        <RateCard key={card.id} card={card} index={i+1} save={save} previewCard={openPreviewCard}  />
+                        <RateCard key={card.id} card={card} index={i+1} save={save} cardIdToIndex={cardIdToIndex} previewCard={openPreviewCard}  />
                         <Divider />
                     </React.Fragment>
                 ) : <div>empty</div>}

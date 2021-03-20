@@ -9,7 +9,8 @@ export const saveRating = ({rating, cardNumber}) => async( dispatch, getState) =
     await axios.post("/api/addrating", {
             difficulty: rating.difficulty,
             quality: rating.quality,
-            cardId: rating.cardId
+            cardId: rating.cardId,
+            duplicateCardIds: rating.duplicateCardIds.join()
         }, {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem("user_token")

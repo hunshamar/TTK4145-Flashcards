@@ -3,10 +3,10 @@ import { CREATE_PEERREVIEW, LOAD_PEERREVIEWS, SET_LOADING, SET_ALERT, GET_USER_A
 import { refreshTokens } from './authActions';
 
 export const createPeerreviews = ({groupId, dueDate, numberOfReviews}) => async( dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})
     await refreshTokens()
         
     
-    dispatch({type: SET_LOADING, payload: true})
     await axios.post("/api/createpeerreviewsessions", {
             groupId: groupId,
             dueDate: dueDate,
@@ -49,10 +49,10 @@ export const createPeerreviews = ({groupId, dueDate, numberOfReviews}) => async(
 };
 
 export const getUserPeerreviews = () => async( dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})
     await refreshTokens()
         
     
-    dispatch({type: SET_LOADING, payload: true})
     await axios.get("/api/userpeerreviews", 
     {
         headers: {
@@ -94,10 +94,10 @@ export const getUserPeerreviews = () => async( dispatch, getState) => {
 };
 
 export const loadPeerreview = (pid) => async( dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})
     await refreshTokens()
         
     
-    dispatch({type: SET_LOADING, payload: true})
     await axios.get("/api/peerreview/"+pid, 
     {
         headers: {

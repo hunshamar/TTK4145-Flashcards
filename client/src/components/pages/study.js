@@ -14,7 +14,7 @@ const Study = () => {
         <PageWrapper>
             <Grid container spacing={2} >
                 <Grid item xs={12}>
-                    <Typography variant="h4" gutterBottom> Study </Typography>
+                    <Typography variant="h4" gutterBottom> Study - Coming Soon... </Typography>
                     <Typography variant="body2" color="textSecondary">
                     Page for studying cards.                     <br/> 
                     Todo:<br/>

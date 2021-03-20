@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import RotateLeft from "@material-ui/icons/RotateLeft";
 import { styled } from '@material-ui/core/styles';
+import { useRef } from "react";
+import HTMLTextField from "../submodules/HTMLTextField";
 
 
 
@@ -87,12 +89,39 @@ const exampleString =
 </div>
 `
 
-
 const HTMLGuide = () => {
 
     const [HTMLString, setHTMLString] = useState(exampleString)
 
-    console.log(HTMLString)
+    const inputRef = useRef()
+
+    const addTabs = e => {
+        console.log(e.key)
+        if (e.key === "Tab"){
+            e.preventDefault()
+            console.log(inputRef)
+
+            const { selectionStart, selectionEnd } = e.target
+
+            const tab = "\t"
+
+            const newHTMLString =
+              HTMLString.substring(0, selectionStart) +
+              tab+
+              HTMLString.substring(selectionEnd)
+
+            // setHTMLString(newHTMLString)
+            
+            inputRef.current.value = newHTMLString
+            setHTMLString(newHTMLString)
+
+            inputRef.current.selectionStart = inputRef.current.selectionEnd = selectionStart+tab.length
+            
+        }
+
+
+    }
+
     return(
         <PageWrapper>
             <Grid container spacing={2}>
@@ -169,14 +198,14 @@ const HTMLGuide = () => {
                     <Typography variant="caption" color="textSecondary">
                             <b>HTML Input:</b> <br/> 
                         </Typography>
-                <TextField
-                    onChange={e => setHTMLString(e.target.value)} 
+                <HTMLTextField 
+                    onChange={setHTMLString} 
+                    value={HTMLString}
                     fullWidth 
                     required
-                    variant="outlined"
-                    color="secondary"
-                    value={HTMLString}
-                    InputProps={{
+                    multiline
+
+                    InputProps={{                        
                         style: {
                             padding: "2px",
                             fontSize: "12px"
@@ -191,8 +220,8 @@ const HTMLGuide = () => {
                             </div>
                         </InputAdornment>,
                     }}
-                    multiline
-                    />
+
+                />
 
                 </Grid>
                 <Grid item xs={5}>

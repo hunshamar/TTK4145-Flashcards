@@ -68,8 +68,8 @@ export const searchUsers = (role, searchPhrase, ) => async (dispatch) => {
 
 
 export const getUsersStatus = (cardgroupId) => async (dispatch, getState) => {
-    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})
+    await refreshTokens()
 
     if (!cardgroupId){
         dispatch({type: GET_DELIVERY_STATUS, payload: []})
@@ -97,8 +97,8 @@ export const getUsersStatus = (cardgroupId) => async (dispatch, getState) => {
 
 
 export const addAdmin = (user) => async (dispatch, getState) => {
-    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})   
+    await refreshTokens()
     axios.get("/api/addadmin/"+user.id, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("user_token")}`
@@ -118,8 +118,8 @@ export const addAdmin = (user) => async (dispatch, getState) => {
 }
 
 export const removeAdmin = (user) => async (dispatch, getState) => {
-    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})   
+    await refreshTokens()
     axios.get("/api/removeadmin/"+user.id, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("user_token")}`

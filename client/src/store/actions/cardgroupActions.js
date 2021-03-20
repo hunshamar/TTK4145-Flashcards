@@ -54,8 +54,8 @@ export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
 
 
 export const loadCardgroups = () => async (dispatch, getState) => {
-    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})
+    await refreshTokens()
 
 
     await axios.get("/api/cardgroups")
@@ -78,8 +78,8 @@ export const loadCardgroups = () => async (dispatch, getState) => {
 
 
 export const loadCardgroup = (groupId) => async (dispatch) => {
-    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})
+    await refreshTokens()
 
     await axios.get("/api/cardgroup/"+groupId)
     .then(res => {

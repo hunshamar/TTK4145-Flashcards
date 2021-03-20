@@ -17,13 +17,18 @@ def add_rating():
     try:        
         difficulty_rating = request.json["difficulty"]
         quality_rating = request.json["quality"]
+        duplicate_card_ids = request.json["duplicateCardIds"]
+        print("her")
+        print(duplicate_card_ids)
 
         print(difficulty_rating, quality_rating)
 
-        cid = request.json["cardId"]
+        cid = int(request.json["cardId"])
+        print("cid", cid)
         uid = uid = get_jwt_identity()
 
-        rating = addRating(uid, cid, difficulty_rating , quality_rating)
+
+        rating = addRating(uid, cid, difficulty_rating , quality_rating, duplicate_card_ids)
         return jsonify(rating)
 
     except Exception as e:
@@ -65,3 +70,13 @@ def delete_card_rating(cid):
 def get_ratings():    
     sleep(DELAY_S)
     return jsonify(getAllRatings())
+
+
+
+@cardratingBlueprint.route("/api/delratings")
+# @jwt_required
+def del_all_ratings():    
+    sleep(DELAY_S)
+    deleteAllCardRatings()
+
+    return "success"

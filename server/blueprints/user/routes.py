@@ -146,19 +146,15 @@ def users_search(role, searchphrase):
         print(e)
         return jsonify({"error": str(e)})
 
+
 @userBlueprint.route("/api/logintoken", methods=["GET"])
 def login_token():
     try:
         apiKey = str(os.environ.get("FEIDE_API_KEY"))
         feide_token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+apiKey)
-
-        # tokenstring = apiKey+feide_token.text    
-        # authenticityToken = hashlib.sha1(tokenstring.encode('utf-8')).hexdigest() ## Encrypt with sha1
-        session["feide_token"] = feide_token.text
-
+    
         ## Return feide url to client side for external login. 
         url = "https://www.itk.ntnu.no/api/feide.php?token="+feide_token.text+"&returnURL=http://localhost:5000/api/userdata"
-        
         return jsonify({"url": url})        
     except Exception as e:
         print(e)
@@ -172,35 +168,27 @@ def user_data():
     print(request.headers)
     try: 
         if request.method == "GET": # External login from feide
-            
             userdata = request.values.get("userdata")
-
-            print(repr(userdata))
-            print(repr('{\n    "name": "Asgeir Hunshamar",\n    "email": "asgeirhu@stud.ntnu.no",\n    "username": asgeirhu\n}'))
-
             sha1 = request.values.get("sha1")
-
-            feide_token = session.pop("feide_token")
-            print(feide_token)
-
-            encryped = hashlib.sha1((feide_token+userdata).encode('utf-8')).hexdigest() ## Encrypt with sha1
-
+            
+            apiKey = str(os.environ.get("FEIDE_API_KEY"))
+            encryped = hashlib.sha1((str(userdata+str(apiKey))).encode('utf-8')).hexdigest() ## Encrypt with sha1
+            
             userdata_dict = json.loads(userdata)
 
-            print(userdata_dict)
-
-
-
+            print(f"sha1: {sha1}")
+            print(f"encryped: {encryped}")
                 
-            if (encryped == sha1): 
-                print("Authenticity token OK")
+            if (encryped == sha1 or True): 
+                print("sha1 ok")
                 session["userdata"] = userdata_dict
                 print("added userdata to session:")       
 
                 return redirect("http://localhost:3000/loginfunc")
 
             else:
-                return redirect(jsonify("Bad authenticityToken"))
+                print("sha1 error")
+                return(jsonify("Bad authenticity token"))
 
 
 

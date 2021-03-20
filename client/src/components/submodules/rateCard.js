@@ -1,6 +1,8 @@
 
-import { Button, Card, Tooltip, Grid, IconButton, Typography, Box } from '@material-ui/core';
+import { Button, Card, Tooltip, Grid, IconButton, Typography, Box, TextField } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
+
+
 
 import SaveIcon from '@material-ui/icons/Save';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -15,15 +17,14 @@ import ratingReducer from '../../store/reducers/ratingReducer';
 import loadingReducer from '../../store/reducers/loadingReducer';
 import Loading from '../notifications/loading';
 import { SET_ALERT } from '../../store/actionTypes';
+import MarkAsDuplicatedDialog from '../dialogs/markAsDuplicateDialog';
 const useStyles = makeStyles(theme => ({
-    container: {
-        padding: "10px",
-        minHeight: "150px",
-        margin: "10px 0",
-    },
     duplicateButton: {
         fontSize: "10px",
         marginTop: "10px"
+    },
+    marked: {
+        backgroundColor: theme.palette.backgroundHover,
     },
     body:{
         minHeight: "100px",
@@ -56,17 +57,20 @@ const difficultyLabels = {
     5: 'Excellent+',
   };
 
-const RateCard = ({card, index, save, previewCard}) => {
+const RateCard = ({card, index, save, previewCard, cardIdToIndex}) => {
 
     const classes = useStyles()
     const [flipped, setFlipped] = useState(false);
 
     const [difficulty, setDifficulty] = useState(0)
     const [hoverDifficulty, setHoverDifficulty] = useState(-1);
+    
 
     const [relevance, setRelevance] = useState(0)
     const [saveDate, setSaveDate] = useState("");
 
+    const [duplicateCardIds, setDuplicateCardIds] = useState([])
+    const [openMarkAsDuplicated, setOpenMarkAsDuplicated] = useState(false)
     const loading = useSelector(state => state.loadingReducer.loading)
 
 
@@ -89,6 +93,9 @@ const RateCard = ({card, index, save, previewCard}) => {
             setDifficulty(rating.difficulty)    
             setQuality(rating.quality_rating)
             setSaveDate(rating.savedatestring)
+            console.log("hiiieeer")
+            console.log(rating)
+            setDuplicateCardIds(rating.duplicates)
         }
     }, [rating])
 
@@ -98,12 +105,8 @@ const RateCard = ({card, index, save, previewCard}) => {
         }
     }, [save])
 
-
-
     const markAsDuplicate = () => {
-        console.log("duplicate")
-        alert("Mark as duplicate not yet implemented")
-        // setDifficulty(5)
+        setOpenMarkAsDuplicated(true)
     }
 
     const submitRating = () => {
@@ -113,6 +116,7 @@ const RateCard = ({card, index, save, previewCard}) => {
             const rating = {
                 difficulty,
                 quality,
+                duplicateCardIds,
                 cardId: card.id
             }                  
             dispatch(saveRating({rating, cardNumber: index}))
@@ -122,7 +126,16 @@ const RateCard = ({card, index, save, previewCard}) => {
     }
 
     return(
-        <Grid className={classes.container} container spacing={2}>
+        <Box className={openMarkAsDuplicated ? classes.marked : ""} style={{padding: "20px 10px"}}>
+        <Grid className={classes.container} container spacing={2} >
+                <MarkAsDuplicatedDialog 
+                    open={openMarkAsDuplicated} 
+                    onClose={()=>setOpenMarkAsDuplicated(false)}
+                    duplicateCards={duplicateCardIds} 
+                    setDuplicateCards={setDuplicateCardIds}
+                    flashcard={card}
+                      />
+                
                 <Grid item xs={1}>       
                         <Typography variant="subtitle2">#</Typography>
                         <Typography variant="body2">{index}</Typography>
@@ -197,7 +210,13 @@ const RateCard = ({card, index, save, previewCard}) => {
                             onChange={(event, newValue) => {
                                 setQuality(newValue);
                             }}
-                        /> */}
+                        /> */}  
+                        <Typography variant="body2">Duplicate Card{duplicateCardIds.length >= 2 ? "s" : ""}: </Typography> 
+                        <Box  style={{minHeight: "30px", minWidth: "30px"}}>
+                        <Typography variant="body2" color="textSecondary">{duplicateCardIds.map(d => <b>#{cardIdToIndex(d)}{", "}</b>)} </Typography> 
+                        </Box>
+                            
+
                          <Button className={classes.duplicateButton} onClick={markAsDuplicate} variant="contained" color="primary" fullWidth endIcon={<MoodBadIcon />} >                           
                             Mark as duplicate
                         </Button>
@@ -221,6 +240,7 @@ const RateCard = ({card, index, save, previewCard}) => {
                     </IconButton> 
                 </Grid> */}
         </Grid>
+        </Box>
     )
 }
 

@@ -1,8 +1,7 @@
 import { Divider, Grid, Typography, Button } from "@material-ui/core"
 import { useState } from 'react';
 
-
-
+import DOMPurify from 'dompurify';
 
 
 const FlashcardStudy = ({flashcard, style}) => {
@@ -11,24 +10,32 @@ const FlashcardStudy = ({flashcard, style}) => {
 
     return (
         <div style={style}>
-            <Grid container spacing={2} style={{minWidth: "500px", minHeight: "200px"}}>
-                <Grid item xs={12} style={{textAlign: "center"}}>
+            <Grid container spacing={0} style={{minWidth: "500px"}}>
+                <Grid item xs={12}  style={{textAlign: "center", minHeight: "100px"}}>
+                <Typography variant="caption" color="textSecondary">
+                        Front:
+                    </Typography>
+                    <Typography variant="body2" style={{marginTop: "auto", overflow: "hidden"}}>
+                        <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(flashcard.front)}} />
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}  >
+                    <Divider /> 
+                </Grid>
+                <Grid item xs={12} style={{textAlign: "center", minHeight: "100px"}}>
 
-                    <Typography variant="body2">
-                        {/* {flashcard.front} */}
-                        <div dangerouslySetInnerHTML={{__html: flashcard.front}} />
-                    </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                    <Divider />
-                </Grid>
-                <Grid item xs={12} style={{textAlign: "center"}}>
+                   
                     {reveal ? 
-                    <Typography variant="body2">
-                        <div dangerouslySetInnerHTML={{__html: flashcard.back}} />
-                    </Typography>
+                     <div>
+                        <Typography variant="caption" color="textSecondary">
+                            Back:
+                        </Typography>
+                        <Typography variant="body2">
+                            <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(flashcard.back)}} />
+                        </Typography>
+                    </div>
                     :
-                    <Button variant="contained" color="primary" onClick={() => setReveal(true)}> 
+                    <Button variant="contained" color="primary" style={{marginTop: "25px"}} onClick={() => setReveal(true)}> 
                         Show Answer
                     </Button>}
                 </Grid>

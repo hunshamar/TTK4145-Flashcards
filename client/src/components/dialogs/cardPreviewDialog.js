@@ -35,7 +35,7 @@ const CardPreviewDialog = ({card, onClose, open, selectedValue}) => {
         className={classes.dialog}
        open={open} 
        >    
-            <div style={{margin: "20px"}}>
+       <div >
 
                 <Tooltip title="Close" placement="left">
                     <IconButton  onClick={handleClose} className={classes.customizedButton}   > 
@@ -44,7 +44,7 @@ const CardPreviewDialog = ({card, onClose, open, selectedValue}) => {
                 </Tooltip>
 
                 {/* <Typography variant="h4" align="center">Flashcard Preview </Typography>  */}
-                <FlashcardStudy flashcard={card} style={{margin: "50px"}} />
+                <FlashcardStudy flashcard={card} style={{margin: "30px"}} />
 
             </div>    
         </Dialog>

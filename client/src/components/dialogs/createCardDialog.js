@@ -17,6 +17,9 @@ import { addCard } from '../../store/actions/cardActions';
 import UploadImage from '../submodules/uploadImage';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import { Link } from 'react-router-dom';
+import HTMLTextField from '../submodules/HTMLTextField';
+import FlashcardStudy from '../submodules/flashcardStudy';
+import { Box } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     dialog: {
@@ -34,6 +37,7 @@ const CreateCardDialog = (props) => {
 
     const [front, setFront] = useState("")
     const [back, setBack] = useState("")
+    const [preview, setPreview] = useState(false)
 
    
 
@@ -63,6 +67,7 @@ const CreateCardDialog = (props) => {
     }
 
     const handleClose = () => {
+        setPreview(false)
         onClose(selectedValue);
     };
   
@@ -87,6 +92,17 @@ const CreateCardDialog = (props) => {
                     <CardgroupSelect onChange={e => setCardgroupid(e)} />
                 </Grid> */}
                 <Grid item xs={12}>
+                
+                <HTMLTextField 
+                    onChange={setFront} 
+                    value={front} 
+                    label="Front"
+                    fullWidth 
+                    required
+                    multiline
+                    rows={7}
+                />
+{/* 
                 <TextField
                     onChange={e => setFront(e.target.value)} 
                     fullWidth 
@@ -108,10 +124,10 @@ const CreateCardDialog = (props) => {
                     // }}
                     multiline
                     rows={4}
-                    />
+                    /> */}
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField 
+                    {/* <TextField 
                         onChange={e => setBack(e.target.value)}
                         id="asd"
                         label="Back"
@@ -123,8 +139,28 @@ const CreateCardDialog = (props) => {
                         fullWidth
                         required
                         variant="outlined"
+                    /> */}
+                    <HTMLTextField 
+                        onChange={setBack}
+                        label="Back"
+                        multiline
+                        rows={7}
+                        value={back}
+                        fullWidth
+                        required
                     />
                 </Grid>
+                
+                <Grid item xs={12} style={{textAlign: "center"}}>
+                    {preview ?                     
+                    <Box border={1} borderColor="secondary.light" borderRadius={5} align="center" mb="5px"> 
+                        <FlashcardStudy flashcard={{front, back}} />
+                    </Box> : ""}
+                    <Button fullWidth color="secondary" variant="outlined" endIcon={<VisibilityIcon />} onClick={() => setPreview(!preview)}>
+                     {preview ? "Hide Preview" : "Preview Flashcard"}
+                    </Button>
+                </Grid>
+
                 <Grid item xs={6}>
                     <Button variant="contained" onClick={handleClose} fullWidth color="primary"  > Back</Button>
                 </Grid>

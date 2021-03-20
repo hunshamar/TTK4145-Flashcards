@@ -80,8 +80,8 @@ export const editCard = (card) => async( dispatch, getState) => {
 };
 
 export const loadCardGroupUserFlashcards = (cardgroupId) => async dispatch => {
-    await refreshTokens()
     dispatch({type: SET_LOADING, payload: true})
+    await refreshTokens()
     console.log("cardgroupid", cardgroupId)
 
     await axios.get("/api/cardgroupuserflashcards/"+cardgroupId,
@@ -106,9 +106,9 @@ export const loadCardGroupUserFlashcards = (cardgroupId) => async dispatch => {
 }
 
 export const loadCards = props => async (dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})
     await refreshTokens()
 
-    dispatch({type: SET_LOADING, payload: true})
 
     await axios.get("/api/flashcards")
     .then(res => {
@@ -130,9 +130,9 @@ export const loadCards = props => async (dispatch, getState) => {
 }
 
 export const loadCardgroupFlashcards = (cardgroupId) => async (dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})
     await refreshTokens()
 
-    dispatch({type: SET_LOADING, payload: true})
 
 
     console.log("idd",cardgroupId)
@@ -159,9 +159,9 @@ export const loadCardgroupFlashcards = (cardgroupId) => async (dispatch, getStat
 }
 
 export const loadPeerReviewFlashcards = (peerreviewid) => async (dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})
     await refreshTokens()
 
-    dispatch({type: SET_LOADING, payload: true})
 
     await axios.get("/api/peerreviewflashcards/"+peerreviewid,
     {headers: { 

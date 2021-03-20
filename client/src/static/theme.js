@@ -13,6 +13,13 @@ export const darkTheme = createMuiTheme({
     type: 'dark',
     textColor: "#fff",
 
+    background: {
+      default: "#303030"
+    },
+    backgroundHover: "#202020",
+    
+
+
     primary: {
       main: "#171717"
     },
@@ -45,6 +52,11 @@ export const theme = createMuiTheme({
   },
 
   palette: {
+
+    background: {
+      default: "#fafafa",
+    },
+    backgroundHover: "#f1f1f1",
 
     primary: { 
         // light: will be calculated from palette.primary.main,
