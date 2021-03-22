@@ -10,10 +10,10 @@ import { Button,
     IconButton,
     Tooltip
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {  useDispatch } from 'react-redux';
-import { addCard } from '../../store/actions/cardActions';
+import { addCard, editCard } from '../../store/actions/cardActions';
 import UploadImage from '../submodules/uploadImage';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import { Link } from 'react-router-dom';
@@ -39,21 +39,31 @@ const CreateCardDialog = (props) => {
     const [back, setBack] = useState("")
     const [preview, setPreview] = useState(false)
 
+    useEffect(() => {
+        if (props.card){
+            console.log("cccc", props.card)
+            setFront(props.card.front)
+            setBack(props.card.back)
+        }
+    }, [props.card])
    
-
     const submit = e => {
         e.preventDefault()
-        console.log("id", cardgroupId)
-        
-        if (front && back && cardgroupId){
-
-
-            try{ dispatch(addCard({
-                front: front,
-                back: back,
-                cardgroupid: cardgroupId
-            }))}
-            catch {
+              
+        if (front && back && (cardgroupId || props.card.id)){
+            if (props.card){
+                dispatch(editCard({
+                    front: front,
+                    back: back,
+                    id: props.card.id
+                }))
+            }               
+            else{
+                dispatch(addCard({
+                    front: front,
+                    back: back,
+                    cardgroupid: cardgroupId
+                }))
             }
             setFront("")
             setBack("")
@@ -82,7 +92,7 @@ const CreateCardDialog = (props) => {
             <Grid container spacing={2}>
                 <Grid item xs={12}>
 
-                    <Typography variant="h5">Create a flashcard. This can be edited later </Typography>
+                    <Typography variant="h5"> {props.card ? "Edit Flashcard" : "Create a flashcard. This can be edited later"} </Typography>
                     <Typography variant="body2" color="textSecondary"> You can write either pure text or use HTML. <Link  to="/htmlguide" target="_blank">HTML Guide</Link> 
                     <br/>
                     Make sure the Card looks good in <i>Preview Flashcard</i> if writing in HTML.
@@ -96,7 +106,7 @@ const CreateCardDialog = (props) => {
                 <HTMLTextField 
                     onChange={setFront} 
                     value={front} 
-                    label="Front"
+                    label="Front (question)"
                     fullWidth 
                     required
                     multiline
@@ -142,7 +152,7 @@ const CreateCardDialog = (props) => {
                     /> */}
                     <HTMLTextField 
                         onChange={setBack}
-                        label="Back"
+                        label="Back (answer)"
                         multiline
                         rows={7}
                         value={back}
@@ -154,7 +164,7 @@ const CreateCardDialog = (props) => {
                 <Grid item xs={12} style={{textAlign: "center"}}>
                     {preview ?                     
                     <Box border={1} borderColor="secondary.light" borderRadius={5} align="center" mb="5px"> 
-                        <FlashcardStudy flashcard={{front, back}} />
+                        <FlashcardStudy flashcard={{front, back}} revealback={true} />
                     </Box> : ""}
                     <Button fullWidth color="secondary" variant="outlined" endIcon={<VisibilityIcon />} onClick={() => setPreview(!preview)}>
                      {preview ? "Hide Preview" : "Preview Flashcard"}
@@ -162,10 +172,10 @@ const CreateCardDialog = (props) => {
                 </Grid>
 
                 <Grid item xs={6}>
-                    <Button variant="contained" onClick={handleClose} fullWidth color="primary"  > Back</Button>
+                    <Button variant="contained" onClick={handleClose} fullWidth color="primary"  >Cancel</Button>
                 </Grid>
                 <Grid item xs={6}>
-                <Button type="submit" fullWidth style={{backgroundColor: front && back ? "green" : "grey", color: "white"}}>Submit</Button>
+                <Button type="submit" fullWidth style={{backgroundColor: front && back ? "green" : "grey", color: "white"}}>Submit {props.card ? "Edit" : ""}</Button>
                 </Grid>
 
             </Grid>

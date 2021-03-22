@@ -11,7 +11,7 @@ export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
     console.log("c cardgroup")
     console.log(cardgroup)
 
-    axios.post("/api/addcardgroup", {
+    axios.post("/api/admin/cardgroups", {
             title: cardgroup.title,
             numberOfCardsDue: cardgroup.numberOfCardsDue,
             dueDate: cardgroup.dueDate
@@ -81,7 +81,7 @@ export const loadCardgroup = (groupId) => async (dispatch) => {
     dispatch({type: SET_LOADING, payload: true})
     await refreshTokens()
 
-    await axios.get("/api/cardgroup/"+groupId)
+    await axios.get("/api/cardgroups/"+groupId)
     .then(res => {
         console.log("res,", res)
         if(res.data.error){
@@ -108,7 +108,7 @@ export const deleteCardgroup = (cardgroup) => async (dispatch, getState) => {
     console.log("and action")
     console.log(cardgroup.id)
 
-    await axios.delete("/api/deletegroup/" + cardgroup.id, 
+    await axios.delete("/api/admin/cardgroups/" + cardgroup.id, 
     {headers: { 
         Authorization: "Bearer " +localStorage.getItem("user_token") 
     }}

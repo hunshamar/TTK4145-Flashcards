@@ -12,67 +12,25 @@ from time import sleep
 from ..values import DELAY_S
 
 
-@flashcardBlueprint.route("/api/flashcards")
-@jwt_required
-@admin_only
-def flashcards():    
-    sleep(DELAY_S)
-    return jsonify(getAllFlashcards())
 
-@flashcardBlueprint.route("/api/flashcard/<cid>")
+@flashcardBlueprint.route("/api/admin/flashcards", methods=["GET"])
 @jwt_required
 @admin_only
-def flashcard(cid):    
+def flashcards_all():    
+    sleep(DELAY_S)
+    return jsonify(getAllFlashcards()) # make safe
+
+@flashcardBlueprint.route("/api/flashcards/<cid>", methods=["GET"])
+@jwt_required
+@admin_only
+def flashcards_get(cid):    
     sleep(DELAY_S)
     try:
         return jsonify(getFlashcard(cid).to_dict())
     except Exception as e:
         return jsonify({"error": str(e)})
 
-@flashcardBlueprint.route("/api/editflashcard", methods=["GET", "POST"])
-@jwt_required
-def edit_flashcard():
-    sleep(DELAY_S)
-    try:
-        userId = get_jwt_identity()
-        cardId = int(request.json["id"])
-        if getFlashcard(cardId).user.id != userId:
-            raise Exception("Error. Can not edit other users flashcards")
-        
-
-        newFront = request.json["front"]
-        newBack = request.json["back"]
-        cardId = request.json["id"]
-
-
-        flashcard = editFlashcard(cardId, newFront, newBack)       
-
-        return jsonify(flashcard)
-
-    except Exception as e:
-        print(e)
-        return jsonify({"error": str(e)})
-
-@flashcardBlueprint.route("/api/deliverystatus/<cgid>", methods=["GET"])
-@jwt_required
-@admin_only
-def status(cgid):
-    sleep(DELAY_S)
-    try:
-        status = getCardgroupDeliveryStatus(int(cgid))
-        return jsonify(status)
-
-    except Exception as e:
-        print(e)
-        return jsonify({"error": str(e)})
-
-@flashcardBlueprint.route("/api/initcards", methods=["GET"])
-def init_cards():
-    initCards()
-    return jsonify({"success": "true"})
-
-
-@flashcardBlueprint.route("/api/addFlashcard", methods=["POST"])
+@flashcardBlueprint.route("/api/currentuser/flashcards", methods=["POST"])
 @jwt_required
 def add_Flashcard():
     sleep(DELAY_S)
@@ -93,17 +51,30 @@ def add_Flashcard():
         print(e)
         return jsonify({"error": str(e)})
 
-
-# temp, expand
-@flashcardBlueprint.route("/api/calculateaverageratings", methods=["GET"])
-def ratings():
-    calculateCardAverageRating()
-    return jsonify({"ratings": "true"})
-
-
-@flashcardBlueprint.route("/api/deleteflashcard/<cid>", methods=["DELETE"])
+@flashcardBlueprint.route("/api/currentuser/flashcards/<cid>", methods=["PUT"])
 @jwt_required
-def delete_card(cid):
+def flashcards_edit(cid):
+    sleep(DELAY_S)
+    try:
+        userId = get_jwt_identity()
+        cardId = int(cid)
+        if getFlashcard(cardId).user.id != userId:
+            raise Exception("Error. Can not edit other users flashcards")
+        
+
+        newFront = request.json["front"]
+        newBack = request.json["back"]
+        flashcard = editFlashcard(cardId, newFront, newBack)       
+
+        return jsonify(flashcard)
+
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
+
+@flashcardBlueprint.route("/api/currentuser/flashcards/<cid>", methods=["DELETE"])
+@jwt_required
+def flashcard_delete(cid):
     sleep(DELAY_S)
     cardId = int(cid)
     
@@ -119,28 +90,53 @@ def delete_card(cid):
         return jsonify({"success": "true"})
     except Exception as e:
         return jsonify({"error": str(e)})   
-
-@flashcardBlueprint.route("/api/cardgroupflashcards/<cgid>", methods=["GET"])
+        
+@flashcardBlueprint.route("/api/admin/cardgroup/<cgid>/deliverystatus", methods=["GET"])
 @jwt_required
 @admin_only
-def cardgroup_cards(cgid):
+def status(cgid):
     sleep(DELAY_S)
-    print(type(cgid), "find this")
     try:
-        return jsonify(getCardgroupFlashcards(int(cgid)))
+        status = getCardgroupDeliveryStatus(int(cgid))
+        return jsonify(status)
+
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)})
 
-@flashcardBlueprint.route("/api/cardgroupuserflashcards/<cgid>", methods=["GET"])
+@flashcardBlueprint.route("/api/currentuser/flashcards/cardgroupid=<cgid>", methods=["GET"])
 @jwt_required
-def cardgroup_user_cards(cgid):
+def cardgroup_user_flashcardscards(cgid):
     sleep(DELAY_S)
+    print("her her")
     print(type(cgid), "find this")
     uid = get_jwt_identity()
     try:
         return jsonify(getCardGroupFlashCardsUser(int(cgid), int(uid)))
     except Exception as e:
         return jsonify({"error": str(e)})
+
+
+
+##############################################################################
+
+# ## temp
+# @flashcardBlueprint.route("/api/initcards", methods=["GET"])
+# def init_cards():
+#     initCards()
+#     return jsonify({"success": "true"})
+
+
+# # temp, expand
+# @flashcardBlueprint.route("/api/flashcards/<cid>/averagerating", methods=["GET"])
+# def ratings():
+#     calculateCardAverageRating(cid)
+#     return jsonify({"ratings": "true"})
+
+
+
+
+
 
 
 

@@ -7,7 +7,7 @@ export const createPeerreviews = ({groupId, dueDate, numberOfReviews}) => async(
     await refreshTokens()
         
     
-    await axios.post("/api/createpeerreviewsessions", {
+    await axios.post("/api/admin/peerreviews", {
             groupId: groupId,
             dueDate: dueDate,
             numberOfReviews: numberOfReviews
@@ -53,7 +53,7 @@ export const getUserPeerreviews = () => async( dispatch, getState) => {
     await refreshTokens()
         
     
-    await axios.get("/api/userpeerreviews", 
+    await axios.get("/api/currentuser/peerreviews", 
     {
         headers: {
             Authorization: "Bearer " + localStorage.getItem("user_token")
@@ -98,7 +98,7 @@ export const loadPeerreview = (pid) => async( dispatch, getState) => {
     await refreshTokens()
         
     
-    await axios.get("/api/peerreview/"+pid, 
+    await axios.get("/api/currentuser/peerreviews/"+pid, 
     {
         headers: {
             Authorization: "Bearer " + localStorage.getItem("user_token")

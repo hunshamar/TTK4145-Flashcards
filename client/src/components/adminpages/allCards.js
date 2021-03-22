@@ -23,8 +23,10 @@ import CardDialog from "../dialogs/cardDialog";
 
 
     useEffect(() => {
-        dispatch(loadCardgroupFlashcards(cardGroupId)) 
-        console.log("status")
+        if(cardGroupId){
+            dispatch(loadCardgroupFlashcards(cardGroupId)) 
+            console.log("status")
+        }
     }, [dispatch, cardGroupId])
     
     console.log("cards")

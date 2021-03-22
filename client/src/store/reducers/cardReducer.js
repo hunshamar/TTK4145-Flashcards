@@ -1,4 +1,4 @@
-import { CREATE_CARD, CREATE_CARD_ERROR, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARD, LOAD_CARDS } from "../actionTypes"
+import { CREATE_CARD, CREATE_CARD_ERROR, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARD, LOAD_CARDS,CLEAR_CARDS } from "../actionTypes"
 
 const initState = {
     cards: [
@@ -54,6 +54,13 @@ const cardReducer = (state = initState, action) => {
                 cards: state.cards.filter((card) => card.id !== action.payload.id),
             }
             // return state;
+        case "CLEAR_CARDS":
+
+            console.log("faen")
+
+            return{
+                cards: []
+            }
         
         case DELETE_CARD_ERROR:
             return state

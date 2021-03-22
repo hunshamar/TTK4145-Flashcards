@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux';
 import React, {useState} from "react"
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { loadCards, loadCardgroupFlashcards, loadPeerReviewFlashcards } from '../../store/actions/cardActions';
+import { loadCards, loadCardgroupFlashcards, loadPeerReviewFlashcards, clearCardReducer } from '../../store/actions/cardActions';
 import RateCard from '../submodules/rateCard';
-import { Box, Button, Divider, Grid, Typography } from '@material-ui/core';
+import { Box, Button, Divider, Grid, makeStyles, Typography } from '@material-ui/core';
 import { PageWrapper } from "../../static/wrappers";
 import { loadCardgroup } from '../../store/actions/cardgroupActions';
 import Loading from '../notifications/loading';
@@ -18,11 +18,21 @@ import ratingReducer from '../../store/reducers/ratingReducer';
 import { getRatingsInPeerreview } from '../../store/actions/ratingActions';
 import CardPreviewDialog from '../dialogs/cardPreviewDialog';
 
+const useStyles = makeStyles(theme => ({
+    savebutton: {
+        // margin: theme.spacing.unit, // You might not need this now
+        // position: "fixed",
+        // width: "300px",
+        // bottom: theme.spacing.unit * 2
+      },
+}))
+
 const PeerReviewGroup = (props) =>{
+
+    const classes = useStyles()
+
     const peerreviewId = props.match.params.id
 
-    const cards = useSelector(state => state.cardReducer.cards)
-    const peerreview = useSelector(state => state.peerreviewReducer.peerreviews[0])
 
     const ratings = useSelector(state => state.ratingReducer.ratings)
     const [save, setSave] = useState(false) 
@@ -32,10 +42,15 @@ const PeerReviewGroup = (props) =>{
 
     const dispatch = useDispatch() 
     useEffect(() => {
+        dispatch(clearCardReducer())
         dispatch(loadPeerreview(peerreviewId))
         dispatch(loadPeerReviewFlashcards(peerreviewId))  
         dispatch(getRatingsInPeerreview(peerreviewId))
     }, [])
+
+    const cards = useSelector(state => state.cardReducer.cards)
+    const peerreview = useSelector(state => state.peerreviewReducer.peerreviews[0])
+
 
     console.log("mhmhmhm")
 
@@ -72,9 +87,11 @@ const PeerReviewGroup = (props) =>{
     }
     
 
-    if (!cards || !peerreview){
+    if (!cards.length){
         return(
-            <Loading />
+            <PageWrapper>
+                <Loading />
+            </PageWrapper>
         )
     }
     else {
@@ -86,7 +103,8 @@ const PeerReviewGroup = (props) =>{
                 <Typography variant="body2" color="textSecondary">
                 {peerreview.reviewsDue} cards are due to be rated. Read the question, attempt to answer it to yourself, 
                 then you may reveal the answer. After testing the card, you are to rate it based on three criteria, try to be objective<br/> 
-                    If the card is hard to read, press "FULL CARD VIEW"  button for a full preview of the card.
+                    If the card is hard to read, press "FULL CARD VIEW"  button for a full preview of the card. <br/>
+                    <u>Remember to save ratings before exiting this page.</u>
                     <br/><br/>
                     <b>Level of Difficulty</b> An objective rating on the difficulty of the card. From extremely easy to extremely hard.<br/>
                     <b>Relevance and Quality</b> A rating of how relevant the card is to the course curriculum and the quality of the flashcard. Will studying
@@ -99,7 +117,7 @@ const PeerReviewGroup = (props) =>{
                     {/* <b>Overall quality</b> The overall quality of the flashcard. Is the question well phrased? Is it too long and complex? Is it original? This rating can be more subjective. <br/> */}
 
                 </Typography>
-                    <Progress x={ratings.length} y={peerreview.reviewsDue} body="Cards rated" style={{width: "300px", marginLeft: "auto", marginBottom: "30px"}} />
+                    <Progress x={ratings.length} y={peerreview.reviewsDue} body="Card ratings submitted" style={{width: "300px", marginLeft: "auto", marginBottom: "30px"}} />
                 <Divider />
                 
                 {cards.length ? 
@@ -116,7 +134,7 @@ const PeerReviewGroup = (props) =>{
                 <Grid container spacing={2}>
                     <Grid item xs={12}>     */}
                     <div style={{padding: "0 200px"}}>
-                    <Button color="primary" fullWidth variant="contained" onClick={saveAllRatings}  >
+                    <Button color="primary" fullWidth variant="contained" onClick={saveAllRatings}  className={classes.savebutton}>
                         Save Ratings<Loading style={{marginLeft: "10px", height: "26px", }} size={24} alternative={<SaveIcon />} /> 
                     </Button> <br/>
                     </div>

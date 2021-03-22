@@ -4,9 +4,9 @@ import { CREATE_RATING, LOAD_RATINGS, SET_ALERT, SET_LOADING } from '../actionTy
 import { refreshTokens } from './authActions';
 
 export const saveRating = ({rating, cardNumber}) => async( dispatch, getState) => {
-    await refreshTokens()
-    dispatch({type: SET_LOADING, payload: true})        
-    await axios.post("/api/addrating", {
+    dispatch({type: SET_LOADING, payload: true})   
+    await refreshTokens()     
+    await axios.post("/api/currentuser/cardrating/"+rating.cardId, {
             difficulty: rating.difficulty,
             quality: rating.quality,
             cardId: rating.cardId,
@@ -46,7 +46,7 @@ export const saveRating = ({rating, cardNumber}) => async( dispatch, getState) =
 export const getRating = (cardId) => async( dispatch, getState) => {
     await refreshTokens()
         
-    await axios.get("/api/getrating/"+cardId, 
+    await axios.get("/api/currentuser/cardrating/"+cardId, 
          {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem("user_token")
@@ -85,7 +85,7 @@ export const getRating = (cardId) => async( dispatch, getState) => {
 export const getRatingsInPeerreview = (peerreviewid) => async( dispatch, getState) => {
     await refreshTokens()
     console.log("Is this aused")
-    await axios.get("/api/ratingsinpeerreview/"+peerreviewid, 
+    await axios.get(`/api/currentuser/peerreview/${peerreviewid}/cardratings`, 
          {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem("user_token")

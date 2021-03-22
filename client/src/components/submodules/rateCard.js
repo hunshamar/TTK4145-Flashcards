@@ -18,6 +18,7 @@ import loadingReducer from '../../store/reducers/loadingReducer';
 import Loading from '../notifications/loading';
 import { SET_ALERT } from '../../store/actionTypes';
 import MarkAsDuplicatedDialog from '../dialogs/markAsDuplicateDialog';
+import DivHTMLSanatized from './divHTMLSanitized';
 const useStyles = makeStyles(theme => ({
     duplicateButton: {
         fontSize: "10px",
@@ -143,15 +144,15 @@ const RateCard = ({card, index, save, previewCard, cardIdToIndex}) => {
                 <Grid item xs={4}>       
                         <Typography variant="subtitle2">Question</Typography>
                         <Typography variant="body2">                      
-                                <div dangerouslySetInnerHTML={{__html: card.front}} style={{overflow: "hidden"}}/>
+                                <DivHTMLSanatized text={card.front} style={{overflow: "hidden"}}/>
                         </Typography>
                 </Grid>
                 
                 <Grid item xs={4} >       
                         <Typography variant="subtitle2">{flipped ? "Answer" : "Reveal Answer"}</Typography>
                         {flipped ? 
-                            <Typography className={classes.body} variant="body2"> {flipped ?                         
-                                <div dangerouslySetInnerHTML={{__html: card.back}} />
+                            <Typography className={classes.body} variant="body2"> {flipped ?     
+                                <DivHTMLSanatized text={card.back} style={{overflow: "hidden"}}/>
                                 : "" }</Typography>
                         :
                             <div></div>

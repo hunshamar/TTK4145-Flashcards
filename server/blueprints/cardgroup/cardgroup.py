@@ -20,6 +20,9 @@ class Cardgroup(db.Model):
 
     peerreview = db.relationship("Peerreview", uselist=False, cascade="all, delete-orphan", backref="cardgroup")
 
+    def get_flashcards(self):
+        return [f.to_dict() for f in self.flashcards]
+
     def get_n_random_cards(self, n):
         
         ## temp løsning ?              

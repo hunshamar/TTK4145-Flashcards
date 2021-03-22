@@ -67,37 +67,27 @@ def manual_add_admin():
         return jsonify({"error": str(e)})
 
 
-@userBlueprint.route("/api/addadmin/<uid>")
+@userBlueprint.route("/api/admin/<uid>", methods=["POST", "DELETE"])
 @jwt_required
 @admin_only
-def add_admin(uid):
+def admin(uid):
     sleep(DELAY_S)
     try:
-        adminUser = makeAdmin(int(uid))
-        return jsonify(adminUser)
+        if request.methods=="POST":
+            adminUser = makeAdmin(int(uid))
+            return jsonify(adminUser)
+        if request.methods=="DELETE":
+            adminUser = removeAdmin(int(uid))
+            return jsonify(adminUser)
+
+
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
 
 
 
-
-
-@userBlueprint.route("/api/removeadmin/<uid>")
-@jwt_required
-@admin_only
-def remove_admin(uid):
-    sleep(DELAY_S)
-    try:
-        adminUser = removeAdmin(int(uid))
-        return jsonify(adminUser)
-    except Exception as e:
-        print(e)
-        return jsonify({"error": str(e)})
-
-
-
-@userBlueprint.route("/api/getcurrentuser")
+@userBlueprint.route("/api/currentuser/user", methods=["GET"])
 @jwt_required
 def get_current_user():
     sleep(DELAY_S)
@@ -110,10 +100,10 @@ def get_current_user():
 
 
 
-@userBlueprint.route("/api/users/all")
+@userBlueprint.route("/api/admin/users/", methods=["GET"])
 @jwt_required
 @admin_only
-def users():
+def users_all():
     sleep(DELAY_S)
     try:
         return jsonify(getAllUsers())
@@ -122,7 +112,7 @@ def users():
         return jsonify({"error": str(e)})
 
 
-@userBlueprint.route("/api/users/role=<role>")
+@userBlueprint.route("/api/admin/users/role=<role>", methods=["GET"])
 @jwt_required
 @admin_only
 def users_filter(role):
@@ -135,7 +125,7 @@ def users_filter(role):
         print(e)
         return jsonify({"error": str(e)})
 
-@userBlueprint.route("/api/users/search/role=<role>/searchphrase=<searchphrase>")
+@userBlueprint.route("/api/admin/users/search/role=<role>/q=<searchphrase>", methods=["GET"])
 @jwt_required
 @admin_only
 def users_search(role, searchphrase):
@@ -147,21 +137,21 @@ def users_search(role, searchphrase):
         return jsonify({"error": str(e)})
 
 
-@userBlueprint.route("/api/logintoken", methods=["GET"])
+@userBlueprint.route("/api/login/url", methods=["GET"])
 def login_token():
     try:
         apiKey = str(os.environ.get("FEIDE_API_KEY"))
         feide_token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+apiKey)
     
         ## Return feide url to client side for external login. 
-        url = "https://www.itk.ntnu.no/api/feide.php?token="+feide_token.text+"&returnURL=http://localhost:5000/api/userdata"
+        url = "https://www.itk.ntnu.no/api/feide.php?token="+feide_token.text+"&returnURL=http://localhost:5000/api/login/userdata"
         return jsonify({"url": url})        
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
 
 # Protect this route... 
-@userBlueprint.route("/api/userdata", methods=["POST", "GET"])
+@userBlueprint.route("/api/login/userdata", methods=["POST", "GET"])
 def user_data():    
 
 
@@ -218,7 +208,7 @@ def user_data():
 
 
 
-@userBlueprint.route("/api/login/callback")
+@userBlueprint.route("/api/login/callback", methods=["GET"])
 def login_callback():
     sleep(DELAY_S)
     try:
@@ -260,13 +250,13 @@ def check_if_blacklisted_token(decrypted_token):
     return InvalidToken.is_invalid(jti)
 
 
-@userBlueprint.route("/api/checkiftokenexpire", methods=["POST"])
+@userBlueprint.route("/api/token/expired", methods=["POST"])
 @jwt_required
 def check_if_token_expire():
     return jsonify({"success": True})
 
 
-@userBlueprint.route("/api/refreshtoken", methods=["POST"])
+@userBlueprint.route("/api/token/refresh", methods=["POST"])
 @jwt_refresh_token_required
 def refresh():
     identity = get_jwt_identity()
@@ -287,7 +277,7 @@ def access_logout():
         return jsonify({"error": e.message})
 
 
-@userBlueprint.route("/api/logout/refresh", methods=["POST"])
+@userBlueprint.route("/api/logout/refreshtoken", methods=["POST"])
 @jwt_refresh_token_required
 def refresh_logout():
     jti = get_raw_jwt()["jti"]

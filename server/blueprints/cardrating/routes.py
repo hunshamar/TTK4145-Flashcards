@@ -10,9 +10,9 @@ from ..values import DELAY_S
 
 
 
-@cardratingBlueprint.route("/api/addrating", methods=["POST"])
+@cardratingBlueprint.route("/api/currentuser/cardrating/<cid>", methods=["POST"])
 @jwt_required
-def add_rating():       
+def cardrating_add(cid):       
     sleep(1)
     try:        
         difficulty_rating = request.json["difficulty"]
@@ -24,6 +24,9 @@ def add_rating():
         print(difficulty_rating, quality_rating)
 
         cid = int(request.json["cardId"])
+
+        cid = int(cid)
+        
         print("cid", cid)
         uid = uid = get_jwt_identity()
 
@@ -35,9 +38,9 @@ def add_rating():
         print(e)
         return(jsonify({"error": str(e)}))       
 
-@cardratingBlueprint.route("/api/getrating/<cid>", methods=["GET"])
+@cardratingBlueprint.route("/api/currentuser/cardrating/<cid>", methods=["GET"])
 @jwt_required
-def get_rating(cid):    
+def cardrating_get(cid):    
     sleep(DELAY_S)
     try:        
         cid = int(cid)
@@ -51,10 +54,10 @@ def get_rating(cid):
         print(e)
         return(jsonify({"error": str(e)}))    
 
-@cardratingBlueprint.route("/api/deletecardrating/<cid>", methods=["GET"])
+@cardratingBlueprint.route("/api/admin/cardrating/<cid>", methods=["DELETE"])
 @jwt_required
 @admin_only
-def delete_card_rating(cid):    
+def cardrating_delete(cid):    
     sleep(DELAY_S)
     try:        
         cid = int(cid)
@@ -65,9 +68,13 @@ def delete_card_rating(cid):
         print(e)
         return(jsonify({"error": str(e)}))        
 
-@cardratingBlueprint.route("/api/ratings")
-# @jwt_required
-def get_ratings():    
+
+
+
+## remove
+@cardratingBlueprint.route("/api/cardratings")
+@jwt_required
+def card():    
     sleep(DELAY_S)
     return jsonify(getAllRatings())
 

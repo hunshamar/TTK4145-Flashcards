@@ -4,13 +4,13 @@ import { useState } from 'react';
 import DOMPurify from 'dompurify';
 
 
-const FlashcardStudy = ({flashcard, style}) => {
+const FlashcardStudy = ({flashcard, style, revealback}) => {
     
-    const [reveal, setReveal] = useState(false)
+    const [reveal, setReveal] = useState(revealback)
 
     return (
         <div style={style}>
-            <Grid container spacing={0} style={{minWidth: "500px"}}>
+            <Grid container spacing={0} >
                 <Grid item xs={12}  style={{textAlign: "center", minHeight: "100px"}}>
                 <Typography variant="caption" color="textSecondary">
                         Front:

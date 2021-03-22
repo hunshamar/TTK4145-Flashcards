@@ -99,12 +99,11 @@ def initCards():
 
 
     for u in users:
-        for i in range(4):
-            print(u.username)
+        for i in range(2):
             front = f" for chapter 2 this is user with username {u.username}'s question nr {i} "
             back = f" for chapter 2  this is user with username {u.username}'s answer nr {i} "
 
-            addFlashcard(front, back, u.id, 1)
+            addFlashcard(front, back, u.id, 2)
             
 
 

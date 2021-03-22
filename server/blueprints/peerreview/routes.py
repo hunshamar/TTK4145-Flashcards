@@ -13,10 +13,11 @@ from ..values import DELAY_S
 
 
 
-@peerreviewBlueprint.route("/api/createpeerreviewsessions", methods=["POST"])
+# @peerreviewBlueprint.route("/api/createpeerreviewsessions", methods=["POST"])
+@peerreviewBlueprint.route("/api/admin/peerreviews", methods=["POST"])
 @jwt_required
 @admin_only
-def add_peerreview_for_all_students():      
+def peerreviews_create():      
     try:        
         group_id = request.json["groupId"]
         due_date = request.json["dueDate"]
@@ -32,37 +33,41 @@ def add_peerreview_for_all_students():
         print(e)
         return(jsonify({"error": str(e)}))       
 
-@peerreviewBlueprint.route("/api/addpeerreview", methods=["POST", "GET"])
+# @peerreviewBlueprint.route("/api/addpeerreview", methods=["POST", "GET"])
+# @jwt_required
+# @admin_only
+# def add_peerreview():      
+#     try:      
+        
+
+#         user_id = request.json["useId"]
+#         group_id = request.json["groupId"]
+#         due_date = request.json["dueDate"]
+#         n_reviews = request.json["numberOfReviews"]
+#         addPeerReview(group_id, user_id, due_date, n_reviews)
+
+#         return jsonify({"success": "true"})
+
+#     except Exception as e:
+#         print(e)
+#         return(jsonify({"error": str(e)}))       
+
+
+# @peerreviewBlueprint.route("/api/peerreviews", methods=["GET"])
+# def get_peerreviews():      
+#     try:        
+#         return jsonify(getAllPeerreviews())
+
+#     except Exception as e:
+#         print(e)
+#         return(jsonify({"error": str(e)}))       
+        
+@peerreviewBlueprint.route("/api/currentuser/peerreviews/<pid>", methods=["GET"])
 @jwt_required
-@admin_only
-def add_peerreview():      
-    try:      
-        
-
-        user_id = request.json["useId"]
-        group_id = request.json["groupId"]
-        due_date = request.json["dueDate"]
-        n_reviews = request.json["numberOfReviews"]
-        addPeerReview(group_id, user_id, due_date, n_reviews)
-
-        return jsonify({"success": "true"})
-
-    except Exception as e:
-        print(e)
-        return(jsonify({"error": str(e)}))       
-
-@peerreviewBlueprint.route("/api/allpeerreviews", methods=["POST", "GET"])
-def get_peerreviews():      
-    try:        
-        return jsonify(getAllPeerreviews())
-
-    except Exception as e:
-        print(e)
-        return(jsonify({"error": str(e)}))       
-        
-@peerreviewBlueprint.route("/api/peerreview/<pid>", methods=["GET"])
 def get_peerreview(pid):      
     try:        
+
+        ## add check
         return jsonify(getPeerReview(int(pid)))
 
     except Exception as e:
@@ -72,7 +77,7 @@ def get_peerreview(pid):
 
 
 
-@peerreviewBlueprint.route("/api/userpeerreviews/", methods=["GET"])
+@peerreviewBlueprint.route("/api/currentuser/peerreviews", methods=["GET"])
 @jwt_required
 def get_user_peerreviews():      
     try:        
@@ -83,27 +88,19 @@ def get_user_peerreviews():
         print(e)
         return(jsonify({"error": str(e)}))   
 
-@peerreviewBlueprint.route("/api/peerreviewflashcards/<peerreviewid>", methods=["GET"])
+@peerreviewBlueprint.route("/api/peerreview/<pid>/flashcards", methods=["GET"])
 @jwt_required
-def get_peerreview_flashcards(peerreviewid):      
+def get_peerreview_flashcards(pid):      
     try:        
-        return jsonify(getPeerreviewCards(peerreviewid))
+        return jsonify(getPeerreviewCards(int(pid)))
 
     except Exception as e:
         print(e)
         return(jsonify({"error": str(e)}))       
 
 
-
-@peerreviewBlueprint.route("/api/deleteall/", methods=["GET"])
-def delete_peer():      
-    deleteAllPeerReviews()
-    return jsonify("true")
-
-
-
-@peerreviewBlueprint.route("/api/ratingsinpeerreview/<pid>", methods=["GET"])
-# @jwt_required
+@peerreviewBlueprint.route("/api/currentuser/peerreview/<pid>/cardratings", methods=["GET"])
+@jwt_required
 def get_ratings_in_peerreview(pid):      
     try:        
         uid = get_jwt_identity()
@@ -116,3 +113,11 @@ def get_ratings_in_peerreview(pid):
     except Exception as e:
         print(e)
         return(jsonify({"error": str(e)}))   
+
+### temp
+@peerreviewBlueprint.route("/api/deleteall", methods=["GET"])
+def delete_peer():      
+    deleteAllPeerReviews()
+    return jsonify("true")
+
+

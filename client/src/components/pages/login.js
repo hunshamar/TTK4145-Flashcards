@@ -97,7 +97,7 @@ function Login() {
   const feideLogin = async () => {    
     loading = !loading
     dispatch({type: SET_LOADING, payload: true}) 
-    await axios.get("/api/logintoken", { withCredentials: true })
+    await axios.get("/api/login/url", { withCredentials: true })
     .then(res => {
       window.open(res.data.url, "_self")
     })  

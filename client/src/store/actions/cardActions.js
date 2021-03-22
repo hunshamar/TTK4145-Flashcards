@@ -1,12 +1,12 @@
 
 import axios from 'axios';
-import { SET_ALERT, CREATE_CARD, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARDS, LOAD_CARD, SET_LOADING } from '../actionTypes';
+import { SET_ALERT, CREATE_CARD, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARDS, LOAD_CARD, SET_LOADING, CLEAR_CARDS } from '../actionTypes';
 import { refreshTokens } from './authActions';
 
 export const addCard = (card) => async( dispatch, getState) => {
     await refreshTokens()
     
-    axios.post("/api/addFlashcard", {
+    axios.post("/api/currentuser/flashcards", {
             front: card.front,
             back: card.back,
             cardgroupid: card.cardgroupid
@@ -43,10 +43,9 @@ export const editCard = (card) => async( dispatch, getState) => {
     await refreshTokens()
     console.log("carddd", card)
     
-    axios.post("/api/editflashcard", {
+    axios.put("/api/currentuser/flashcards/"+card.id, {
             front: card.front,
             back: card.back,
-            id: card.id
             // cardgroupid: card.cardgroupid
 
         }, {
@@ -84,7 +83,7 @@ export const loadCardGroupUserFlashcards = (cardgroupId) => async dispatch => {
     await refreshTokens()
     console.log("cardgroupid", cardgroupId)
 
-    await axios.get("/api/cardgroupuserflashcards/"+cardgroupId,
+    await axios.get(`/api/currentuser/flashcards/cardgroupid=${cardgroupId}`,
         {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("user_token")}`
@@ -105,29 +104,29 @@ export const loadCardGroupUserFlashcards = (cardgroupId) => async dispatch => {
     dispatch({type: SET_LOADING, payload: false})
 }
 
-export const loadCards = props => async (dispatch, getState) => {
-    dispatch({type: SET_LOADING, payload: true})
-    await refreshTokens()
+// export const loadCards = props => async (dispatch, getState) => {
+//     dispatch({type: SET_LOADING, payload: true})
+//     await refreshTokens()
 
 
-    await axios.get("/api/flashcards")
-    .then(res => {
-        if(res.data.error){
-            throw new Error(res.data.error)
-        }
-        const cards = res.data
-        console.log("mah cah")
-        console.log(cards)
-        dispatch({type: LOAD_CARDS, payload: cards})
-    })
-    .catch(err => {
-        let alert = {severity: "error", text: err.toString() + " when attemting to get card"}
-        dispatch({type: SET_ALERT, payload: alert})  
-    })
+//     await axios.get("/api/flashcards")
+//     .then(res => {
+//         if(res.data.error){
+//             throw new Error(res.data.error)
+//         }
+//         const cards = res.data
+//         console.log("mah cah")
+//         console.log(cards)
+//         dispatch({type: LOAD_CARDS, payload: cards})
+//     })
+//     .catch(err => {
+//         let alert = {severity: "error", text: err.toString() + " when attemting to get card"}
+//         dispatch({type: SET_ALERT, payload: alert})  
+//     })
 
-    dispatch({type: SET_LOADING, payload: false})
+//     dispatch({type: SET_LOADING, payload: false})
 
-}
+// }
 
 export const loadCardgroupFlashcards = (cardgroupId) => async (dispatch, getState) => {
     dispatch({type: SET_LOADING, payload: true})
@@ -137,7 +136,7 @@ export const loadCardgroupFlashcards = (cardgroupId) => async (dispatch, getStat
 
     console.log("idd",cardgroupId)
 
-    await axios.get("/api/cardgroupflashcards/"+cardgroupId,
+    await axios.get(`/api/admin/cardgroup/${cardgroupId}/flashcards`,
     {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("user_token")}`
@@ -163,7 +162,7 @@ export const loadPeerReviewFlashcards = (peerreviewid) => async (dispatch, getSt
     await refreshTokens()
 
 
-    await axios.get("/api/peerreviewflashcards/"+peerreviewid,
+    await axios.get(`/api/peerreview/${peerreviewid}/flashcards`,
     {headers: { 
         Authorization: "Bearer " +localStorage.getItem("user_token") 
     }}
@@ -184,32 +183,38 @@ export const loadPeerReviewFlashcards = (peerreviewid) => async (dispatch, getSt
 
 
 
-export const loadCard = props => async (dispatch, getState) => {
-    dispatch({type: SET_LOADING, payload: true})
+// export const loadCard = props => async (dispatch, getState) => {
+//     dispatch({type: SET_LOADING, payload: true})
 
 
-    if (props){
-        await axios.get("/api/flashcard/"+props)
-        .then(res => {
-            if(res.data.error){
-                throw new Error(res.data.error)
-            }
-            const card = res.data
-            console.log("lmlmlml")
-            console.log(card)
-            dispatch({type: LOAD_CARD, payload: [card]})
-        })
-        .catch(err => {
-        let alert = {severity: "error", text: err.toString() + " when attemting to get card"}
-        dispatch({type: SET_ALERT, payload: alert})  
-        })
+//     if (props){
+//         await axios.get("/api/flashcard/"+props)
+//         .then(res => {
+//             if(res.data.error){
+//                 throw new Error(res.data.error)
+//             }
+//             const card = res.data
+//             console.log("lmlmlml")
+//             console.log(card)
+//             dispatch({type: LOAD_CARD, payload: [card]})
+//         })
+//         .catch(err => {
+//         let alert = {severity: "error", text: err.toString() + " when attemting to get card"}
+//         dispatch({type: SET_ALERT, payload: alert})  
+//         })
         
-    }
+//     }
 
-    dispatch({type: SET_LOADING, payload: false})
+//     dispatch({type: SET_LOADING, payload: false})
 
+// }
+
+export const clearCardReducer = () => async (dispatch) => {
+
+
+    console.log("alert tthh")
+    dispatch({type: CLEAR_CARDS})
 }
-
 
 
 export const deleteCard = (card) => async (dispatch, getState) => {
@@ -217,7 +222,7 @@ export const deleteCard = (card) => async (dispatch, getState) => {
 
     console.log("del,", card)
 
-    await axios.delete("/api/deleteflashcard/" + card.id, 
+    await axios.delete(`/api/currentuser/flashcards/${card.id}`,
     {headers: { 
         Authorization: "Bearer " +localStorage.getItem("user_token") 
     }}

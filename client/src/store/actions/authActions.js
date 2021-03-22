@@ -29,32 +29,6 @@ export const signInCallack = () => async (dispatch) => {
     dispatch({type: SET_LOADING, payload: false})
 }
 
-export const adminOnly = () => async (dispatch) => {
-    await refreshTokens()
-    axios.get("/api/adminonly", {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem("user_token")}`
-        }
-    })
-    .then(res => {
-        console.log("from admin test")
-        if(res.data.error){
-            throw new Error(res.data.error)
-        }
-        console.log(res.data)       
-        const alert = {severity: "success", text: res.data.status}
-        dispatch({type: SET_ALERT, payload: alert})
- 
-
-        // dispatch({type: LOG_IN_CALLBACK, payload})
-    })
-    .catch(err => {
-        console.log("Error in signInCallback", err)
-        const alert = {severity: "error", text: err.toString()}
-        dispatch({type: SET_ALERT, payload: alert})
-    })
-}
-
 export const checkLogInStatus = () => async (dispatch, getState) => {
     await refreshTokens()
     
@@ -66,7 +40,7 @@ export const checkLogInStatus = () => async (dispatch, getState) => {
 
     if (user_token && refresh_token){
         console.log("found both tokens")
-        axios.get("/api/getcurrentuser", {
+        axios.get("/api/currentuser/user", {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("user_token")}`
             }
@@ -100,7 +74,7 @@ export const signOut = () => async (dispatch, getState) => {
 
     if (localStorage.getItem("user_token")) {
         const token = localStorage.getItem("user_token")
-        axios.post("/api/logout/access", {}, {
+        axios.post("/api/logout/accesstoken", {}, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -114,7 +88,7 @@ export const signOut = () => async (dispatch, getState) => {
     }
     if (localStorage.getItem("refresh_token")) {
         const refreshToken = localStorage.getItem("refresh_token")
-        axios.post("/api/logout/refresh", {}, {
+        axios.post("/api/logout/refreshtoken", {}, {
             headers: {
                 Authorization: `Bearer ${refreshToken}`
             }
@@ -138,7 +112,7 @@ export const refreshTokens = async () => {
     const user_token = localStorage.getItem("user_token")
     try {
         /* Will return error if token expire */
-        await axios.post("/api/checkiftokenexpire", {}, {
+        await axios.post("/api/token/expired", {}, {
             headers: {
                 Authorization: `Bearer ${user_token}`
             }
@@ -154,7 +128,7 @@ export const refreshTokens = async () => {
             localStorage.removeItem("user_token")
             return false;
         }
-        await axios.post("/api/refreshtoken", {}, {
+        await axios.post("/api/token/refresh", {}, {
             headers: {
                 Authorization: `Bearer ${refresh_token}`
             }

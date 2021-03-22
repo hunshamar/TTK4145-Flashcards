@@ -11,8 +11,9 @@ cardgroupBlueprint = Blueprint("cardgroup", __name__)
 from time import sleep #test test
 from ..values import DELAY_S
 
-@cardgroupBlueprint.route("/api/cardgroups")
-def cardgroups():    
+
+@cardgroupBlueprint.route("/api/cardgroups", methods=["GET"])
+def cardgroups_all():    
     sleep(DELAY_S)
     try:
         return jsonify(getAllCardgroups())
@@ -20,9 +21,8 @@ def cardgroups():
         return jsonify({"error": str(e)})
 
 
-
-@cardgroupBlueprint.route("/api/cardgroup/<cgid>", methods=["GET"])
-def cardgroup(cgid):   
+@cardgroupBlueprint.route("/api/cardgroups/<cgid>", methods=["GET"])
+def cardgroups(cgid):   
     sleep(DELAY_S) 
     try:
         return jsonify(getCardgroup(int(cgid)).to_dict())
@@ -32,10 +32,10 @@ def cardgroup(cgid):
 
 
 
-@cardgroupBlueprint.route("/api/addcardgroup", methods=["POST"])
+@cardgroupBlueprint.route("/api/admin/cardgroups", methods=["POST"])
 @jwt_required
 @admin_only
-def add_cardgroup():
+def cardgroups_add():
     sleep(DELAY_S)
     try:
         title = request.json["title"]
@@ -52,10 +52,10 @@ def add_cardgroup():
         print(e)
         return {"error": str(e)}
 
-@cardgroupBlueprint.route("/api/deletegroup/<cgid>", methods=["GET","DELETE"])
+@cardgroupBlueprint.route("/api/admin/cardgroups/<cgid>", methods=["DELETE"])
 @jwt_required
 @admin_only
-def delete_group(cgid):
+def cardgroups_delete(cgid):
     sleep(DELAY_S)
     print(cgid, "is deleted yes")
     # return jsonify({"error": "here"})
@@ -65,6 +65,25 @@ def delete_group(cgid):
         return jsonify({"success": "deleted all cards and groups"})
     except Exception as e:
         print(e)
+        return jsonify({"error": str(e)})
+
+
+
+@cardgroupBlueprint.route("/api/admin/cardgroup/<cgid>/flashcards", methods=["GET"])
+@jwt_required
+@admin_only
+def cardgroup_flashcards(cgid):
+    sleep(DELAY_S)
+    print(type(cgid), "find this")
+    try:
+
+        cardgroup = Cardgroup.query.get(int(cgid))
+        
+        return jsonify(cardgroup.get_flashcards())
+
+
+        return jsonify(getCardgroupFlashcards(int(cgid)))
+    except Exception as e:
         return jsonify({"error": str(e)})
 
 

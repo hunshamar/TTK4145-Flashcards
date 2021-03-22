@@ -126,7 +126,7 @@ const Navbar = props => {
                     <Toolbar style={{padding: 0}}>
 
         <Link to="/" className={classes.link}>  
-        <Typography variant="h6" style={{flexGrow: 0}} onClick={() => history.push("/home")}>
+        <Typography variant="h6" style={{flexGrow: 0}} onClick={() => history.push("/")}>
         TTK4145 Flashcards
         </Typography>
         </Link>
