@@ -34,7 +34,7 @@ const ManualLogin = () => {
         name: name
       }      
 
-      var url = '/api/userdata';
+      var url = '/api/login/userdata';
       fetch(url, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -97,7 +97,7 @@ function Login() {
   const feideLogin = async () => {    
     loading = !loading
     dispatch({type: SET_LOADING, payload: true}) 
-    await axios.get("/api/login/url", { withCredentials: true })
+    await axios.get("/api/login/url ", { withCredentials: true })
     .then(res => {
       window.open(res.data.url, "_self")
     })  

@@ -8,5 +8,5 @@ initRoute = Blueprint("init", __name__)
 @initRoute.route("/init")
 def init():
     db.create_all()
-    return "yessum"
+    return "initialized"
 

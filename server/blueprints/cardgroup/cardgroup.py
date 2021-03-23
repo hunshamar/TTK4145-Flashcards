@@ -70,6 +70,35 @@ def getAllCardgroups():
         raise Exception("Error finding cardgroups function. No cardgroups")
     return [i.to_dict() for i in cardgroups]
 
+def editCardgroup(cardgroup_id, title, due_date, number_of_cards_due):
+
+    current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+      
+    if (title and due_date and number_of_cards_due):        
+        if (len(title) < 3):
+            raise Exception("Title must be longer than 2 characters") 
+        if due_date < current_gmt_time: 
+            raise Exception("Due date can not be in the past")
+        if int(number_of_cards_due) < 1:
+            raise Exception("Number of cards due must be larger than 0")
+
+        if int(number_of_cards_due) > MAX_NUMBER_OF_CARDS:
+            raise Exception("Number of cards are limited to "+str(MAX_NUMBER_OF_CARDS))
+
+        cardgroup = Cardgroup.query.get(cardgroup_id)
+        if not cardgroup:
+            raise Exception("Cardgroup with id not found")
+
+        cardgroup.title = title
+        cardgroup.due_date = due_date
+        cardgroup.number_of_cards_due = number_of_cards_due
+    
+        db.session.commit()
+        
+        return cardgroup.to_dict()
+    else: 
+        raise Exception("Error adding cardgroup function")
+
 
 def addCardgroup(title, due_date, number_of_cards_due):
 

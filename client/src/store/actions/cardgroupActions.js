@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { SET_ALERT, CREATE_CARDGROUP, SET_LOADING, LOAD_CARDGROUPS, DELETE_CARDGROUP, DELETE_CARDGROUP_ERROR, LOAD_CARDGROUP } from '../actionTypes';
+import { SET_ALERT, CREATE_CARDGROUP, SET_LOADING, LOAD_CARDGROUPS, DELETE_CARDGROUP, DELETE_CARDGROUP_ERROR, LOAD_CARDGROUP, EDIT_CARDGROUP } from '../actionTypes';
 import { refreshTokens } from './authActions';
 
 
@@ -26,11 +26,7 @@ export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
             }
             console.log("returned")
             console.log(res.data)
-            
-            if(res.data.error){
-                console.log("error")
-                throw new Error(res.data.error)
-            }
+       
 
 
             const createdCardgroup = res.data
@@ -40,6 +36,45 @@ export const addCardgroup = (cardgroup) => async( dispatch, getState) => {
             let alert = {severity: "success", text: "successfully created cardgroup: "+createdCardgroup.title}
             dispatch({type: SET_ALERT, payload: alert})
             dispatch({type: CREATE_CARDGROUP, payload: createdCardgroup})
+        })
+        .catch(err => {
+            console.log("This is an error yes plz")
+            let alert = {severity: "error", text: err.toString()}
+            dispatch({type: SET_ALERT, payload: alert})
+            // dispatch({type: CREATE_CARDGROUP_ERROR, err})
+        })
+
+    console.log("async call up in hier", cardgroup)
+    
+};
+
+export const editCardgroup = (cardgroup) => async( dispatch, getState) => {
+    await refreshTokens()
+
+    console.log("we editing")
+
+    axios.put(`/api/admin/cardgroups/${cardgroup.id}`, {
+            title: cardgroup.title,
+            numberOfCardsDue: cardgroup.numberOfCardsDue,
+            dueDate: cardgroup.dueDate
+        }, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("user_token")
+            }
+        })
+        .then(res => {
+            if(res.data.error){
+                throw new Error(res.data.error)
+            }
+            console.log("returned")
+            console.log(res.data)
+            
+
+            const editedCardgroup = res.data
+
+            let alert = {severity: "success", text: "successfully edited cardgroup: "+editedCardgroup.title}
+            dispatch({type: SET_ALERT, payload: alert})
+            dispatch({type: EDIT_CARDGROUP, payload: editedCardgroup})
         })
         .catch(err => {
             console.log("This is an error yes plz")

@@ -1,5 +1,5 @@
 
-import { CREATE_CARDGROUP, CREATE_CARDGROUP_ERROR, DELETE_CARDGROUP, LOAD_CARDGROUPS, DELETE_CARDGROUP_ERROR, LOAD_CARDGROUP } from '../actionTypes';
+import { CREATE_CARDGROUP, CREATE_CARDGROUP_ERROR, DELETE_CARDGROUP, LOAD_CARDGROUPS, DELETE_CARDGROUP_ERROR, EDIT_CARDGROUP, LOAD_CARDGROUP } from '../actionTypes';
 
 const initState = {
     success: null,
@@ -37,6 +37,20 @@ const cardgroupReducer = (state = initState, action) => {
             return{
                 ...state,
                 cardgroups: action.payload
+            }
+
+        case EDIT_CARDGROUP:
+            console.log("edit")
+            return{
+                ...state,
+                cardgroups: state.cardgroups.map(group => {
+                    if (group.id === action.payload.id){
+                        return action.payload
+                    }
+                    else{
+                        return group
+                    }
+                })    
             }
 
         case DELETE_CARDGROUP:

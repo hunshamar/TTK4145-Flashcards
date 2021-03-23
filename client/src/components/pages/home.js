@@ -37,9 +37,9 @@ const Home = () => {
                         <span>You will be able to use the collective deck to study the course material, either a random sample or through spaced repetition, which is recommended. </span>
                          <Link color="textPrimary" href="https://en.wikipedia.org/wiki/Spaced_repetition">Read more about spaced repetition here</Link>  
                         <br/> <br />
-                        Please submit feedback, suggestions and report bugs. Either with mail to Asgeir Hunshamar, contact below, or through anonomous feedback survey.
+                        Please submit feedback, suggestions or report bugs with the button below
 
-                        <div style={{margin: "30px 50px 0"}}>
+                        <div style={{margin: "10px 50px 0"}}>
                         <Feedback />
                         </div>
                                                

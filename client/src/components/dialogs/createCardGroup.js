@@ -17,11 +17,13 @@ import {
 import React, { useState } from 'react';
 
 
-import { addCardgroup } from '../../store/actions/cardgroupActions';
+import { addCardgroup, editCardgroup } from '../../store/actions/cardgroupActions';
 import {  useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import ConfirmDialog from "./confirmDialog"
 import { useSelector } from 'react-redux';
+import { dateJSONToString } from '../../utils/datehandling';
+import { setDate } from 'date-fns';
 
 const useStyles = makeStyles(theme => ({
     dialog: {
@@ -31,20 +33,33 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const CreateCardGroup = (props) => {
-    const { onClose, selectedValue, open } = props;
+const CreateCardGroup = ({ onClose, selectedValue, open, toeditCardgroup }) => {
     const dispatch = useDispatch();    
     
     const [selectedDate, setSelectedDate] = React.useState(null);
     const [title, setTitle] = useState("");
-    const [numberOfCards, setNumberOfCards] = useState(0)
+    const [numberOfCards, setNumberOfCards] = useState(null)
     const [time, setTime] = useState("23:59")
     const formSubmitCallback = useSelector(state => state.alertReducer.severity)
     const newStatus = useSelector(state => state.alertReducer.newAlert)
 
     const classes = useStyles()
 
+    useEffect(() => {
+        console.log("starting")
+        if(toeditCardgroup){
+            setTitle(toeditCardgroup.title)
+            setNumberOfCards(toeditCardgroup.numberOfCardsDue)
+            let d = new Date(toeditCardgroup.dueDate)
+            setSelectedDate(d)
 
+            setTime( d.getHours()+":"+d.getMinutes() )
+
+        }
+    }, [open])
+
+    // remove
+    console.log(selectedDate)
 
     const handleDateChange = (date) => {
       setSelectedDate(date);
@@ -59,28 +74,37 @@ const CreateCardGroup = (props) => {
     },[newStatus])
 
     const submit = e => {
-        e.preventDefault()        
 
-      
+        e.preventDefault()              
+        let dueDate = selectedDate
+
+        dueDate.setMinutes(time.split(":")[1])
+        dueDate.setHours(time.split(":")[0])
+
 
 
         if (title && selectedDate && numberOfCards && time){
 
-            console.log("herfra")
-            let dueDate = selectedDate
 
-            dueDate.setMinutes(time.split(":")[1])
-            dueDate.setHours(time.split(":")[0])
+            if (toeditCardgroup){
+                dispatch(editCardgroup({
+                    id: toeditCardgroup.id,
+                    title: title,        
+                    dueDate: dueDate,
+                    numberOfCardsDue: numberOfCards        
+                }))              
+    
+            } else {       
 
-
-
-            dispatch(addCardgroup({
-                title: title,        
-                dueDate: dueDate,
-                numberOfCardsDue: numberOfCards        
-            }))              
+                dispatch(addCardgroup({
+                    title: title,        
+                    dueDate: dueDate,
+                    numberOfCardsDue: numberOfCards        
+                }))              
+            }
         }
         else{
+            alert("Fill inn all fields")
         }
     }
 
@@ -104,7 +128,7 @@ const CreateCardGroup = (props) => {
 
             <Grid container spacing={2}>
                 <Grid item xs={12} >
-                    <Typography variant="h6" align="left" >New Cardgroup</Typography>
+                    <Typography variant="h6" align="left" > {toeditCardgroup ? "Edit Cardgroup" : "New Cardgroup" } </Typography>
                 </Grid>
             </Grid>
 
@@ -119,6 +143,7 @@ const CreateCardGroup = (props) => {
                         onChange={e => setTitle(e.target.value)} 
                         fullWidth 
                         required 
+                        value={title}
                         variant="outlined" 
                         label="Cardgroup title"/>
                 </Grid>
@@ -130,6 +155,7 @@ const CreateCardGroup = (props) => {
                     id="outlined-number"
                     label="Number of flashcards for delivery pr student"
                     type="number"
+                    value={numberOfCards}
                     required
                     onChange={e => setNumberOfCards(e.target.value)} 
                     variant="outlined"
@@ -171,6 +197,7 @@ const CreateCardGroup = (props) => {
                             type="time"
                             variant="outlined"
                             onChange = {e => setTime(e.target.value)}
+                            value={time}
                             defaultValue="23:59"
                             color="secondary"
                             InputLabelProps={{
@@ -190,7 +217,7 @@ const CreateCardGroup = (props) => {
                     <Button variant="contained" onClick={handleClose} fullWidth color="primary"  > Back</Button>
                 </Grid>
                 <Grid item xs={6}>
-                    <Button type="submit" fullWidth style={{backgroundColor: selectedDate && title && numberOfCards ? "green" : "grey", color: "white"}}>Submit</Button>
+                    <Button type="submit" fullWidth style={{backgroundColor: selectedDate && title && numberOfCards ? "green" : "grey", color: "white"}}>{toeditCardgroup ? "Submit Edit" : "Submit"}</Button>
                 </Grid>
 
                 </Grid>

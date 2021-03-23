@@ -15,6 +15,7 @@ import { Redirect } from 'react-router-dom';
 import { dateJSONToString } from '../../utils/datehandling';
 import Progress from '../submodules/progress';
 import { useHistory } from 'react-router-dom';
+import CreateCardGroup from '../dialogs/createCardGroup';
 
 
 const useStyles = makeStyles(theme => ({
@@ -53,12 +54,17 @@ const CardGroupPage = props => {
     const user = useSelector(state => state.authReducer.loggedInUser)
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
+    const [openEditCardgroup, setOpenEditCardgroup] = useState(false)
 
     const loading = useSelector(state => state.loadingReducer.loading)
 
     const handleClickOpen = () => {
+        if (cards.length >= cardgroup.numberOfCardsDue){
+            alert("All Cards Delivered. Delete or edit existing cards")
+        } else {
         setOpen(true);
-      };
+        }
+    };
 
     const handleClose = (value) => {
         setOpen(false);
@@ -73,11 +79,16 @@ const CardGroupPage = props => {
 
     }
 
+    const handleEdit = () => {
+        setOpenEditCardgroup(true)
+    }
+
     console.log("cardgr.:")
     console.log(cardgroup)
     
     useEffect(() => {
         console.log("stuff and things") 
+
         console.log(cardgroup)
         dispatch(loadCardGroupUserFlashcards(props.match.params.id))       
         dispatch(loadCardgroup(props.match.params.id))
@@ -92,7 +103,9 @@ const CardGroupPage = props => {
     }
     else return(
         <PageWrapper>
-            <CreateCardDialog open={open} onClose={handleClose} cardgroupId={props.match.params.id} />           
+            
+            <CreateCardDialog open={open} onClose={handleClose} cardgroupId={props.match.params.id} />    
+            <CreateCardGroup open={openEditCardgroup} onClose={() => setOpenEditCardgroup(false)} toeditCardgroup={cardgroup} />       
 
             {cardgroup ? 
             <Grid container spacing={6}>
@@ -117,9 +130,18 @@ const CardGroupPage = props => {
 
 
                     {isAdmin ? 
-                    <Button fullWidth style={{height: "80px"}} className={classes.delButton} variant="outlined" onClick={handleDelete}>
-                        Delete cardgroup and all cards
-                    </Button> : <div></div>}
+
+                    <div>
+                        <Typography variant="subtitle2">Admin Functionality for This Cardgroup:</Typography>
+                        <Button fullWidth style={{height: "60px", margin: "10px 0"}} className={classes.delButton} variant="contained" onClick={handleDelete}>
+                            Delete cardgroup and all cards
+                        </Button> 
+                        <Button fullWidth style={{height: "60px", margin: "10px 0"}} color="primary" variant="contained" onClick={handleEdit}>
+                            Edit Cardgroup
+                        </Button> 
+                    </div>
+                    : <div></div>}
+
                 </Grid>
                 <Grid item xs={7}>
                     

@@ -120,7 +120,7 @@ export const loadCardGroupUserFlashcards = (cardgroupId) => async dispatch => {
 //         dispatch({type: LOAD_CARDS, payload: cards})
 //     })
 //     .catch(err => {
-//         let alert = {severity: "error", text: err.toString() + " when attemting to get card"}
+//         let alert = {severity: "error", text: err.toString() + " when attempting to get card"}
 //         dispatch({type: SET_ALERT, payload: alert})  
 //     })
 
@@ -149,7 +149,7 @@ export const loadCardgroupFlashcards = (cardgroupId) => async (dispatch, getStat
         dispatch({type: LOAD_CARDS, payload: cards})
     })
     .catch(err => {
-        let alert = {severity: "error", text: err.toString() + " when attemting to get card"}
+        let alert = {severity: "error", text: err.toString() + " when attempting to get card"}
         dispatch({type: SET_ALERT, payload: alert})  
     })
 
@@ -173,7 +173,7 @@ export const loadPeerReviewFlashcards = (peerreviewid) => async (dispatch, getSt
         dispatch({type: LOAD_CARDS, payload: cards})
     })
     .catch(err => {
-        let alert = {severity: "error", text: err.toString() + " when attemting to get card"}
+        let alert = {severity: "error", text: err.toString() + " when attempting to get card"}
         dispatch({type: SET_ALERT, payload: alert})  
     })
 
@@ -182,32 +182,6 @@ export const loadPeerReviewFlashcards = (peerreviewid) => async (dispatch, getSt
 }
 
 
-
-// export const loadCard = props => async (dispatch, getState) => {
-//     dispatch({type: SET_LOADING, payload: true})
-
-
-//     if (props){
-//         await axios.get("/api/flashcard/"+props)
-//         .then(res => {
-//             if(res.data.error){
-//                 throw new Error(res.data.error)
-//             }
-//             const card = res.data
-//             console.log("lmlmlml")
-//             console.log(card)
-//             dispatch({type: LOAD_CARD, payload: [card]})
-//         })
-//         .catch(err => {
-//         let alert = {severity: "error", text: err.toString() + " when attemting to get card"}
-//         dispatch({type: SET_ALERT, payload: alert})  
-//         })
-        
-//     }
-
-//     dispatch({type: SET_LOADING, payload: false})
-
-// }
 
 export const clearCardReducer = () => async (dispatch) => {
 
@@ -236,7 +210,7 @@ export const deleteCard = (card) => async (dispatch, getState) => {
         dispatch({type: DELETE_CARD, payload: card})        
     })
     .catch(err => {
-        let alert = {severity: "error", text: err.toString() + " when attemting to delete card"}
+        let alert = {severity: "error", text: err.toString() + " when attempting to delete card"}
         dispatch({type: SET_ALERT, payload: alert})  
         dispatch({type: DELETE_CARD_ERROR, payload: card}) 
     })

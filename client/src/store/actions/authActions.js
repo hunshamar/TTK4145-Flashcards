@@ -30,6 +30,10 @@ export const signInCallack = () => async (dispatch) => {
 }
 
 export const checkLogInStatus = () => async (dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})
+
+    
+
     await refreshTokens()
     
     const user_token = localStorage.getItem("user_token")
@@ -66,6 +70,7 @@ export const checkLogInStatus = () => async (dispatch, getState) => {
         let payload = {loggedIn: false, loggedInUser: {}, loading: false}
         dispatch({type: LOG_IN_STATUS, payload})
     }
+    dispatch({type: SET_LOADING, payload: false})
 
 }
 

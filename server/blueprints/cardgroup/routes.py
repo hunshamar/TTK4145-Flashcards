@@ -30,6 +30,30 @@ def cardgroups(cgid):
         print(e)
         return jsonify({"error": str(e)})
 
+@cardgroupBlueprint.route("/api/admin/cardgroups/<cgid>", methods=["PUT"])
+def cardgroups_edit(cgid):   
+    sleep(DELAY_S) 
+    try:
+
+        cardgroup_id = int(cgid)
+        title = request.json["title"]
+        number_of_cards_due = request.json["numberOfCardsDue"]
+        due_date = request.json["dueDate"]
+        due_date_python_format = datetime.datetime.strptime(due_date, '%Y-%m-%dT%H:%M:%S.%fZ')
+
+
+        if not (title or number_of_cards_due or due_date):
+            raise Eception("Invalid form for cardgroup")
+    
+        edited_cardgroup = editCardgroup(cardgroup_id, title, due_date_python_format, number_of_cards_due)
+
+
+        return jsonify(edited_cardgroup)
+
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
+
 
 
 @cardgroupBlueprint.route("/api/admin/cardgroups", methods=["POST"])

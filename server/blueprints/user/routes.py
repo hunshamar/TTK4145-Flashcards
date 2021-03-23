@@ -73,10 +73,10 @@ def manual_add_admin():
 def admin(uid):
     sleep(DELAY_S)
     try:
-        if request.methods=="POST":
+        if request.method=="POST":
             adminUser = makeAdmin(int(uid))
             return jsonify(adminUser)
-        if request.methods=="DELETE":
+        if request.method=="DELETE":
             adminUser = removeAdmin(int(uid))
             return jsonify(adminUser)
 
@@ -144,6 +144,7 @@ def login_token():
         feide_token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+apiKey)
     
         ## Return feide url to client side for external login. 
+        session["feide_token"] = feide_token.text
         url = "https://www.itk.ntnu.no/api/feide.php?token="+feide_token.text+"&returnURL=http://localhost:5000/api/login/userdata"
         return jsonify({"url": url})        
     except Exception as e:
@@ -162,14 +163,17 @@ def user_data():
             sha1 = request.values.get("sha1")
             
             apiKey = str(os.environ.get("FEIDE_API_KEY"))
-            encryped = hashlib.sha1((str(userdata+str(apiKey))).encode('utf-8')).hexdigest() ## Encrypt with sha1
+
+            enc = apiKey + session.pop("feide_token") + userdata
+
+            encryped = hashlib.sha1((str(enc)).encode('utf-8')).hexdigest() ## Encrypt with sha1
             
             userdata_dict = json.loads(userdata)
 
             print(f"sha1: {sha1}")
             print(f"encryped: {encryped}")
                 
-            if (encryped == sha1 or True): 
+            if (encryped == sha1): 
                 print("sha1 ok")
                 session["userdata"] = userdata_dict
                 print("added userdata to session:")       
