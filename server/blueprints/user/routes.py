@@ -29,9 +29,7 @@ def admin_only(f):
     @wraps(f)
     def wrapper(*args, **kwds):
         uid = get_jwt_identity()
-        user = getUser(uid)
-
-        print("is admin", user.is_admin())
+        user = get_user(uid)
         
         if user.is_admin():                 
             return f(*args, **kwds) # continue
@@ -60,8 +58,8 @@ def manual_add_admin():
         if not (username and email):
             raise Exception("Missing credentials for username and or email")
 
-        adminUser = makeAdmin(getUserId(email, username))
-        return jsonify(adminUser)
+        admin_user = make_admin(getUserId(email, username))
+        return jsonify(admin_user)
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
@@ -74,11 +72,11 @@ def admin(uid):
     sleep(DELAY_S)
     try:
         if request.method=="POST":
-            adminUser = makeAdmin(int(uid))
-            return jsonify(adminUser)
+            admin_user = make_admin(int(uid))
+            return jsonify(admin_user)
         if request.method=="DELETE":
-            adminUser = removeAdmin(int(uid))
-            return jsonify(adminUser)
+            admin_user = remove_admin(int(uid))
+            return jsonify(admin_user)
 
 
     except Exception as e:
@@ -93,7 +91,7 @@ def get_current_user():
     sleep(DELAY_S)
     try:
         uid = get_jwt_identity()
-        return jsonify(getUser(uid).to_dict())
+        return jsonify(get_user(uid).to_dict())
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
@@ -106,7 +104,7 @@ def get_current_user():
 def users_all():
     sleep(DELAY_S)
     try:
-        return jsonify(getAllUsers())
+        return jsonify(get_all_users())
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
@@ -117,10 +115,8 @@ def users_all():
 @admin_only
 def users_filter(role):
     sleep(DELAY_S)
-    try:
-
-            
-        return jsonify(getUsersWithRole(role))
+    try:            
+        return jsonify(get_users_with_role(role))
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
@@ -131,7 +127,7 @@ def users_filter(role):
 def users_search(role, searchphrase):
     sleep(DELAY_S)
     try:
-        return jsonify(searchUsers(role, searchphrase))
+        return jsonify(serach_users(role, searchphrase))
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
@@ -140,8 +136,8 @@ def users_search(role, searchphrase):
 @userBlueprint.route("/api/login/url", methods=["GET"])
 def login_token():
     try:
-        apiKey = str(os.environ.get("FEIDE_API_KEY"))
-        feide_token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+apiKey)
+        api_key = str(os.environ.get("FEIDE_API_KEY"))
+        feide_token = requests.get("https://www.itk.ntnu.no/api/feide_token.php?apiKey="+api_key)
     
         ## Return feide url to client side for external login. 
         session["feide_token"] = feide_token.text
@@ -162,9 +158,9 @@ def user_data():
             userdata = request.values.get("userdata")
             sha1 = request.values.get("sha1")
             
-            apiKey = str(os.environ.get("FEIDE_API_KEY"))
+            api_key = str(os.environ.get("FEIDE_API_KEY"))
 
-            enc = apiKey + session.pop("feide_token") + userdata
+            enc = api_key + session.pop("feide_token") + userdata
 
             encryped = hashlib.sha1((str(enc)).encode('utf-8')).hexdigest() ## Encrypt with sha1
             
@@ -179,6 +175,7 @@ def user_data():
                 print("added userdata to session:")       
 
                 return redirect("http://localhost:3000/loginfunc")
+                # return redirect("/loginfunc")
 
             else:
                 print("sha1 error")
@@ -193,10 +190,10 @@ def user_data():
             email = userdata["email"]
             name = userdata["name"]
 
-            if userRegistred(email, username):
+            if user_registered(email, username):
                 print("added to session exists", session.get("userdata"))
 
-            elif usernameRegistred(username) or emailRegistred(email):
+            elif username_registered(username) or email_registered(email):
                 raise Exception("duplicate. Username and email must either belong to a existing user or be unique")
             
             else:
@@ -224,15 +221,15 @@ def login_callback():
 
             print(username, email, name)
 
-            if not usernameRegistred(username):
-                addUser(username, email, name)
+            if not username_registered(username):
+                add_user(username, email, name)
 
             # user = userRegistred(email, username)[0]
 
-            if not userRegistred(email, username):
+            if not user_registered(email, username):
                 raise Exception("error fetching user")
             
-            user = getUser(getUserId(email, username))
+            user = get_user(get_user_id(email, username))
 
             token = create_access_token(identity=user.id)        
             refresh_token = create_refresh_token(identity=user.id)

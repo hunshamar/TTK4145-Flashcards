@@ -64,13 +64,13 @@ class Cardgroup(db.Model):
 
 
 
-def getAllCardgroups():
+def get_all_cardgroups():
     cardgroups = Cardgroup.query.all()
     if not cardgroups:
         raise Exception("Error finding cardgroups function. No cardgroups")
     return [i.to_dict() for i in cardgroups]
 
-def editCardgroup(cardgroup_id, title, due_date, number_of_cards_due):
+def edit_cardgroup(cardgroup_id, title, due_date, number_of_cards_due):
 
     current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
       
@@ -100,7 +100,7 @@ def editCardgroup(cardgroup_id, title, due_date, number_of_cards_due):
         raise Exception("Error adding cardgroup function")
 
 
-def addCardgroup(title, due_date, number_of_cards_due):
+def add_cardgroup(title, due_date, number_of_cards_due):
 
     current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
       
@@ -122,7 +122,7 @@ def addCardgroup(title, due_date, number_of_cards_due):
     else: 
         raise Exception("Error adding cardgroup function")
 
-def getCardgroup(cdid):
+def get_cardgroup(cdid):
     if (not cdid):
         raise Exception("No group id")
     cdid = int(cdid) # make sure int
@@ -131,7 +131,7 @@ def getCardgroup(cdid):
         raise Exception(f"Cardgroup with id {cdid} not found")
     return cardgroup
 
-def delCardgroup(cdid):
+def delete_cardgroup(cdid):
     cardgroup = getCardgroup(cdid)
     db.session.delete(cardgroup)
     db.session.commit()

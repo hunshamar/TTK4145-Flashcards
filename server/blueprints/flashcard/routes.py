@@ -18,7 +18,7 @@ from ..values import DELAY_S
 @admin_only
 def flashcards_all():    
     sleep(DELAY_S)
-    return jsonify(getAllFlashcards()) # make safe
+    return jsonify(get_all_flashcards()) # make safe
 
 @flashcardBlueprint.route("/api/flashcards/<cid>", methods=["GET"])
 @jwt_required
@@ -26,7 +26,7 @@ def flashcards_all():
 def flashcards_get(cid):    
     sleep(DELAY_S)
     try:
-        return jsonify(getFlashcard(cid).to_dict())
+        return jsonify(get_flashcard(cid).to_dict())
     except Exception as e:
         return jsonify({"error": str(e)})
 
@@ -43,7 +43,7 @@ def add_Flashcard():
             raise Exception("Error. Invalid form for card")
 
         uid = get_jwt_identity()
-        card = addFlashcard(front, back, uid, cardgroupid)
+        card = add_flashcard(front, back, uid, cardgroupid)
         print("the card added", card)
         # return jsonify(card)
         return jsonify(card)
@@ -64,7 +64,7 @@ def flashcards_edit(cid):
 
         newFront = request.json["front"]
         newBack = request.json["back"]
-        flashcard = editFlashcard(cardId, newFront, newBack)       
+        flashcard = edit_flashcard(cardId, newFront, newBack)       
 
         return jsonify(flashcard)
 
@@ -81,10 +81,7 @@ def flashcard_delete(cid):
     print(cid, "is deleted yes")
     try:
         userId = get_jwt_identity()
-
-        print(userId)
-        print(getFlashcard(cardId).user.id)
-        if getFlashcard(cardId).user.id != userId:
+        if get_flashcard(cardId).user.id != userId:
             raise Exception("Error. Can not delete other users flashcards")
         deleteFlashcard(cid)
         return jsonify({"success": "true"})
@@ -97,7 +94,7 @@ def flashcard_delete(cid):
 def status(cgid):
     sleep(DELAY_S)
     try:
-        status = getCardgroupDeliveryStatus(int(cgid))
+        status = get_cardgroup_delivery_status(int(cgid))
         return jsonify(status)
 
     except Exception as e:
@@ -112,7 +109,7 @@ def cardgroup_user_flashcardscards(cgid):
     print(type(cgid), "find this")
     uid = get_jwt_identity()
     try:
-        return jsonify(getCardGroupFlashCardsUser(int(cgid), int(uid)))
+        return jsonify(get_user_flashcards_from_cardgroup(int(cgid), int(uid)))
     except Exception as e:
         return jsonify({"error": str(e)})
 

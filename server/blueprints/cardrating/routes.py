@@ -31,7 +31,7 @@ def cardrating_add(cid):
         uid = uid = get_jwt_identity()
 
 
-        rating = addRating(uid, cid, difficulty_rating , quality_rating, duplicate_card_ids)
+        rating = add_rating(uid, cid, difficulty_rating , quality_rating, duplicate_card_ids)
         return jsonify(rating)
 
     except Exception as e:
@@ -45,7 +45,7 @@ def cardrating_get(cid):
     try:        
         cid = int(cid)
         uid = uid = get_jwt_identity()
-        rating = getRating(uid, cid)
+        rating = get_rating(uid, cid)
         if rating: 
             return jsonify(rating.to_dict())
         else:
@@ -61,7 +61,7 @@ def cardrating_delete(cid):
     sleep(DELAY_S)
     try:        
         cid = int(cid)
-        ratings = deleteCardRatings(cid)
+        ratings = delete_ratings_of_card(cid)
         return jsonify(ratings)
 
     except Exception as e:
@@ -76,7 +76,7 @@ def cardrating_delete(cid):
 @jwt_required
 def card():    
     sleep(DELAY_S)
-    return jsonify(getAllRatings())
+    return jsonify(get_all_ratings())
 
 
 
@@ -84,6 +84,6 @@ def card():
 # @jwt_required
 def del_all_ratings():    
     sleep(DELAY_S)
-    deleteAllCardRatings()
+    delete_all_cardratings()
 
     return "success"
