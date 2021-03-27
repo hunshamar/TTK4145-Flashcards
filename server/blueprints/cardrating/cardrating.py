@@ -3,8 +3,8 @@ from db import db
 import datetime
 
 # import parents
-from ..flashcard.flashcard import Flashcard, getFlashcard
-from ..user.user import User, getUser
+from ..flashcard.flashcard import Flashcard, get_flashcard
+from ..user.user import User, get_user
 from ..peerreview.peerreview import Peerreview
 
 
@@ -51,11 +51,11 @@ class Cardrating(db.Model):
     #     self.user = user
     #     self.savedatestring = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-def addRating(user_id, flashcard_id, difficulty, quality_rating, duplicate_card_ids):
+def add_rating(user_id, flashcard_id, difficulty, quality_rating, duplicate_card_ids):
 
 
 
-    flashcard = getFlashcard(flashcard_id)
+    flashcard = get_flashcard(flashcard_id)
     peerreview = Peerreview.query.filter_by(cardgroup_id=flashcard.cardgroup_id, user_id=user_id).first()
 
     current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
@@ -73,10 +73,10 @@ def addRating(user_id, flashcard_id, difficulty, quality_rating, duplicate_card_
 
     else:
         
-        user = getUser(user_id)
+        user = get_user(user_id)
 
         
-        rating = getRating(user_id, flashcard_id)      
+        rating = get_rating(user_id, flashcard_id)      
         if rating:
             rating.difficulty = difficulty
             rating.quality_rating = quality_rating
@@ -101,28 +101,28 @@ def addRating(user_id, flashcard_id, difficulty, quality_rating, duplicate_card_
 
         return rating.to_dict()
 
-def getRating(user_id, flashcard_id):
+def get_rating(user_id, flashcard_id):
     print(f"user_id {user_id} flashcard_id {flashcard_id}")
     rating = Cardrating.query.filter_by(card_id=flashcard_id, user_id=user_id).first()
     print("get reting", rating)
     return rating
 
 
-def getAllRatings():
+def get_all_ratings():
     ratings = Cardrating.query.all()
     if not ratings:
         raise Exception("Error finding ratings. No ratings")
     return [i.to_dict() for i in ratings]
 
             
-def deleteCardRatings(cid):
+def delete_ratings_of_card(cid):
 
     ratings = Cardrating.query.filter_by(card_id=cid).all()    
     for rating in ratings:
         db.session.delete(rating)
     db.session.commit()
 
-def deleteAllCardRatings():
+def delete_all_cardratings():
     ratings=Cardrating.query.all()
     for r in ratings:
         db.session.delete(r)

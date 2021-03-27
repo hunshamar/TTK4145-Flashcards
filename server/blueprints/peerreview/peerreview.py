@@ -4,7 +4,7 @@ import datetime
 from flask import jsonify
 
 # import parents
-from ..flashcard.flashcard import Flashcard, getFlashcard
+from ..flashcard.flashcard import Flashcard, get_flashcard
 # from ..user.user import User, getUser
 
 import random
@@ -68,7 +68,7 @@ class Peerreview(db.Model):
         self.reviews_per_student = reviews_per_student
         self.flashcards = cardgroup.get_cards_from_ids(cardids)
 
-def addPeerReview(cardgroup_id, user_id, due_date, reviews_per_student): 
+def add_peer_review(cardgroup_id, user_id, due_date, reviews_per_student): 
 
     user = User.query.get(user_id)
     cardgroup = Cardgroup.query.get(cardgroup_id)  
@@ -86,13 +86,13 @@ def addPeerReview(cardgroup_id, user_id, due_date, reviews_per_student):
     db.session.add(peerreview)
     db.session.commit()
 
-def getPeerReview(pid):
-    return Peerreview.query.get(pid).to_dict()
+def get_peer_review(pid):
+    return Peerreview.query.get(pid)
 
 #
 # picks random cards for users, but ensured all cards are picked the same number of times
 #
-def pickRandomCards(cardids, number_of_users, reviews_per_user):
+def pick_random_cards(cardids, number_of_users, reviews_per_user):
 
     users_cards = []
     for n in range(number_of_users):
@@ -136,7 +136,7 @@ def pickRandomCards(cardids, number_of_users, reviews_per_user):
 
 
 
-def addPeerReviewForAllStudents(cardgroup_id, due_date, reviews_per_student):
+def add_peer_reviews_for_all_students(cardgroup_id, due_date, reviews_per_student):
 
 
     current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
@@ -164,7 +164,7 @@ def addPeerReviewForAllStudents(cardgroup_id, due_date, reviews_per_student):
     for c in cards:
         card_ids.append(c.id)
     
-    peer_review_user_cards = pickRandomCards(card_ids, len(users), reviews_per_student)
+    peer_review_user_cards = pick_random_cards(card_ids, len(users), reviews_per_student)
 
 
     for index, user in enumerate(users):
@@ -184,23 +184,23 @@ def addPeerReviewForAllStudents(cardgroup_id, due_date, reviews_per_student):
     db.session.commit()
 
 
-def getAllPeerreviews():
+def get_all_peerreviews():
     peerreviews = Peerreview.query.all()
 
     return [i.to_dict() for i in peerreviews]
 
-def getUserPeerreviews(uid):
+def get_user_peerreviews(uid):
     peerreviews = Peerreview.query.filter_by(user_id=uid).all()
     return [p.to_dict() for p in peerreviews]
 
-def deleteAllPeerReviews():
+def delete_all_peerreviews():
     re = Peerreview.query.all()
     for r in re:
         db.session.delete(r)
 
     db.session.commit()
 
-def getPeerreviewCards(pid):
+def get_peer_review_cards(pid):
     peerreview = Peerreview.query.get(pid)
     if not peerreview:
         raise Exception("Peer review not found with id", pid)

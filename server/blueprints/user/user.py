@@ -39,39 +39,36 @@ class User(db.Model):
         self.role = "User"
 
 
-def addUser(username, email, name):
+def add_user(username, email, name):
     user = User(username, email, name)
     db.session.add(user)
     db.session.commit()
     return user.to_dict
 
-def makeAdmin(id):
-    # id = getUserId(email, username)
-    user = getUser(id)
+def make_admin(id):
+    user = get_user(id)
     user.role = "Admin" 
     print("updated", user.to_dict())
     db.session.commit()
     return user.to_dict()
 
-def removeAdmin(id):
-    # id = getUserId(email, username)
-    user = getUser(id)
+def remove_admin(id):
+    user = get_user(id)
     user.role = "User" 
-    print("updated", user.to_dict())
     db.session.commit()
     return user.to_dict()
   
     
-def usernameRegistred(username):
+def username_registered(username):
     user = User.query.filter_by(username = username).all()
     return user
 
-def emailRegistred(email):
+def email_registered(email):
     email = User.query.filter_by(email = email).all()
     return email
 
 
-def userRegistred(email, username): 
+def user_registered(email, username): 
     user_list = User.query.filter_by(email=email, username=username).all()
     print(user_list)
     if (len(user_list) > 1):
@@ -80,21 +77,21 @@ def userRegistred(email, username):
         return False
     return True
 
-def getUserId(email, username):
+def get_user_id(email, username):
     if not userRegistred(email, username):
         raise Exception("Could not find user registered with email", email,"and username", username)
     else:
         return User.query.filter_by(email=email, username=username).first().id
 
-def getAllUsers():
+def get_all_users():
     users = User.query.all()
     return [i.to_dict() for i in users]
 
-def getUsersWithRole(role):
+def get_users_with_role(role):
     users = User.query.filter_by(role=role)
     return [i.to_dict() for i in users]
 
-def searchUsers(role, phrase):
+def serach_users(role, phrase):
     if role=="all":
         users = User.query.filter_by(username=phrase)
     else:
@@ -102,7 +99,7 @@ def searchUsers(role, phrase):
 
     return [i.to_dict() for i in users]
 
-def getUser(uid):
+def get_user(uid):
     if not uid:
         raise Exception("User id parameter missing")
     user = User.query.get(uid)

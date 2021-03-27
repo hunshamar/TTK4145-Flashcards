@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
 import datetime
-from ..user.user import User, getUser
+from ..user.user import User, get_user
 from .cardgroup import *
 from ..user.routes import admin_only
 
@@ -16,7 +16,7 @@ from ..values import DELAY_S
 def cardgroups_all():    
     sleep(DELAY_S)
     try:
-        return jsonify(getAllCardgroups())
+        return jsonify(get_all_cardgroups())
     except Exception as e:
         return jsonify({"error": str(e)})
 
@@ -25,7 +25,7 @@ def cardgroups_all():
 def cardgroups(cgid):   
     sleep(DELAY_S) 
     try:
-        return jsonify(getCardgroup(int(cgid)).to_dict())
+        return jsonify(get_cardgroup(int(cgid)).to_dict())
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
@@ -45,7 +45,7 @@ def cardgroups_edit(cgid):
         if not (title or number_of_cards_due or due_date):
             raise Eception("Invalid form for cardgroup")
     
-        edited_cardgroup = editCardgroup(cardgroup_id, title, due_date_python_format, number_of_cards_due)
+        edited_cardgroup = edit_cardgroup(cardgroup_id, title, due_date_python_format, number_of_cards_due)
 
 
         return jsonify(edited_cardgroup)
@@ -68,9 +68,9 @@ def cardgroups_add():
         due_date_python_format = datetime.datetime.strptime(due_date, '%Y-%m-%dT%H:%M:%S.%fZ')
 
         if not (title or number_of_cards_due or due_date):
-            raise Eception("Invalid form for cardgroup")
+            raise Exception("Invalid form for cardgroup")
 
-        cardgroup = addCardgroup(title, due_date_python_format, number_of_cards_due)
+        cardgroup = add_cardgroup(title, due_date_python_format, number_of_cards_due)
         return jsonify(cardgroup)
     except Exception as e:
         print(e)
@@ -85,7 +85,7 @@ def cardgroups_delete(cgid):
     # return jsonify({"error": "here"})
     try:         
 
-        delCardgroup(cgid)
+        delete_cardgroup(cgid)
         return jsonify({"success": "deleted all cards and groups"})
     except Exception as e:
         print(e)
@@ -106,7 +106,7 @@ def cardgroup_flashcards(cgid):
         return jsonify(cardgroup.get_flashcards())
 
 
-        return jsonify(getCardgroupFlashcards(int(cgid)))
+        return jsonify(get_cardgroup_flashcards(int(cgid)))
     except Exception as e:
         return jsonify({"error": str(e)})
 

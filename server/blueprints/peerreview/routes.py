@@ -25,7 +25,7 @@ def peerreviews_create():
 
         due_date_python_format = datetime.datetime.strptime(due_date, '%Y-%m-%dT%H:%M:%S.%fZ')
 
-        addPeerReviewForAllStudents(int(group_id), due_date_python_format, int(n_reviews))
+        add_peer_reviews_for_all_students(int(group_id), due_date_python_format, int(n_reviews))
 
         return jsonify({"status": "success"})
 
@@ -66,9 +66,14 @@ def peerreviews_create():
 @jwt_required
 def get_peerreview(pid):      
     try:        
+        
+        peer_review = get_peer_review(int(pid))
 
-        ## add check
-        return jsonify(getPeerReview(int(pid)))
+        if peer_review.user_id != get_jwt_identity():
+            raise Exception("Getted Peer Review does not belong to current user")
+
+
+        return jsonify(peer_review.to_dict())
 
     except Exception as e:
         print(e)
@@ -82,7 +87,7 @@ def get_peerreview(pid):
 def get_user_peerreviews():      
     try:        
         uid = get_jwt_identity()
-        return jsonify(getUserPeerreviews(uid))
+        return jsonify(get_user_peerreviews(uid))
 
     except Exception as e:
         print(e)
@@ -92,7 +97,7 @@ def get_user_peerreviews():
 @jwt_required
 def get_peerreview_flashcards(pid):      
     try:        
-        return jsonify(getPeerreviewCards(int(pid)))
+        return jsonify(get_peer_review_cards(int(pid)))
 
     except Exception as e:
         print(e)
@@ -117,7 +122,7 @@ def get_ratings_in_peerreview(pid):
 ### temp
 @peerreviewBlueprint.route("/api/deleteall", methods=["GET"])
 def delete_peer():      
-    deleteAllPeerReviews()
+    delete_all_peerreviews()
     return jsonify("true")
 
 

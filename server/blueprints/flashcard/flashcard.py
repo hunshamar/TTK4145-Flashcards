@@ -1,8 +1,8 @@
 from db import db
 
 #import parents
-from ..user.user import User, addUser
-from ..cardgroup.cardgroup import Cardgroup, getCardgroup
+from ..user.user import User, add_user
+from ..cardgroup.cardgroup import Cardgroup, get_cardgroup
 import datetime
 
 
@@ -61,11 +61,11 @@ class Flashcard(db.Model):
     #     self.user = user
     #     self.cardgroup = cardgroup
 
-def getAllFlashcards():
+def get_all_flashcards():
     flashcards = Flashcard.query.all()
     return [i.to_dict() for i in flashcards]
 
-def getFlashcard(cid):
+def get_flashcard(cid):
     if (not cid):
         raise Exception("No card id")
     cid = int(cid) # make sure int
@@ -74,7 +74,7 @@ def getFlashcard(cid):
         raise Exception(f"Card with id {cid} not found")
     return Flashcard.query.get(cid)
 
-def calculateCardAverageRating():
+def calculate_average_rating():
     for flashcard in Flashcard.query.all():
         flashcard.calculate_average_rating()
     db.session.commit()
@@ -83,7 +83,7 @@ def calculateCardAverageRating():
 #     flashcards = Flashcard.querry.all()
 #     return [i.to_dict() for i in filter(lambda i: i.user_id == uid, flashcards)]
 
-def initCards():
+def init_cards():
     
 
 
@@ -107,7 +107,7 @@ def initCards():
             
 
 
-def addFlashcard(front, back, userid, cardgroupid):
+def add_flashcard(front, back, userid, cardgroupid):
     if (front and back and userid and cardgroupid):
         user = User.query.get(userid)
         if (not user):
@@ -118,10 +118,10 @@ def addFlashcard(front, back, userid, cardgroupid):
             raise Exception(f"Error. cardgroup with id {cardgroupid} not found")
 
         # Number of flashcards already added
-        numberOfFlashcardsAlreadyAdded = len(getCardGroupFlashCardsUser(cardgroupid, userid))
-        print("num", numberOfFlashcardsAlreadyAdded)
+        number_of_flashcards_already_added = len(get_user_flashcards_from_cardgroup(cardgroupid, userid))
+        print("num", number_of_flashcards_already_added)
 
-        if numberOfFlashcardsAlreadyAdded+1 > cardgroup.number_of_cards_due:
+        if number_of_flashcards_already_added+1 > cardgroup.number_of_cards_due:
             raise Exception("Error. All cards delivered")
 
         current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
@@ -137,13 +137,13 @@ def addFlashcard(front, back, userid, cardgroupid):
     else:
         raise Exception("Error. Invalid form for adding flashcard")
         
-def getCardgroupFlashcards(cgid):
+def get_cardgroup_flashcards(cgid):
     cards = Flashcard.query.filter_by(cardgroup_id=cgid)
     if (not cards):
         raise Exception(f"cards from cardgroup not found")
     return [i.to_dict() for i in cards]
 
-def deleteFlashcard(cid):
+def delete_flashcard(cid):
     flashcard = Flashcard.query.get(cid)
 
     cardgroup = Cardgroup.query.get(flashcard.cardgroup_id)
@@ -157,29 +157,29 @@ def deleteFlashcard(cid):
     db.session.commit()
     # return card.to_dict()
 
-def getCardGroupFlashCardsUser(cgid, uid):
+def get_user_flashcards_from_cardgroup(cgid, uid):
     cards = Flashcard.query.filter_by(cardgroup_id=cgid, user_id=uid)
     if (not cards):
         raise Exception(f"cards from cardgroup not found")
     return [i.to_dict() for i in cards]
 
-def getCardgroupDeliveryStatus(cgid):
+def get_cardgroup_delivery_status(cgid):
     #add error stuff
     users = User.query.all()
-    cardgroup = getCardgroup(cgid)
-    statusDicts = []    
+    cardgroup = get_carddgroup(cgid)
+    status_dicts = []    
     for user in users:
-        statusDicts.append({
+        status_dicts.append({
             "user": user.to_dict(),
             "cardgroup": cardgroup.to_dict(),
-            "delivered": len(getCardGroupFlashCardsUser(cgid, user.id)),
+            "delivered": len(get(cgid, user.id)),
         })
 
-    return statusDicts
+    return status_dicts
 
 
-def editFlashcard(cardId, newFront, newBack):
-    flashcard = getFlashcard(cardId)
+def edit_flashcard(cardId, newFront, newBack):
+    flashcard = get_flashcard(cardId)
     cardgroup = Cardgroup.query.get(flashcard.cardgroup_id)
     if (not cardgroup):
         raise Exception(f"Error. cardgroup with id {cardgroupid} not found")
