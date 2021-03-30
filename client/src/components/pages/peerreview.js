@@ -62,35 +62,27 @@ const PeerReview = () => {
         <PageWrapper>
             <CreatePeerreview open={open} onClose={() => setOpen(false)}  />
 
-            <Grid container spacing={5}>  
-                <Grid item xs={12}>
-                    <Grid container spacing={2}>  
-                        <Grid item xs={8}  >
-                            <Typography variant="h4" gutterBottom >
-                                Peer Review of Cards
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={4}  >
-                            {isAdmin ?                 
+            <Grid container spacing={2}>  
+            <Grid item xs={8}  >
+                <Typography variant="h4" gutterBottom >
+                    Peer Review of Flashcards 
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                    Rate other students' cards
+                    </Typography>
+            </Grid>
+            <Grid item xs={4}>
+            {isAdmin ?                 
                             <Button fullWidth className={classes.addButton} variant="outlined" onClick={() => setOpen(true)}>
                                 + Add Peer Review Session
                             </Button> :
                             <div></div>}
-                        </Grid>
-                        <Grid item xs={12}  >
 
-
-
-                            <Typography variant="body2" color="textSecondary">
-                                Review other students' cards
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
+            </Grid> 
+            
+            <Grid item xs={12}>
                             <PeerreviewView peerreviews={peerreviews} onClick={handleRedirect} />
                         </Grid> 
-
-                    </Grid>
-                </Grid>
 
             </Grid>
 

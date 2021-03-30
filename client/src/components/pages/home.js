@@ -39,7 +39,7 @@ const Home = () => {
                         <br/> <br />
                         Please submit feedback, suggestions or report bugs with the button below
 
-                        <div style={{margin: "10px 50px 0"}}>
+                        <div style={{margin: "40px 50px 0px"}}>
                         <Feedback />
                         </div>
                                                

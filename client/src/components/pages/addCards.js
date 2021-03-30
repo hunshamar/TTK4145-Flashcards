@@ -68,7 +68,7 @@ const AddCards = () => {
         <Grid container spacing={2}>
             <Grid item xs={8}  >
                 <Typography variant="h4" gutterBottom >
-                    Add Cards    
+                    Add Flashcards to Cardgroups    
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                     Each cardgroup has a set number of cards to submit and a duedate.

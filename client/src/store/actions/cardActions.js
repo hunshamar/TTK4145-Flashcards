@@ -130,30 +130,35 @@ export const loadCardGroupUserFlashcards = (cardgroupId) => async dispatch => {
 
 export const loadCardgroupFlashcards = (cardgroupId) => async (dispatch, getState) => {
     dispatch({type: SET_LOADING, payload: true})
-    await refreshTokens()
 
 
 
     console.log("idd",cardgroupId)
 
-    await axios.get(`/api/admin/cardgroup/${cardgroupId}/flashcards`,
-    {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem("user_token")}`
-        }
-    })
-    .then(response => {
-        const cards = response.data
-        console.log("lmlmlml")
-        console.log(cards)
-        dispatch({type: LOAD_CARDS, payload: cards})
-    })
-    .catch(err => {
-        let alert = {severity: "error", text: err.toString() + " when attempting to get card"}
-        dispatch({type: SET_ALERT, payload: alert})  
-    })
+    if (!cardgroupId){
+        dispatch({type: LOAD_CARDS, payload: []})
+    } else {
 
+        await refreshTokens()
+        await axios.get(`/api/admin/cardgroup/${cardgroupId}/flashcards`,
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("user_token")}`
+            }
+        })
+        .then(response => {
+            const cards = response.data
+            console.log("lmlmlml")
+            console.log(cards)
+            dispatch({type: LOAD_CARDS, payload: cards})
+        })
+        .catch(err => {
+            let alert = {severity: "error", text: err.toString() + " when attempting to get card"}
+            dispatch({type: SET_ALERT, payload: alert})  
+        })
+    }
     dispatch({type: SET_LOADING, payload: false})
+
 
 }
 

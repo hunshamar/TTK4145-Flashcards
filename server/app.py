@@ -28,7 +28,13 @@ manager = Manager(app)
 
 manager.add_command("db", MigrateCommand)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.db"
+if os.environ.get("FLASK_DEBUG"):
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.db"
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://bfdilpajpjblic:97f2ddb3205fcfaa87e8a1fe5390063eb547a3386c6e4a1c647975f76ca894a5@ec2-54-155-208-5.eu-west-1.compute.amazonaws.com:5432/dctjtuqf2vfpip"
+
+
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
 app.config["JWT_BLACKLIST_ENABLED"] = True
@@ -49,12 +55,17 @@ app.register_blueprint(peerreviewBlueprint)
 @app.route("/init")
 def init():   
     db.create_all()
-    return jsonify(app.secret_key)
+    return jsonify("init")
 
 
 @app.route("/<a>")
 def react_routes(a):
     return app.send_static_file("index.html")
+
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
+
 
 
 @app.route("/")

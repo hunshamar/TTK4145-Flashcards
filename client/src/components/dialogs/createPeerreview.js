@@ -24,6 +24,7 @@ import ConfirmDialog from "./confirmDialog"
 import { useSelector } from 'react-redux';
 import CardgroupSelect from '../submodules/cardgroupselect';
 import { createPeerreviews } from '../../store/actions/peerreviewActions';
+import Loading from '../notifications/loading';
 
 const useStyles = makeStyles(theme => ({
     dialog: {
@@ -187,8 +188,10 @@ const CreatePeerreview = (props) => {
                 <Grid item xs={6}>
                     <Button variant="contained" onClick={handleClose} fullWidth color="primary"  > Back</Button>
                 </Grid>
-                <Grid item xs={6}>
-                    <Button type="submit" fullWidth style={{backgroundColor: (groupId && numberOfReviews && selectedDate) ? "green" : "grey", color: "white"}}>Submit</Button>
+                <Grid item xs={6}> 
+                <Button type="submit" fullWidth style={{backgroundColor: (groupId && numberOfReviews && selectedDate) ? "green" : "grey", color: "white"}}>
+                    Submit<Loading style={{marginLeft: "10px", height: "26px", }} size={24} alternative={""} /> 
+                </Button> 
                 </Grid>
 
                 </Grid>

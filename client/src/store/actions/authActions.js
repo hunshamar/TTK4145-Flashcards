@@ -30,7 +30,7 @@ export const signInCallack = () => async (dispatch) => {
 }
 
 export const checkLogInStatus = () => async (dispatch, getState) => {
-    dispatch({type: SET_LOADING, payload: true})
+
 
     
 
@@ -70,7 +70,6 @@ export const checkLogInStatus = () => async (dispatch, getState) => {
         let payload = {loggedIn: false, loggedInUser: {}, loading: false}
         dispatch({type: LOG_IN_STATUS, payload})
     }
-    dispatch({type: SET_LOADING, payload: false})
 
 }
 

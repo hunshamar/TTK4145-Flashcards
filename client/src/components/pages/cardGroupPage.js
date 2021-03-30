@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { loadCardGroupUserFlashcards } from '../../store/actions/cardActions';
 import CardView from '../submodules/cardview';
 import { deleteCardgroup, loadCardgroup } from '../../store/actions/cardgroupActions';
-import { Button, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
+import { Button, Divider, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
 import CreateCardDialog from '../dialogs/createCardDialog';
 import {PageWrapper} from "../../static/wrappers"
 import authReducer from '../../store/reducers/authReducer';
@@ -133,6 +133,7 @@ const CardGroupPage = props => {
 
                     <div>
                         <Typography variant="subtitle2">Admin Functionality for This Cardgroup:</Typography>
+                        <Divider />
                         <Button fullWidth style={{height: "60px", margin: "10px 0"}} className={classes.delButton} variant="contained" onClick={handleDelete}>
                             Delete cardgroup and all cards
                         </Button> 

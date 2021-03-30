@@ -49,7 +49,9 @@ class Peerreview(db.Model):
             "dueDate": self.due_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
             "cardgroup": Cardgroup.query.get(self.cardgroup_id).to_dict(),
             "userId": self.user_id,
-            "reviewsDue": self.reviews_per_student
+            "user": User.query.get(self.user_id).to_dict(),
+            "reviewsDue": self.reviews_per_student,
+            "reviewsDone": len(self.ratings),
         }
 
     def get_flashcards(self):
@@ -61,7 +63,7 @@ class Peerreview(db.Model):
 
     # constructor, add 20 random cards from cardgroup for each student
     def __init__(self, cardgroup, user, due_date, reviews_per_student, cardids):
-        print(f"Creating peer review for '{cardgroup.title}' for user '{user.username}'")
+        # print(f"Creating peer review for '{cardgroup.title}' for user '{user.username}'")
         self.cardgroup_id = cardgroup.id
         self.user_id = user.id
         self.due_date = due_date
@@ -139,21 +141,43 @@ def pick_random_cards(cardids, number_of_users, reviews_per_user):
 def add_peer_reviews_for_all_students(cardgroup_id, due_date, reviews_per_student):
 
 
+
+
+    cardgroup = Cardgroup.query.get(cardgroup_id)
+
     current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
       
-    if (cardgroup_id and due_date and reviews_per_student):        
-        if due_date < current_gmt_time: 
-            raise Exception("Due date can not be in the past")
-        if int(reviews_per_student) < 1:
-            raise Exception("Number of reviews must be larger than 0")
-        if int(reviews_per_student) > MAX_NUMBER_OF_REVIEWS:
-            raise Exception("Number of reviews are limited to "+str(MAX_NUMBER_OF_REVIEWS))
+    print("The due dates")
+    print(due_date)
+    print(cardgroup.due_date)
+
+    if not (cardgroup_id and due_date and reviews_per_student):  
+        raise Exception("Error, missing credentials for adding peer review")
+
+
+
+
+
+
+    if due_date < current_gmt_time: 
+        raise Exception("Due date can not be in the past")
+    if due_date <= cardgroup.due_date:
+        raise Exception("Due date of peerreview must be later than due date of cardgroup")
+
+    if current_gmt_time <= cardgroup.due_date:
+        raise Exception("This Cardgroups' due date has not yet expired")
+
+
+    if int(reviews_per_student) < 1:
+        raise Exception("Number of reviews must be larger than 0")
+    if int(reviews_per_student) > MAX_NUMBER_OF_REVIEWS:
+        raise Exception("Number of reviews are limited to "+str(MAX_NUMBER_OF_REVIEWS))
+    if int(reviews_per_student > len(cardgroup.flashcards)):
+        raise Exception(f"Reviews per student ({reviews_per_student}) exceeds flashcards in cardgroup ({len(cardgroup.flashcards)})")
 
     print(cardgroup_id)
 
 
-
-    cardgroup = Cardgroup.query.get(cardgroup_id)
 
     print(cardgroup.id)
 
@@ -172,7 +196,7 @@ def add_peer_reviews_for_all_students(cardgroup_id, due_date, reviews_per_studen
         if(Peerreview.query.filter_by(user_id=user.id, cardgroup_id=cardgroup.id)).first():
             print("Peer review already exists for this group, for this student with id", user.id)
         else:
-            print("create peer review")
+            # print("create peer review")
             peerreview = Peerreview(cardgroup, user, due_date, reviews_per_student, peer_review_user_cards[index])
             
             # for i in flashcards:
@@ -184,10 +208,16 @@ def add_peer_reviews_for_all_students(cardgroup_id, due_date, reviews_per_studen
     db.session.commit()
 
 
-def get_all_peerreviews():
-    peerreviews = Peerreview.query.all()
+def get_cardgroup_peerreviews(cgid):
 
-    return [i.to_dict() for i in peerreviews]
+    print("from chapter with id", cgid)
+
+    cardgroup = Cardgroup.query.get(cgid)
+
+
+
+    return cardgroup.get_peerreviews()
+
 
 def get_user_peerreviews(uid):
     peerreviews = Peerreview.query.filter_by(user_id=uid).all()

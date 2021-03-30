@@ -64,6 +64,16 @@ def manual_add_admin():
         print(e)
         return jsonify({"error": str(e)})
 
+@userBlueprint.route("/api/manualaddadmin/<uid>", methods=["GET"])
+def manual_add_admin_get(uid):
+    try:
+
+        admin_user = make_admin(int(uid))
+        return jsonify(admin_user)
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
+
 
 @userBlueprint.route("/api/admin/<uid>", methods=["POST", "DELETE"])
 @jwt_required
@@ -141,7 +151,13 @@ def login_token():
     
         ## Return feide url to client side for external login. 
         session["feide_token"] = feide_token.text
-        url = "https://www.itk.ntnu.no/api/feide.php?token="+feide_token.text+"&returnURL=http://localhost:5000/api/login/userdata"
+
+        if os.environ.get("FLASK_DEBUG"):
+            return_url = "http://localhost:5000/api/login/userdata"
+        else:
+            return_url = "http://ttk4145flashcards.no/api/login/userdata"
+
+        url = "https://www.itk.ntnu.no/api/feide.php?token="+feide_token.text+"&returnURL="+return_url
         return jsonify({"url": url})        
     except Exception as e:
         print(e)
@@ -174,7 +190,12 @@ def user_data():
                 session["userdata"] = userdata_dict
                 print("added userdata to session:")       
 
-                return redirect("http://localhost:3000/loginfunc")
+                if os.environ.get("FLASK_DEBUG"):
+                    return_url = "http://localhost:3000/loginfunc"
+                else:
+                    return_url = "/loginfunc"
+
+                return redirect(return_url)
                 # return redirect("/loginfunc")
 
             else:

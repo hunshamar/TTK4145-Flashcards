@@ -95,7 +95,6 @@ function Login() {
   const dispatch = useDispatch()
   let loading = false;
   const feideLogin = async () => {    
-    loading = !loading
     dispatch({type: SET_LOADING, payload: true}) 
     await axios.get("/api/login/url ", { withCredentials: true })
     .then(res => {

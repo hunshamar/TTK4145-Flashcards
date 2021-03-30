@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
         textDecoration: "none"
     },
     button: {
-        width: "250px",
+        width: "100%",
         height: "50px",
     }
 })); 
@@ -51,6 +51,10 @@ const AdminNavbar = props => {
             url: "/adminpage/allcards",
             label: "All Cards"
         },
+        {
+            url: "/adminpage/peerreviews",
+            label: "Peerreviews"
+        },
     ]
 
     useEffect(() => {
@@ -68,7 +72,7 @@ const AdminNavbar = props => {
 
             <Toolbar style={{padding: 0}}>                        
                 <ToggleButtonGroup
-                    fullWidth
+                    style={{width: "100%"}}
                     value={alignment}
                     exclusive  
                     aria-label="text alignment"

@@ -36,8 +36,20 @@ const CardgroupSelect = props => {
   
     const [group, setGroup] = React.useState('');
     
+    useEffect(() => {
+      if(props.showFirst && cardgroups.length){
+
+        setGroup(cardgroups[0].id)
+        if (props.onChange){
+          props.onChange(cardgroups[0].id)
+        }
+  
+      }
+    }, [cardgroups])
+    
 
     const handleChange = (event) => {
+      // console.log("evt", event.target.value)
       setGroup(event.target.value);
       if (props.onChange){
         props.onChange(event.target.value)
@@ -47,7 +59,7 @@ const CardgroupSelect = props => {
 
     return(
         <FormControl fullWidth variant="outlined" >
-            <InputLabel id="demo-simple-select-outlined-label">Cardgroup</InputLabel>
+            <InputLabel id="demo-simple-select-outlined-label">Choose Cardgroup</InputLabel>
             <Select
             required
             color="secondary"

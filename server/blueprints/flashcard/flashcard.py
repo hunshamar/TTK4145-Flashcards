@@ -87,23 +87,22 @@ def init_cards():
     
 
 
-    # for i in range(100):
+    # for i in range(4, 100):
     #     username = "user"+str(i)
-    #     email = "user"+str(i)+"@user.ntnu.no"
-    #     name = "first"+str(i)+" last name"
-    #     addUser(username, email, name)
+    #     email = "user"+str(i)
+    #     name = "name"+str(i)
+    #     add_user(username, email, name)
     
     users = User.query.all()
     
+    for c in Cardgroup.query.all():
 
+        for u in users:
+            for i in range(c.number_of_cards_due):
+                front = f" for chapter {c.title} this is user with username {u.username}'s question nr {i+1} "
+                back = f" for chapter {c.title}  this is user with username {u.username}'s answer nr {i+1} "
 
-
-    for u in users:
-        for i in range(2):
-            front = f" for chapter 2 this is user with username {u.username}'s question nr {i} "
-            back = f" for chapter 2  this is user with username {u.username}'s answer nr {i} "
-
-            addFlashcard(front, back, u.id, 2)
+                add_flashcard(front, back, u.id, c.id)
             
 
 
@@ -166,13 +165,13 @@ def get_user_flashcards_from_cardgroup(cgid, uid):
 def get_cardgroup_delivery_status(cgid):
     #add error stuff
     users = User.query.all()
-    cardgroup = get_carddgroup(cgid)
+    cardgroup = Cardgroup.query.get(cgid)
     status_dicts = []    
     for user in users:
         status_dicts.append({
             "user": user.to_dict(),
             "cardgroup": cardgroup.to_dict(),
-            "delivered": len(get(cgid, user.id)),
+            "delivered": len(get_user_flashcards_from_cardgroup(cgid, user.id)),
         })
 
     return status_dicts

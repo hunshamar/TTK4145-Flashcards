@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import userReducer from '../../store/reducers/userReducer';
 import { useEffect } from 'react';
 import {  getUsersStatus } from '../../store/actions/userActions';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import CardgroupSelect from '../submodules/cardgroupselect';
 import { useState } from 'react';
 import { Typography } from "@material-ui/core";
 import { loadCardgroupFlashcards } from "../../store/actions/cardActions";
 import CardDialog from "../dialogs/cardDialog";
+import Loading from "../notifications/loading";
 
 
  const AllCards = () => {
@@ -18,15 +19,15 @@ import CardDialog from "../dialogs/cardDialog";
     const [openCard, setOpenCard] = useState(false);
     const [selectedCard, setSelectedCard] = useState({})
 
+    const loading = useSelector(state => state.loadingReducer.loading)
 
     const [cardGroupId, setCardGroupId] = useState(0)
 
 
     useEffect(() => {
-        if(cardGroupId){
-            dispatch(loadCardgroupFlashcards(cardGroupId)) 
-            console.log("status")
-        }
+        dispatch(loadCardgroupFlashcards(cardGroupId)) 
+        console.log("status")
+        
     }, [dispatch, cardGroupId])
     
     console.log("cards")
@@ -63,15 +64,19 @@ import CardDialog from "../dialogs/cardDialog";
         <PageWrapper>       
             <CardDialog open={openCard} onClose={() => setOpenCard(false)} card={selectedCard} />
             <div style={{marginBottom: "15px"}} >
-                <CardgroupSelect onChange={setCardGroupId} />
-                <Typography variant="subtitle2" style={{marginTop: "20px"}}>
-                {/* {status[0] ? "Due: " + dateToString(status[0].cardgroup.dueDate) : "Due:"} */}
-                </Typography>
+                <CardgroupSelect onChange={setCardGroupId} showFirst />
             </div>
 
-                <div style={{ height: 400, width: '100%' }}>
- 
-                <DataGrid  onCellClick={e => handleClick(e)} rows={rows} columns={columns} pageSize={5}  />
+                <div style={{ height: "400px", width: '100%' }}>
+
+                {loading ? <Loading /> : 
+
+                cards.length ? 
+                <DataGrid 
+                    onCellClick={e => handleClick(e)} rows={rows} columns={columns} pageSize={10}                   
+                />
+                : "No flashcards for this cardgroup"
+                }
             </div>
         </PageWrapper>
     )

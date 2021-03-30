@@ -53,14 +53,16 @@ def peerreviews_create():
 #         return(jsonify({"error": str(e)}))       
 
 
-# @peerreviewBlueprint.route("/api/peerreviews", methods=["GET"])
-# def get_peerreviews():      
-#     try:        
-#         return jsonify(getAllPeerreviews())
+@peerreviewBlueprint.route("/api/admin/peerreviews/<cgid>", methods=["GET"])
+# @jwt_required
+# @admin_only
+def peerreviews_get_all(cgid):      
+    try:        
+        return jsonify(get_cardgroup_peerreviews(int(cgid)))
 
-#     except Exception as e:
-#         print(e)
-#         return(jsonify({"error": str(e)}))       
+    except Exception as e:
+        print(e)
+        return(jsonify({"error": str(e)}))       
         
 @peerreviewBlueprint.route("/api/currentuser/peerreviews/<pid>", methods=["GET"])
 @jwt_required
@@ -84,7 +86,7 @@ def get_peerreview(pid):
 
 @peerreviewBlueprint.route("/api/currentuser/peerreviews", methods=["GET"])
 @jwt_required
-def get_user_peerreviews():      
+def peerreview_get_current_users_reviews():      
     try:        
         uid = get_jwt_identity()
         return jsonify(get_user_peerreviews(uid))
@@ -95,7 +97,7 @@ def get_user_peerreviews():
 
 @peerreviewBlueprint.route("/api/peerreview/<pid>/flashcards", methods=["GET"])
 @jwt_required
-def get_peerreview_flashcards(pid):      
+def peerreview_get_flashcards(pid):      
     try:        
         return jsonify(get_peer_review_cards(int(pid)))
 

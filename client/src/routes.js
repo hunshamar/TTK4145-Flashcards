@@ -22,6 +22,7 @@ import PeerReviewGroup from "./components/pages/peerReviewGroup";
 import Study from "./components/pages/study";
 import Home from './components/pages/home';
 import HTMLGuide from "./components/pages/HTMLGuide";
+import AllPeerreviews from "./components/adminpages/allPeerreviews";
 
 
 
@@ -91,6 +92,7 @@ const Routes = () => {
                                 <Route path={`${url}/users`} exact component={Users} />
                                 <Route path={`${url}/deliverystatus`} exact component={DeliveryStatus} />
                                 <Route path={`${url}/allcards`} exact component={AllCards} />
+                                <Route path={`${url}/peerreviews`} exact component={AllPeerreviews} />
                             </>
                             )}
                         />

@@ -18,10 +18,15 @@ class Cardgroup(db.Model):
     flashcards = db.relationship("Flashcard", cascade="all, delete", backref="cardgroup")
 
 
-    peerreview = db.relationship("Peerreview", uselist=False, cascade="all, delete-orphan", backref="cardgroup")
+    peerreview = db.relationship("Peerreview", cascade="all, delete-orphan", backref="cardgroup")
 
     def get_flashcards(self):
         return [f.to_dict() for f in self.flashcards]
+
+
+
+    def get_peerreviews(self):
+        return [p.to_dict() for p in self.peerreview]
 
     def get_n_random_cards(self, n):
         
@@ -30,10 +35,10 @@ class Cardgroup(db.Model):
 
     def get_cards_from_ids(self, idarr):
 
-        print("idarr", idarr)
+        # print("idarr", idarr)
         fc = [card for card in self.flashcards if card.id in idarr]
         
-        print([f.id for f in fc])
+        # print([f.id for f in fc])
 
 
         return fc
@@ -65,9 +70,11 @@ class Cardgroup(db.Model):
 
 
 def get_all_cardgroups():
-    cardgroups = Cardgroup.query.all()
+    cardgroups = Cardgroup.query.order_by(Cardgroup.id).all()
     if not cardgroups:
         raise Exception("Error finding cardgroups function. No cardgroups")
+
+
     return [i.to_dict() for i in cardgroups]
 
 def edit_cardgroup(cardgroup_id, title, due_date, number_of_cards_due):
@@ -132,7 +139,7 @@ def get_cardgroup(cdid):
     return cardgroup
 
 def delete_cardgroup(cdid):
-    cardgroup = getCardgroup(cdid)
+    cardgroup = get_cardgroup(cdid)
     db.session.delete(cardgroup)
     db.session.commit()
     return True

@@ -47,7 +47,7 @@ export const getUsersWithRole = (role) => async (dispatch) => {
 
 export const searchUsers = (role, searchPhrase, ) => async (dispatch) => {
     await refreshTokens()
-    axios.get(`/api/admin/users/search/role=${role}/q=${searchPhrase}`, {
+    await axios.get(`/api/admin/users/search/role=${role}/q=${searchPhrase}`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("user_token")}`
         }
@@ -68,31 +68,35 @@ export const searchUsers = (role, searchPhrase, ) => async (dispatch) => {
 
 
 export const getUsersStatus = (cardgroupId) => async (dispatch, getState) => {
-    dispatch({type: SET_LOADING, payload: true})
-    await refreshTokens()
+    
+
 
     if (!cardgroupId){
         dispatch({type: GET_DELIVERY_STATUS, payload: []})
     }
+    else {
 
-    axios.get(`/api/admin/cardgroup/${cardgroupId}/deliverystatus`, {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem("user_token")}`
-        }
-    })
-    .then(res => {
-        if(res.data.error){
-            console.log("error")
-            throw new Error(res.data.error)
-        }
-        const status = res.data
-        console.log("mah status")
-        console.log(status)
-        dispatch({type: GET_DELIVERY_STATUS, payload: status})
-    })
-    .catch(err => console.log(err))
+        dispatch({type: SET_LOADING, payload: true})
+        await refreshTokens()
+        await axios.get(`/api/admin/cardgroup/${cardgroupId}/deliverystatus`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("user_token")}`
+            }
+        })
+        .then(res => {
+            if(res.data.error){
+                console.log("error")
+                throw new Error(res.data.error)
+            }
+            const status = res.data
+            console.log("mah status")
+            console.log(status)
+            dispatch({type: GET_DELIVERY_STATUS, payload: status})
+        })
+        .catch(err => console.log(err))
+        dispatch({type: SET_LOADING, payload: false})
+    }
 
-    dispatch({type: SET_LOADING, payload: false})
 }
 
 

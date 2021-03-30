@@ -7,96 +7,84 @@ import { DataGrid } from '@material-ui/data-grid';
 import CardgroupSelect from '../submodules/cardgroupselect';
 import { useState } from 'react';
 import { Typography } from "@material-ui/core";
+import { getCardgroupPeerreviews } from "../../store/actions/peerreviewActions";
 import { dateJSONToString } from "../../utils/datehandling";
+import RateCard from "../submodules/rateCard";
 import Loading from "../notifications/loading";
 
 
- const DeliveryStatus = () => {
+ const AllPeerreviews = () => {
 
     const dispatch = useDispatch()
     // const users = useSelector(state => state.userReducer.users)
-    const status = useSelector(state => state.userReducer.status)
+    const peerreviews = useSelector(state => state.peerreviewReducer.peerreviews)
 
     const [cardGroupId, setCardGroupId] = useState(0)
+
     const loading = useSelector(state => state.loadingReducer.loading)
 
 
     useEffect(() => {
-        dispatch(getUsersStatus(cardGroupId))
-        console.log("status")
-        console.log(status)
+        dispatch(getCardgroupPeerreviews(cardGroupId))
     }, [dispatch, cardGroupId])
     
-    console.log("usars")
+    console.log("peerreviews", peerreviews)
 
     
 
     const columns = [
         { field: 'username', headerName: 'Username', width: 130 },
-        { field: 'delivered', headerName: 'Delivered', type: "number", width: 130 },
         {
-          field: 'toDeliver',
-          headerName: 'To Deliver',
+          field: 'toRate',
+          headerName: 'To Rate',
           type: 'number',
           width: 130,
         },
-        { field: 'complete', headerName: 'Complete', type: "number", width: 130 },      
+        { field: 'rated', headerName: 'Rated', type: "number", width: 130 },    
+        { field: 'complete', headerName: 'Complete', type: "number", width: 130 },        
     ]      
 
-    let rows = status.map(s => (
+    let rows = peerreviews.map(s => (
         {
             id: s.user.id, 
             username: s.user.username, 
-            delivered: s.delivered, 
-            toDeliver: s.cardgroup.numberOfCardsDue,
-            complete: s.delivered == s.cardgroup.numberOfCardsDue ? true : false
+            toRate: s.reviewsDue,
+            rated: s.reviewsDone,
+            complete: s.reviewsDue == s.reviewsDone ? true : false
         }
     ))
 
-
+    
+      
     
     console.log("cgid", cardGroupId)
-
-
     return (
         <PageWrapper>       
-
             <div style={{marginBottom: "15px"}} >
                 <CardgroupSelect onChange={setCardGroupId} showFirst/>
             </div>
 
-            {loading ? <Loading /> : 
 
-                status.length ? 
+            {loading ? <Loading /> :
+             
+            <div> 
+
+                {peerreviews.length ? 
                 <div>
                     <Typography variant="subtitle2" style={{marginTop: "20px"}}>
-                        {status[0] ? "Due: " + dateJSONToString(status[0].cardgroup.dueDate) : "Due:"}
+                    {peerreviews[0] ? "Due: " + dateJSONToString(peerreviews[0].dueDate) : "Due:"}
                     </Typography>
 
-                    <div style={{ height: "400px", width: '100%' }}>
+                    <div style={{ height: 400, width: '100%' }}>
+                
                         <DataGrid rows={rows} columns={columns} pageSize={10}  />
-                        </div>
-                    
-                </div>
-            : ""
-            }
-
-            {/* {loading ? <Loading /> : 
-
-            status.length ? 
-            <div>
-                <Typography variant="subtitle2" style={{marginTop: "20px"}}>
-                    {status[0] ? "Due: " + dateJSONToString(status[0].cardgroup.dueDate) : "Due:"}
-                </Typography>
-        
-                <div style={{ height: 400, width: '100%' }}>
-                    <DataGrid rows={rows} columns={columns} pageSize={5}  />
-                </div>
-            </div>
-            : 
-            ""} */}
+                    </div>
+                </div> : "No Peerreviews for this cardgroup"}
+ 
+            </div>  }  
+            
         </PageWrapper>
     )
 }
 
-export default DeliveryStatus
+export default AllPeerreviews

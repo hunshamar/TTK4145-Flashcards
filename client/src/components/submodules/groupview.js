@@ -1,11 +1,11 @@
-import { CardActionArea, Divider, Grid, Typography } from '@material-ui/core';
+import { Box, CardActionArea, Divider, Grid, Typography } from '@material-ui/core';
 import { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import loadingReducer from '../../store/reducers/loadingReducer';
 import Loading from '../notifications/loading';
 import { dateJSONToString } from '../../utils/datehandling';
-
+import AddIcon from '@material-ui/icons/Add';
 
 
 
@@ -28,9 +28,14 @@ const GroupView = ({cardgroups, showDueDate, onClick}) => {
                         <Grid item xs={12} key={cardgroup.id}> 
                             <CardActionArea onClick={() => onClick(cardgroup.id)} style={{padding: "10px", minHeight: "100px"}}>
                                 <Grid container spacing={2} >
-                                    <Grid item xs={12}>                        
+                                    <Grid item xs={1} alignItems="center">
+                                        <AddIcon color="textprimary" style={{marginTop: "10px"}} />
+                                    </Grid>
+
+
+                                    <Grid item xs={11}>                        
                                         <Typography variant="subtitle1" component="h2">
-                                            Add cards to <i>{cardgroup.title}    </i> 
+                                            Add flashcards to <i>{cardgroup.title}    </i> 
                                         </Typography>
                                         {showDueDate ? 
                                             <Typography variant="body2" color="textSecondary" component="h2">

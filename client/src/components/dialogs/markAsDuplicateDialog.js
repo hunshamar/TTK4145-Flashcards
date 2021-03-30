@@ -118,7 +118,7 @@ const MarkAsDuplicatedDialog = ({onClose, open, setDuplicateCards, duplicateCard
                     onClick={onClose} 
                     fullWidth 
                     color="primary" 
-                > Submit</Button>
+                > Close</Button>
             </div>
 
         </div>    

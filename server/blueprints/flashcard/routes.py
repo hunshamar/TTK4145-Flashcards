@@ -58,7 +58,7 @@ def flashcards_edit(cid):
     try:
         userId = get_jwt_identity()
         cardId = int(cid)
-        if getFlashcard(cardId).user.id != userId:
+        if get_flashcard(cardId).user.id != userId:
             raise Exception("Error. Can not edit other users flashcards")
         
 
@@ -83,7 +83,7 @@ def flashcard_delete(cid):
         userId = get_jwt_identity()
         if get_flashcard(cardId).user.id != userId:
             raise Exception("Error. Can not delete other users flashcards")
-        deleteFlashcard(cid)
+        delete_flashcard(cid)
         return jsonify({"success": "true"})
     except Exception as e:
         return jsonify({"error": str(e)})   
@@ -93,6 +93,7 @@ def flashcard_delete(cid):
 @admin_only
 def status(cgid):
     sleep(DELAY_S)
+    print("getting status")
     try:
         status = get_cardgroup_delivery_status(int(cgid))
         return jsonify(status)
@@ -117,10 +118,10 @@ def cardgroup_user_flashcardscards(cgid):
 
 ##############################################################################
 
-# ## temp
+## temp
 # @flashcardBlueprint.route("/api/initcards", methods=["GET"])
-# def init_cards():
-#     initCards()
+# def cards_init():
+#     init_cards()
 #     return jsonify({"success": "true"})
 
 

@@ -102,11 +102,11 @@ const PeerReviewGroup = (props) =>{
                 <Typography  variant="h4" >{peerreview.cardgroup.title}</Typography>
                 <Typography variant="body2" color="textSecondary">
                 {peerreview.reviewsDue} cards are due to be rated. Read the question, attempt to answer it to yourself, 
-                then you may reveal the answer. After testing the card, you are to rate it based on three criteria, try to be objective<br/> 
+                then you may reveal the answer. After testing the card, you are to rate the card<br/> 
                     If the card is hard to read, press "FULL CARD VIEW"  button for a full preview of the card. <br/>
                     <u>Remember to save ratings before exiting this page.</u>
                     <br/><br/>
-                    <b>Level of Difficulty</b> An objective rating on the difficulty of the card. From extremely easy to extremely hard.<br/>
+                    <b>Level of Difficulty</b> A rating on the difficulty of the card. From extremely easy to extremely hard.<br/>
                     <b>Relevance and Quality</b> A rating of how relevant the card is to the course curriculum and the quality of the flashcard. Will studying
                      this card be useful for learning the course material? Is the question well-phrased? Is it too long and complex? Is it original?
                     <br/>

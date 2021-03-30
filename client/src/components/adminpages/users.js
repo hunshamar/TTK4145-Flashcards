@@ -127,7 +127,7 @@ import UserDialog from "../dialogs/userDialog";
 
 
                         <div style={{ height: 400, width: '100%' }}> 
-                    <DataGrid onCellClick={e => handleClick(e)} rows={rows} columns={columns} pageSize={5}  />
+                    <DataGrid onCellClick={e => handleClick(e)} rows={rows} columns={columns} pageSize={10}  />
                     </div>
             </Grid>  
             </Grid>     

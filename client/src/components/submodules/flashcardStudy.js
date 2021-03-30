@@ -11,7 +11,7 @@ const FlashcardStudy = ({flashcard, style, revealback}) => {
     return (
         <div style={style}>
             <Grid container spacing={0} >
-                <Grid item xs={12}  style={{textAlign: "center", minHeight: "100px"}}>
+                <Grid item xs={12}  style={{textAlign: "center", minHeight: "100px", minWidth: "300px"}}>
                 <Typography variant="caption" color="textSecondary">
                         Front:
                     </Typography>
@@ -22,7 +22,7 @@ const FlashcardStudy = ({flashcard, style, revealback}) => {
                 <Grid item xs={12}  >
                     <Divider /> 
                 </Grid>
-                <Grid item xs={12} style={{textAlign: "center", minHeight: "100px"}}>
+                <Grid item xs={12} style={{textAlign: "center", minHeight: "100px", minWidth: "300px"}}>
 
                    
                     {reveal ? 

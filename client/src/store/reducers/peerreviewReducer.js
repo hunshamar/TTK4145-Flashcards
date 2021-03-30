@@ -17,7 +17,7 @@ const peerreviewReducer = (state = initState, action) => {
             }
         case LOAD_PEERREVIEWS:
             console.log("got peerreviews", action.payload)
-            console.log({...state, cardgroups: action.payload})
+            console.log({...state, peerreviews: action.payload})
             return {
                 ...state, 
                 peerreviews: action.payload
