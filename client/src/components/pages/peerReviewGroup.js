@@ -44,15 +44,15 @@ const PeerReviewGroup = (props) =>{
     useEffect(() => {
         dispatch(clearCardReducer())
         dispatch(loadPeerreview(peerreviewId))
-        dispatch(loadPeerReviewFlashcards(peerreviewId))  
+        // dispatch(loadPeerReviewFlashcards(peerreviewId))  # remove from actions
         dispatch(getRatingsInPeerreview(peerreviewId))
     }, [])
 
-    const cards = useSelector(state => state.cardReducer.cards)
+    // const cards = useSelector(state => state.cardReducer.cards)
     const peerreview = useSelector(state => state.peerreviewReducer.peerreviews[0])
 
 
-    console.log("mhmhmhm")
+    console.log("mhmhmhm", ratings)
 
     const loading = useSelector(state => state.loadingReducer.loading)
 
@@ -81,13 +81,13 @@ const PeerReviewGroup = (props) =>{
         setOpenPreview(true)   
     }
 
-    const cardIdToIndex = id => {
-        console.log(id)
-        return cards.map(function(x) {return x.id; }).indexOf(id)+1;
-    }
+    // const cardIdToIndex = id => {
+    //     console.log(id)
+    //     return cards.map(function(x) {return x.id; }).indexOf(id)+1;
+    // }
     
 
-    if (!cards.length){
+    if ( ! peerreview){
         return(
             <PageWrapper>
                 <Loading />
@@ -120,11 +120,11 @@ const PeerReviewGroup = (props) =>{
                     <Progress x={ratings.length} y={peerreview.reviewsDue} body="Card ratings submitted" style={{width: "300px", marginLeft: "auto", marginBottom: "30px"}} />
                 <Divider />
                 
-                {/* {cards.length ?     
+                {/* {cards.length ? 
                 
-                ratings.map((rating, i) => 
+                cards.map((card, i) => 
                     <React.Fragment>
-                        <RateCard key={rating.id}  index={i+1} rating={rating} cardIdToIndex={cardIdToIndex} previewCard={openPreviewCard}  />
+                        <RateCard key={card.id} card={card} index={i+1} save={save} cardIdToIndex={cardIdToIndex} previewCard={openPreviewCard}  />
                         <Divider />
                     </React.Fragment>
                 ) : <div>empty</div>} */}

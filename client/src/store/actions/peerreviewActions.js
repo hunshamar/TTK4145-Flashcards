@@ -98,7 +98,7 @@ export const loadPeerreview = (pid) => async( dispatch, getState) => {
     await refreshTokens()
         
     
-    await axios.get("/api/currentuser/peerreviews/"+pid, 
+    await axios.get("/api/currentuser/peerreviews/"+pid+"/ratings/", 
     {
         headers: {
             Authorization: "Bearer " + localStorage.getItem("user_token")
@@ -111,7 +111,7 @@ export const loadPeerreview = (pid) => async( dispatch, getState) => {
             if(res.data.error){
                 throw new Error(res.data.error)
             }
-            console.log("returned")
+            console.log("returne 123")
             console.log(res.data)
             
             if(res.data.error){
