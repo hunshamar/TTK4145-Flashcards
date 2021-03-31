@@ -64,7 +64,7 @@ const CheckCard = ({card, index, isDuplicate, editDuplicates}) => {
 
 }
 
-const MarkAsDuplicatedDialog = ({onClose, open, setDuplicateCards, duplicateCards, flashcard, selectedValue}) => {
+const MarkAsDuplicatedDialog = ({onClose, open, setDuplicateCards, duplicateCards, flashcard_id, selectedValue}) => {
 
     const handleClose = () => {
         onClose(selectedValue);
@@ -103,7 +103,7 @@ const MarkAsDuplicatedDialog = ({onClose, open, setDuplicateCards, duplicateCard
            <Divider />
             {cards.map((card,i) => 
                 
-                <div>{card.id !== flashcard.id ? 
+                <div>{card.id !== flashcard_id ? 
                     <div>
                     <CheckCard card={card} index={i+1} isDuplicate={duplicateCards.includes(card.id)} editDuplicates={editDuplicates}/>  
                    <Divider />

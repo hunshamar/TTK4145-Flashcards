@@ -44,7 +44,7 @@ export const saveRating = ({rating, cardNumber}) => async( dispatch, getState) =
 };
 
 export const getRating = (cardId) => async( dispatch, getState) => {
-    await refreshTokens()
+    // await refreshTokens()
         
     await axios.get("/api/currentuser/cardrating/"+cardId, 
          {
@@ -85,7 +85,7 @@ export const getRating = (cardId) => async( dispatch, getState) => {
 export const getRatingsInPeerreview = (peerreviewid) => async( dispatch, getState) => {
     await refreshTokens()
     console.log("Is this aused")
-    await axios.get(`/api/currentuser/peerreview/${peerreviewid}/cardratings`, 
+    await axios.get("http://localhost:5000/api/currentuser/cardratings/"+peerreviewid, 
          {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem("user_token")
@@ -98,8 +98,7 @@ export const getRatingsInPeerreview = (peerreviewid) => async( dispatch, getStat
             if(res.data.error){
                 throw new Error(res.data.error)
             }
-            console.log("returned")
-            console.log(res.data)
+            console.log("returned", res.data)
 
             
            

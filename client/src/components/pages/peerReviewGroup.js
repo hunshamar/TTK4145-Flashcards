@@ -120,14 +120,14 @@ const PeerReviewGroup = (props) =>{
                     <Progress x={ratings.length} y={peerreview.reviewsDue} body="Card ratings submitted" style={{width: "300px", marginLeft: "auto", marginBottom: "30px"}} />
                 <Divider />
                 
-                {cards.length ? 
+                {/* {cards.length ?     
                 
-                cards.map((card, i) => 
+                ratings.map((rating, i) => 
                     <React.Fragment>
-                        <RateCard key={card.id} card={card} index={i+1} save={save} cardIdToIndex={cardIdToIndex} previewCard={openPreviewCard}  />
+                        <RateCard key={rating.id}  index={i+1} rating={rating} cardIdToIndex={cardIdToIndex} previewCard={openPreviewCard}  />
                         <Divider />
                     </React.Fragment>
-                ) : <div>empty</div>}
+                ) : <div>empty</div>} */}
                 
                 <div style={{margin: "10px", textAlign: "left"}}>
 {/*                 

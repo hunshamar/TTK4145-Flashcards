@@ -8,35 +8,46 @@ from ..user.routes import admin_only
 from time import sleep
 from ..values import DELAY_S
 
-
-
-@cardratingBlueprint.route("/api/currentuser/cardrating/<cid>", methods=["POST"])
+@cardratingBlueprint.route("/api/currentuser/cardratings/<prid>", methods=["GET"])
 @jwt_required
-def cardrating_add(cid):       
-    sleep(1)
-    try:        
-        difficulty_rating = request.json["difficulty"]
-        quality_rating = request.json["quality"]
-        duplicate_card_ids = request.json["duplicateCardIds"]
-        print("her")
-        print(duplicate_card_ids)
-
-        print(difficulty_rating, quality_rating)
-
-        cid = int(request.json["cardId"])
-
-        cid = int(cid)
-        
-        print("cid", cid)
-        uid = uid = get_jwt_identity()
-
-
-        rating = add_rating(uid, cid, difficulty_rating , quality_rating, duplicate_card_ids)
-        return jsonify(rating)
-
+def cardratings_get(prid):
+    try:
+        uid = get_jwt_identity()
+        return(jsonify(add_ratings_to_peerreview(uid, int(prid))))
     except Exception as e:
         print(e)
         return(jsonify({"error": str(e)}))       
+
+
+
+
+# @cardratingBlueprint.route("/api/currentuser/cardrating/<cid>", methods=["POST"])
+# @jwt_required
+# def cardrating_add(cid):       
+#     sleep(1)
+#     try:        
+#         difficulty_rating = request.json["difficulty"]
+#         quality_rating = request.json["quality"]
+#         duplicate_card_ids = request.json["duplicateCardIds"]
+#         print("her")
+#         print(duplicate_card_ids)
+
+#         print(difficulty_rating, quality_rating)
+
+#         cid = int(request.json["cardId"])
+
+#         cid = int(cid)
+        
+#         print("cid", cid)
+#         uid = uid = get_jwt_identity()
+
+
+#         rating = add_rating(uid, cid, difficulty_rating , quality_rating, duplicate_card_ids)
+#         return jsonify(rating)
+
+#     except Exception as e:
+#         print(e)
+#         return(jsonify({"error": str(e)}))       
 
 @cardratingBlueprint.route("/api/currentuser/cardrating/<cid>", methods=["GET"])
 @jwt_required

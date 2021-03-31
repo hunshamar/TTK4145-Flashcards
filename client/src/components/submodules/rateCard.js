@@ -58,7 +58,7 @@ const difficultyLabels = {
     5: 'Excellent+',
   };
 
-const RateCard = ({card, index, save, previewCard, cardIdToIndex}) => {
+const RateCard = ({rating, index, save, previewCard, cardIdToIndex}) => {
 
     const classes = useStyles()
     const [flipped, setFlipped] = useState(false);
@@ -77,16 +77,12 @@ const RateCard = ({card, index, save, previewCard, cardIdToIndex}) => {
 
     const [quality, setQuality] = useState(0)
     const [hoverQuality, setHoverQuality] = useState(-1);
-    const dispatch = useDispatch() 
+    const dispatch = useDispatch()     
 
-    const rating = useSelector(state => state.ratingReducer.ratings.find(rating => rating.card_id == card.id))
-    
-    
-
-    useEffect(() => {
-        console.log("fml")
-        dispatch(getRating(card.id))     
-    }, [])
+    // useEffect(() => {
+    //     console.log("fml")
+    //     dispatch(getRating(card.id))     
+    // }, [])  
 
 
     useEffect(() => {
@@ -118,9 +114,9 @@ const RateCard = ({card, index, save, previewCard, cardIdToIndex}) => {
                 difficulty,
                 quality,
                 duplicateCardIds,
-                cardId: card.id
+                cardId: rating.card.id
             }                  
-            dispatch(saveRating({rating, cardNumber: index}))
+            dispatch(saveRating({rating, index}))
             }
         else {
         }
@@ -134,7 +130,7 @@ const RateCard = ({card, index, save, previewCard, cardIdToIndex}) => {
                     onClose={()=>setOpenMarkAsDuplicated(false)}
                     duplicateCards={duplicateCardIds} 
                     setDuplicateCards={setDuplicateCardIds}
-                    flashcard={card}
+                    flashcard_id={rating.card.id}
                       />
                 
                 <Grid item xs={1}>       
@@ -144,7 +140,7 @@ const RateCard = ({card, index, save, previewCard, cardIdToIndex}) => {
                 <Grid item xs={4}>       
                         <Typography variant="subtitle2">Question</Typography>
                         <Typography variant="body2">                      
-                                <DivHTMLSanatized text={card.front} style={{overflow: "hidden"}}/>
+                                <DivHTMLSanatized text={rating.card.front} style={{overflow: "hidden"}}/>
                         </Typography>
                 </Grid>
                 
@@ -152,7 +148,7 @@ const RateCard = ({card, index, save, previewCard, cardIdToIndex}) => {
                         <Typography variant="subtitle2">{flipped ? "Answer" : "Reveal Answer"}</Typography>
                         {flipped ? 
                             <Typography className={classes.body} variant="body2"> {flipped ?     
-                                <DivHTMLSanatized text={card.back} style={{overflow: "hidden"}}/>
+                                <DivHTMLSanatized text={rating.card.back} style={{overflow: "hidden"}}/>
                                 : "" }</Typography>
                         :
                             <div></div>
@@ -229,7 +225,7 @@ const RateCard = ({card, index, save, previewCard, cardIdToIndex}) => {
                     <Typography variant="caption" color="textSecondary" >{saveDate ? "Last saved "+saveDate : ""} </Typography> 
                 </Grid>
                 <Grid item xs={3} >
-                        <Button fullWidth variant="outlined" color="secondary" onClick = {() => previewCard(card)} endIcon={<VisibilityIcon /> }>
+                        <Button fullWidth variant="outlined" color="secondary" onClick = {() => previewCard(rating.card)} endIcon={<VisibilityIcon /> }>
                             Full Card View
                         </Button>
                 </Grid>
