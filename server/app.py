@@ -5,6 +5,9 @@ from blueprints.flashcard.routes import flashcardBlueprint
 from blueprints.cardgroup.routes import cardgroupBlueprint
 from blueprints.cardrating.routes import cardratingBlueprint
 from blueprints.peerreview.routes import peerreviewBlueprint
+from blueprints.cardreview_deck.routes import cardreviewDeckBlueprint
+from blueprints.cardreview.routes import cardreviewBlueprint
+
 from blueprints.user.user import User
 from db import db
 from flask_cors import CORS
@@ -51,6 +54,8 @@ app.register_blueprint(flashcardBlueprint)
 app.register_blueprint(cardgroupBlueprint)
 app.register_blueprint(cardratingBlueprint)
 app.register_blueprint(peerreviewBlueprint)
+app.register_blueprint(cardreviewDeckBlueprint)
+app.register_blueprint(cardreviewBlueprint)
 
 @app.route("/init")
 def init():   

@@ -1,12 +1,17 @@
 
 
-import { Divider, Grid, Typography } from "@material-ui/core"
+import { Button, Divider, Grid, Typography } from "@material-ui/core"
 import React from "react"
+import { useHistory } from "react-router";
 import { PageWrapper } from "../../static/wrappers";
 
 
 const Study = () => {
 
+    const history = useHistory()
+    const redirectToSpacedRepetitionPage = () => {
+        history.push("/spaced-repetition")
+    }
 
 
 
@@ -30,6 +35,9 @@ const Study = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <Button variant="contained" color="primary" onClick={redirectToSpacedRepetitionPage}>Spaced Repetition</Button>
                 </Grid>
             </Grid>
         </PageWrapper>

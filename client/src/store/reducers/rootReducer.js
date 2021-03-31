@@ -7,6 +7,7 @@ import loadingReducer from './loadingReducer';
 import userReducer from './userReducer';
 import ratingReducer from './ratingReducer';
 import peerreviewReducer from './peerreviewReducer';
+import studyReducer from "./studyReducer"
 
 const rootReducer = combineReducers({
     authReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     userReducer,
     ratingReducer,
     peerreviewReducer,
+    studyReducer
 });
 
 export default rootReducer

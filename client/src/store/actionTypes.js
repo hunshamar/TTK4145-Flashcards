@@ -46,6 +46,7 @@ export const LOAD_PEERREVIEWS = "LOAD_PEERREVIEWS"
 export const CREATE_RATING = "CREATE_RATING"
 export const LOAD_RATINGS = "LOAD_RATINGS"
 
-
+/* Study Actions */
+export const LOAD_CARDREVIEW_DECK = "LOAD_CARDREVIEW_DECK"
 
 

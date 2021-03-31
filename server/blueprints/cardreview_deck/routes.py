@@ -14,8 +14,8 @@ cardreviewDeckBlueprint = Blueprint("cardreview_deck", __name__)
 @jwt_required
 def cardreviews_deck_user():
 
-    # user_id = get_jwt_identity()
-    user_id = 1
+    user_id = get_jwt_identity()
+    
 
     return jsonify(get_user_cardreview_deck(int(user_id)))
 
