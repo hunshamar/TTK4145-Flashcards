@@ -64,16 +64,17 @@ def peerreviews_get_all(cgid):
         print(e)
         return(jsonify({"error": str(e)}))       
         
-@peerreviewBlueprint.route("/api/currentuser/peerreviews/<pid>", methods=["GET"])
+@peerreviewBlueprint.route("/api/currentuser/peerreviews/<pid>/ratings", methods=["GET"])
 @jwt_required
 def get_peerreview(pid):      
-    try:        
-        
+    try:
+                
         peer_review = get_peer_review(int(pid))
 
         if peer_review.user_id != get_jwt_identity():
             raise Exception("Getted Peer Review does not belong to current user")
-
+        else:
+            print("her er peer review", peer_review.to_dict())
 
         return jsonify(peer_review.to_dict())
 

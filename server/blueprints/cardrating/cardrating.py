@@ -53,21 +53,25 @@ class Cardrating(db.Model):
 
 def add_ratings_to_peerreview(user_id, peerreview_id):
     peerreview = Peerreview.query.get(peerreview_id)
+
+
     if peerreivew.user_id != user_id:
         raise Exception("Error. Does not belong to user")
 
     
     if not len(peerreview.ratings):
+        print("asdasd")
         for c in peerreview.flashcards:
             r = Cardrating(card=c, user=user)
             db.session.add(r)
         
-        
+
         db.session.commit()
 
         return peerreview.get_ratings()
 
     else:
+        print("yesssum")
         return peerreview.get_ratings()
 
 

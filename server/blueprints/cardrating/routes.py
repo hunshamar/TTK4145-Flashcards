@@ -11,6 +11,7 @@ from ..values import DELAY_S
 @cardratingBlueprint.route("/api/currentuser/cardratings/<prid>", methods=["GET"])
 @jwt_required
 def cardratings_get(prid):
+    
     try:
         uid = get_jwt_identity()
         return(jsonify(add_ratings_to_peerreview(uid, int(prid))))
