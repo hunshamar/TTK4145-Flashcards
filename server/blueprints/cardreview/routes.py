@@ -15,6 +15,12 @@ cardreviewBlueprint = Blueprint("cardreview", __name__)
 def cardreviews_get_all():
     return jsonify(get_all_cardreviews())
 
+@cardreviewBlueprint.route("/api/currentuser/cardreviews", methods=["POST"])
+@jwt_required
+def cardreviews_add_all():
+    uid = get_jwt_identity()
+    return jsonify(add_cardreviews(uid))
+
 
     
     

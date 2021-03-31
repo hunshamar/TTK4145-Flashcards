@@ -28,8 +28,8 @@ class Cardreview(db.Model):
             "interRepetitionInterval": self.inter_repetition_interval
         }
 
-    def get_flashcard(self):
-        return self.flashcard.public_to_dict()
+    # def get_flashcard(self):
+    #     return self.flashcard.public_to_dict()
 
     def SM_2_algorithm(user_grade):
         if user_grade >= 3: # correct response
@@ -49,19 +49,31 @@ class Cardreview(db.Model):
             self.repetition_number = 0
             self.inter_repetition_interval = 0
 
-    def __init__(self, flashcard_id):
-        self.flashcard_id = flashcard_id,
+    def __init__(self, card, cardreview_deck):
+        self.flashcard_id = card.id
+        self.cardreview_deck_id = cardreview_deck.id
         self.repetition_number = 0
         self.easiness_factor = 2.5
         self.inter_repetition_interval = 0
 
-def add_cardreviews(flashcard_ids, cardreview_deck_id):
+def add_cardreviews(user_id):
 
-    for f_id in flashcard_ids:
-        cardreview = Cardreview(self, f_id)
+    user_cardreview_deck = CardreviewDeck.query.filter_by(user_id=user_id).first()
+    print("user deck", user_cardreview_deck.to_dict())
+
+    flashcards = Flashcard.query.all()
+
+    for f in flashcards:
+        cardreview = Cardreview(f, user_cardreview_deck)
         db.session.add(cardreview)
     
     db.session.commit()
+    print("-----")
+    user_cardreview_deck = CardreviewDeck.query.filter_by(user_id=user_id).first()
+
+    print(user_cardreview_deck.get_cardreviews())
+
+    return user_cardreview_deck.get_cardreviews()
 
 def answer(cardreview_id, user_grade):
 
@@ -72,8 +84,8 @@ def answer(cardreview_id, user_grade):
     return cardreview.to_dict()
 
 
-def get_all_cardreviews():
-    cardreviews = Cardreview.query.all()
+def get_deck_cardreviews(deck_id):
+    cardreviews = Cardreview.query.filter_by(cardreview_deck_id=deck_id)
 
     return [c.to_dict() for c in cardreviews]
 

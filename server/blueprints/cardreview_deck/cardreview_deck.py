@@ -15,11 +15,17 @@ class CardreviewDeck(db.Model):
 
 
     def to_dict(self):
+
+        print(self.cardreviews[0].id)
+        
         return {
             "id": self.id,
             "user_id": self.user_id,
-            "cardreviews": [c.to_dict for c in self.cardreviews]
+            "cardreviews": [c.to_dict() for c in self.cardreviews]
         }
+
+    def get_cardreviews(self):
+        return [c.to_dict() for c in self.cardreviews]
 
     
 

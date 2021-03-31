@@ -1,9 +1,9 @@
-import { LOAD_CARDREVIEW_DECK } from "../actionTypes"
+import { LOAD_CARDREVIEW_DECK , LOAD_CARDREVIEWS } from "../actionTypes"
 
 
 
 const initState = {
-    cardReviews: []
+    cardreviews: []
 }
 
 const studyReducer = (state = initState, action) => {
@@ -14,8 +14,15 @@ const studyReducer = (state = initState, action) => {
             return {
                 ...state, 
                 title: action.payload.title,
-                cardReviews: action.payload.cardreviews
+                cardreviews: action.payload.cardreviews
             }   
+        
+        case LOAD_CARDREVIEWS:
+            return {
+                ...state,
+                cardreviews: action.payload
+            }
+        
         default:
             console.log("default auth")
             return state
