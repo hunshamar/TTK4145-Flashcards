@@ -66,6 +66,7 @@ class Peerreview(db.Model):
         # print(f"Creating peer review for '{cardgroup.title}' for user '{user.username}'")
         self.cardgroup_id = cardgroup.id
         self.user_id = user.id
+        
         self.due_date = due_date
         self.reviews_per_student = reviews_per_student
         self.flashcards = cardgroup.get_cards_from_ids(cardids)

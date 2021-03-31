@@ -62,6 +62,7 @@ def add_ratings_to_peerreview(user_id, peerreview_id):
             r = Cardrating(card=c, user=user)
             db.session.add(r)
         
+        
         db.session.commit()
 
         return peerreview.get_ratings()
