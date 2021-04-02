@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import DivHTMLSanatized from "../submodules/divHTMLSanitized";
 import FlashcardStudy from '../submodules/flashcardStudy';
-
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 const useStyles = makeStyles(theme => ({
     dialog: {
@@ -44,12 +44,13 @@ const CheckCard = ({ rating, isDuplicate, editDuplicates }) => {
 
     return (
         <div>
-            <Grid container spacing={2} onClick={() => setChecked(!checked)}>
-                <Grid item xs={6} className={classes.root}>
+            <Grid container spacing={2} >
+                <Grid item xs={9} className={classes.root}>
                     <Typography variant="body2"><b>Card #{rating.index}</b></Typography>
                 </Grid>
 
-                <Grid item xs={6}>
+
+                <Grid item xs={3}>
                     <Checkbox
                         size="small"
                         color="primary"
@@ -57,6 +58,13 @@ const CheckCard = ({ rating, isDuplicate, editDuplicates }) => {
                         onChange={e => setChecked(e.target.checked)}
                     />
                 </Grid>
+                {/* <Grid item xs={3} className={classes.root}>
+                    <Tooltip title="preview card" placement="right">
+                        <IconButton size="small">
+                            <VisibilityIcon fontSize="small" color="secondary" />
+                        </IconButton>
+                    </Tooltip>
+                </Grid> */}
             </Grid>
         </div>
     )
