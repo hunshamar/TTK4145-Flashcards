@@ -63,12 +63,14 @@ def peerreviews_get_all(cgid):
     except Exception as e:
         print(e)
         return(jsonify({"error": str(e)}))       
-        
-@peerreviewBlueprint.route("/api/currentuser/peerreviews/<pid>/ratings", methods=["GET"])
+
+
+@peerreviewBlueprint.route("/api/currentuser/peerreview/<pid>", methods=["GET"])
 @jwt_required
 def get_peerreview(pid):      
     try:
-                
+        
+
         peer_review = get_peer_review(int(pid))
 
         if peer_review.user_id != get_jwt_identity():
@@ -107,20 +109,22 @@ def peerreview_get_flashcards(pid):
         return(jsonify({"error": str(e)}))       
 
 
-@peerreviewBlueprint.route("/api/currentuser/peerreview/<pid>/cardratings", methods=["GET"])
-@jwt_required
-def get_ratings_in_peerreview(pid):      
-    try:        
-        uid = get_jwt_identity()
-        peerreview = Peerreview.query.get(pid)
+# @peerreviewBlueprint.route("/api/currentuser/peerreview/<pid>/cardratings", methods=["GET"])
+# @jwt_required
+# def get_ratings_in_peerreview(pid): 
+
+#     # return jsonify({"cursed": str(pid)})
+
+#     try:        
+#         uid = get_jwt_identity()
+#         peerreview = Peerreview.query.get(int(pid))
 
 
+#         return jsonify(peerreview.get_ratings())
 
-        return jsonify(peerreview.get_ratings())
-
-    except Exception as e:
-        print(e)
-        return(jsonify({"error": str(e)}))   
+#     except Exception as e:
+#         print(e)
+#         return(jsonify({"error": str(e)}))   
 
 ### temp
 @peerreviewBlueprint.route("/api/deleteall", methods=["GET"])

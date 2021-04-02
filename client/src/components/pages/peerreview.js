@@ -39,6 +39,7 @@ const PeerReview = () => {
 
     useEffect(() => {
         dispatch(getUserPeerreviews())
+
         
     }, [dispatch])   
 
@@ -57,6 +58,9 @@ const PeerReview = () => {
             )
         }
     }, [peerreviews])
+
+    
+
 
     return( 
         <PageWrapper>

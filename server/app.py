@@ -63,19 +63,19 @@ def init():
     return jsonify("init")
 
 
-@app.route("/<a>")
-def react_routes(a):
-    return app.send_static_file("index.html")
+# @app.route("/<a>")
+# def react_routes(a):
+#     return app.send_static_file("index.html")
 
-@app.errorhandler(404)
-def not_found(e):
-    return app.send_static_file('index.html')
+# @app.errorhandler(404)
+# def not_found(e):
+#     return app.send_static_file('index.html')
 
 
 
-@app.route("/")
-def react_index():
-    return app.send_static_file("index.html")
+# @app.route("/")
+# def react_index():
+#     return app.send_static_file("index.html")
 
 
 

@@ -118,11 +118,11 @@ def cardgroup_user_flashcardscards(cgid):
 
 ##############################################################################
 
-## temp
-# @flashcardBlueprint.route("/api/initcards", methods=["GET"])
-# def cards_init():
-#     init_cards()
-#     return jsonify({"success": "true"})
+# temp
+@flashcardBlueprint.route("/api/initcards", methods=["GET"])
+def cards_init():
+    init_cards()
+    return jsonify({"success": "true"})
 
 
 # # temp, expand

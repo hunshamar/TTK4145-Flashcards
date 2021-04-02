@@ -44,6 +44,10 @@ class Peerreview(db.Model):
     
 
     def to_dict(self):     
+
+        print("asdfgh")
+        print(len([r for r in self.ratings if r.is_complete()]))
+
         return {
             "id": self.id, 
             "dueDate": self.due_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
@@ -51,7 +55,7 @@ class Peerreview(db.Model):
             "userId": self.user_id,
             "user": User.query.get(self.user_id).to_dict(),
             "reviewsDue": self.reviews_per_student,
-            "reviewsDone": len(self.ratings),
+            "reviewsDone": len([r for r in self.ratings if r.is_complete()]),
         }
 
     def get_flashcards(self):

@@ -8,9 +8,12 @@ from ..user.routes import admin_only
 from time import sleep
 from ..values import DELAY_S
 
-@cardratingBlueprint.route("/api/currentuser/cardratings/<prid>", methods=["GET"])
+
+
+@cardratingBlueprint.route("/api/currentuser/peerreview/<prid>/cardratings", methods=["GET"])
 @jwt_required
 def cardratings_get(prid):
+    print("på an igjen")
     
     try:
         uid = get_jwt_identity()
@@ -22,33 +25,64 @@ def cardratings_get(prid):
 
 
 
-# @cardratingBlueprint.route("/api/currentuser/cardrating/<cid>", methods=["POST"])
-# @jwt_required
-# def cardrating_add(cid):       
-#     sleep(1)
-#     try:        
-#         difficulty_rating = request.json["difficulty"]
-#         quality_rating = request.json["quality"]
-#         duplicate_card_ids = request.json["duplicateCardIds"]
-#         print("her")
-#         print(duplicate_card_ids)
+@cardratingBlueprint.route("/api/currentuser/cardrating/<rid>/difficulty", methods=["PATCH"])
+@jwt_required
+def cardrating_save_difficulty(rid):   
+    try:        
+        difficulty_rating = request.json["difficulty"]
 
-#         print(difficulty_rating, quality_rating)
+        print("dif", difficulty_rating)
 
-#         cid = int(request.json["cardId"])
-
-#         cid = int(cid)
-        
-#         print("cid", cid)
-#         uid = uid = get_jwt_identity()
+        uid = uid = get_jwt_identity()
 
 
-#         rating = add_rating(uid, cid, difficulty_rating , quality_rating, duplicate_card_ids)
-#         return jsonify(rating)
+        rating = save_difficulty_rating(uid, rid, difficulty_rating)
+        return jsonify(rating.to_dict())
 
-#     except Exception as e:
-#         print(e)
-#         return(jsonify({"error": str(e)}))       
+    except Exception as e:
+        print(e)
+        return(jsonify({"error": str(e)}))       
+
+@cardratingBlueprint.route("/api/currentuser/cardrating/<rid>/quality", methods=["PATCH"])
+@jwt_required
+def cardrating_save_quality(rid):       
+    try:        
+        quality_rating = request.json["quality"]
+
+        print("qq", quality_rating)
+
+        uid = uid = get_jwt_identity()
+
+
+        rating = save_quality_rating(uid, rid, quality_rating)
+        return jsonify(rating.to_dict())
+
+    except Exception as e:
+        print(e)
+        return(jsonify({"error": str(e)}))       
+
+
+@cardratingBlueprint.route("/api/currentuser/cardrating/<rid>", methods=["PUT"])
+@jwt_required
+def cardrating_add(rid):      
+    try:        
+        difficulty_rating = request.json["difficulty"]
+        quality_rating = request.json["quality"]
+        # duplicate_card_ids = request.json["duplicateCardIds"]
+        # print("her")
+        # print(duplicate_card_ids)
+
+        print(difficulty_rating, quality_rating)
+
+        uid = uid = get_jwt_identity()
+
+
+        rating = save_rating(uid, rid, difficulty_rating , quality_rating)
+        return jsonify(rating)
+
+    except Exception as e:
+        print(e)
+        return(jsonify({"error": str(e)}))       
 
 @cardratingBlueprint.route("/api/currentuser/cardrating/<cid>", methods=["GET"])
 @jwt_required
@@ -85,10 +119,28 @@ def cardrating_delete(cid):
 
 ## remove
 @cardratingBlueprint.route("/api/cardratings")
-@jwt_required
-def card():    
+# @jwt_required
+def ratings():    
     sleep(DELAY_S)
     return jsonify(get_all_ratings())
+
+@cardratingBlueprint.route("/api/currentuser/cardrating/<rid>/duplicates", methods=["PATCH"])
+@jwt_required
+def cardrating_add_duplicte(rid):    
+    sleep(DELAY_S)
+
+    uid = get_jwt_identity()
+
+
+    duplicates = request.json["duplicates"]
+    print(duplicates)
+
+    edit_duplicates(uid, rid, duplicates)
+
+
+    return jsonify(get_all_ratings())
+
+
 
 
 

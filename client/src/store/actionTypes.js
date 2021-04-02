@@ -1,18 +1,18 @@
 
 
 /* alert actions */
-export const SET_LOADING       = "SET_LOADING"
-export const CLEAR_LOADING       = "CLEAR_LOADING"
+export const SET_LOADING = "SET_LOADING"
+export const CLEAR_LOADING = "CLEAR_LOADING"
 
 
-/* Loading actions */ 
-export const SET_ALERT       = "SET_ALERT"
-export const CLEAR_ALERT       = "CLEAR_ALERT"
+/* Loading actions */
+export const SET_ALERT = "SET_ALERT"
+export const CLEAR_ALERT = "CLEAR_ALERT"
 
 /* Authentication actions */
 export const LOG_IN_CALLBACK = "LOG_IN_CALLBACK"
-export const LOG_OUT         = "LOG_OUT"
-export const LOG_IN_STATUS   = "LOG_IN_STATUS"
+export const LOG_OUT = "LOG_OUT"
+export const LOG_IN_STATUS = "LOG_IN_STATUS"
 
 /* User actions */
 export const GET_USERS = "GET_USERS"
@@ -23,7 +23,7 @@ export const GET_DELIVERY_STATUS = "GET_DELIVERY_STATUS"
 export const CREATE_CARDGROUP = "CREATE_CARDGROUP"
 export const CREATE_CARDGROUP_ERROR = "CREATE_CARDGROUP_ERROR"
 export const LOAD_CARDGROUPS = "LOAD_CARDGROUPS"
-export const LOAD_CARDGROUP  = "LOAD_CARDGROUP"
+export const LOAD_CARDGROUP = "LOAD_CARDGROUP"
 export const DELETE_CARDGROUP = "DELETE_CARDGROUP"
 export const DELETE_CARDGROUP_ERROR = "DELETE_CARDGROUP_ERROR"
 export const EDIT_CARDGROUP = "EDIT_CARDGROUP"
@@ -45,6 +45,8 @@ export const LOAD_PEERREVIEWS = "LOAD_PEERREVIEWS"
 /* Rating actions */
 export const CREATE_RATING = "CREATE_RATING"
 export const LOAD_RATINGS = "LOAD_RATINGS"
+export const UPDATE_QUALITY_RATING = "UPDUPDATE_QUALITY_RATING"
+export const UPDATE_DIFFICULTY_RATING = "UPDATE_DIFFICULTY_RATING"
 
 /* Study Actions */
 export const LOAD_CARDREVIEW_DECK = "LOAD_CARDREVIEW_DECK"

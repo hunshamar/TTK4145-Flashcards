@@ -87,11 +87,12 @@ def init_cards():
     
 
 
-    # for i in range(4, 100):
-    #     username = "user"+str(i)
-    #     email = "user"+str(i)
-    #     name = "name"+str(i)
-    #     add_user(username, email, name)
+    for i in range(8):
+        username = "user"+str(i)
+        email = "user"+str(i)
+        name = "name"+str(i)
+        if not len(User.query.filter_by(username=username).all()):
+            add_user(username, email, name)
     
     users = User.query.all()
     
