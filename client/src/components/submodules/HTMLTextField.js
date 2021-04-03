@@ -1,17 +1,19 @@
-import { useRef } from "react"
-import { TextField } from '@material-ui/core';
+import { useRef, useState } from "react"
+import { Button, Checkbox, FormControl, FormControlLabel, IconButton, InputAdornment, TextField, Tooltip } from '@material-ui/core';
+import KeyboardTabIcon from '@material-ui/icons/KeyboardTab';
+import FormatIndentIncreaseIcon from '@material-ui/icons/FormatIndentIncrease';
+
+import RotateLeftIcon from '@material-ui/icons/RotateLeft';
+const HTMLTextField = ({ onChange, value, useIndent, inputProps, fullWidth, required, multiline, rows, label }) => {
 
 
-
-const HTMLTextField = ({onChange, value, InputProps, fullWidth, required, multiline, rows, label}) =>{
-
-
+    const [indent, setIndent] = useState(useIndent)
 
     const inputRef = useRef()
 
     const addTabs = e => {
-        console.log(e.key)
-        if (e.key === "Tab"){
+        console.log(e.shiftKey)
+        if (e.key === "Tab") {
             e.preventDefault()
             console.log(inputRef)
 
@@ -19,41 +21,77 @@ const HTMLTextField = ({onChange, value, InputProps, fullWidth, required, multil
 
             const tab = "\t"
 
-            const newValue =
-              value.substring(0, selectionStart) +
-              tab+
-              value.substring(selectionEnd)
+            if (e.shiftKey) {
 
-            // setHTMLString(newHTMLString)
-            
-            inputRef.current.value = newValue
-            onChange(newValue)
 
-            inputRef.current.selectionStart = inputRef.current.selectionEnd = selectionStart+tab.length
+
+                if (value[selectionStart - 1] == "\t") {
+                    console.log("true yes")
+                    let newValue = value.substring(0, selectionStart - 1) + value.substring(selectionEnd)
+                    inputRef.current.value = newValue
+                    onChange(newValue)
+
+                }
+
+                inputRef.current.selectionStart = inputRef.current.selectionEnd = selectionStart - tab.length
+
+
+            }
+            else {
+                const newValue =
+
+                    value.substring(0, selectionStart) +
+                    tab +
+                    value.substring(selectionEnd)
+
+                // setHTMLString(newHTMLString)
+
+                inputRef.current.value = newValue
+                onChange(newValue)
+
+                inputRef.current.selectionStart = inputRef.current.selectionEnd = selectionStart + tab.length
+            }
         }
     }
 
-    return(
+    return (
         <TextField
-        // onKeyDown={addTabs}
-        inputRef={inputRef}
+            // onKeyDown={addTabs}
+            inputRef={inputRef}
 
-        onKeyDown={addTabs}
-    
-        onChange={e => onChange(e.target.value)} 
-        fullWidth={fullWidth}
-        required={required}
-        multiline={multiline}
-        rows={rows}
-        label={label}
-        variant="outlined"
-        color="secondary"
-        value={value}
-        InputProps={InputProps}
-        
+            onKeyDown={indent ? addTabs : ""}
+
+            onChange={e => onChange(e.target.value)}
+            fullWidth={fullWidth}
+            required={required}
+            multiline={multiline}
+            rows={rows}
+            label={label}
+            variant="outlined"
+            color="secondary"
+            value={value}
+            InputProps={{
+                endAdornment: <InputAdornment position="end" style={{ margin: "auto 0 15px" }}>
+                    <div>
+                        <Tooltip title={indent ? "disable tab indent" : "enable tab indent"}>
+                            <IconButton onClick={() => setIndent(!indent)} tabIndex="-1">
+                                {indent ?
+                                    <FormatIndentIncreaseIcon />
+                                    :
+                                    <KeyboardTabIcon />
+                                }
+                            </IconButton>
+                        </Tooltip>
+
+                    </div>
+                </InputAdornment >,
+                ...inputProps
+            }}
+
+
         />
 
-    )  
+    )
 
 
 }

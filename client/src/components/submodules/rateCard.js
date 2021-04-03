@@ -228,7 +228,7 @@ const RateCard = ({ rating, save, previewCard, cardIdToIndex }) => {
                 </Grid>
 
                 <Grid item xs={9} >
-                    <Typography variant="caption" color="textSecondary" >{saveDate ? "Last saved " + saveDate : ""} <Loading style={{ textAlign: "left", display: "inline" }} size="12px" /> </Typography>
+                    <Typography variant="caption" color="textSecondary" >{saveDate ? "Last saved " + saveDate : ""} <Loading style={{ textAlign: "left", display: "inline   " }} size="12px" /> </Typography>
                 </Grid>
                 <Grid item xs={3} >
                     <Button fullWidth variant="outlined" color="secondary" onClick={() => previewCard(rating.card)} endIcon={<VisibilityIcon />}>

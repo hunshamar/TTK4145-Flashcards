@@ -9,7 +9,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import Alerter from './components/notifications/alerter';
 import Footer from "./components/layout/footer";
 
-console.log = function () { };
+// console.log = function () { };
 
 const App = () => {
 

@@ -16,7 +16,6 @@ class CardreviewDeck(db.Model):
 
     def to_dict(self):
 
-        print(self.cardreviews[0].id)
         
         return {
             "id": self.id,
@@ -44,6 +43,8 @@ def get_user_cardreview_deck(user_id):
     if not len(cardreview_deck):
         return create_cardreview_deck(user_id).to_dict()
     else:
+
+        cardreview_deck =  CardreviewDeck.query.filter_by(user_id=user_id).all()    
         return cardreview_deck[0].to_dict()
         
 

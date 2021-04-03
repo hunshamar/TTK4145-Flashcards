@@ -29,13 +29,20 @@ class Flashcard(db.Model):
             self.average_rating = None
         else: 
             for rating in self.ratings:
-                sum += rating.quality_rating
+                if rating.is_complete():
+                    sum += rating.quality_rating
             average = sum / len(self.ratings)
             print(f"rated {len(self.ratings)}, sum={sum}, return av ={average}")
             self.average_rating = int(average)
 
 
-    def to_dict(self):            
+    def to_dict(self):        
+
+        if not self.average_rating and Cardgroup.query.get(self.cardgroup_id).due_date < datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None):
+            self.calculate_average_rating() 
+
+        print("did it work", self.average_rating)
+
         return {
             "id": self.id, 
             "front": self.front,
