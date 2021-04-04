@@ -20,6 +20,14 @@ class Cardgroup(db.Model):
 
     peerreview = db.relationship("Peerreview", cascade="all, delete-orphan", backref="cardgroup")
 
+    def peer_review_due_date_ended(self):
+        
+        if not len(self.peerreview):
+            return False
+        else:
+            return self.peerreview[0].due_date < datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+
+
     def get_flashcards(self):
         return [f.to_dict() for f in self.flashcards]
 

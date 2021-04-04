@@ -12,6 +12,9 @@ const Study = () => {
     const redirectToSpacedRepetitionPage = () => {
         history.push("/spaced-repetition")
     }
+    const redirectToUserDecks = () => {
+        history.push("/user-decks")
+    }
 
 
 
@@ -38,6 +41,9 @@ const Study = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <Button variant="contained" color="primary" onClick={redirectToSpacedRepetitionPage}>Spaced Repetition</Button>
+                </Grid>
+                <Grid item xs={12}>
+                    <Button variant="contained" color="primary" onClick={redirectToUserDecks}>User Decks</Button>
                 </Grid>
             </Grid>
         </PageWrapper>

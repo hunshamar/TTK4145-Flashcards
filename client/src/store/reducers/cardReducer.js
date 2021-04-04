@@ -1,4 +1,4 @@
-import { CREATE_CARD, CREATE_CARD_ERROR, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARD, LOAD_CARDS,CLEAR_CARDS } from "../actionTypes"
+import { CREATE_CARD, CREATE_CARD_ERROR, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARD, LOAD_CARDS,CLEAR_CARDS, UPDATE_CARDS } from "../actionTypes"
 
 const initState = {
     cards: [
@@ -43,6 +43,21 @@ const cardReducer = (state = initState, action) => {
                 ...state, 
                 cards: action.payload,
             }
+        case UPDATE_CARDS:
+            // Update reducer with values from payload. 
+            console.log("got new cards, add and or replace form old cards", action.payload)
+            return {
+                ...state,
+                cards: state.cards.map(card => {
+                    if (action.payload.find(c => c.id === card.id)){
+                        return action.payload.find(c => c.id === card.id)
+                    }
+                    else{
+                        return card
+                    }
+                })
+            }
+
         case DELETE_CARD:
             console.log("deleting dem cards")
             console.log(state.cards)

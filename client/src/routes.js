@@ -24,6 +24,7 @@ import Home from './components/pages/home';
 import HTMLGuide from "./components/pages/HTMLGuide";
 import AllPeerreviews from "./components/adminpages/allPeerreviews";
 import SpacedRepetition from "./components/pages/spacedRepetition";
+import UserDecks from "./components/pages/userDecks"
 
 
 
@@ -79,6 +80,7 @@ const Routes = () => {
                     <Route path="/peerreview/:id" exact component={PeerReviewGroup}/>
                     <Route path="/study" exact component={Study}/>
                     <Route path="/spaced-repetition" exact component={SpacedRepetition}/>
+                    <Route path="/user-decks" exact component={UserDecks}/>
                     <Route path="/about" exact component={ FML} />
                     <Route path="/userprofile/:username" exact component={UserProfile} />
                     {isAdmin ? 

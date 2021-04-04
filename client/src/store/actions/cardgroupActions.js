@@ -88,6 +88,32 @@ export const editCardgroup = (cardgroup) => async( dispatch, getState) => {
 };
 
 
+
+export const loadCardgroupsInCollectiveDeck = () => async (dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})
+    await refreshTokens()
+
+
+    await axios.get("/api/collective-deck/cardgroups")
+    .then(res => {
+        if(res.data.error){
+            console.log("error")
+            throw new Error(res.data.error)
+        }
+        const cardgroups = res.data
+        console.log("mah cardgroups")
+        
+        console.log(cardgroups)
+        dispatch({type: LOAD_CARDGROUPS, payload: cardgroups})
+    })
+    .catch(err => console.log(err))
+
+    dispatch({type: SET_LOADING, payload: false})
+}
+
+
+
+
 export const loadCardgroups = () => async (dispatch, getState) => {
     dispatch({type: SET_LOADING, payload: true})
     await refreshTokens()

@@ -52,8 +52,8 @@ const CreateCardGroup = ({ onClose, selectedValue, open, toeditCardgroup }) => {
             setNumberOfCards(toeditCardgroup.numberOfCardsDue)
             let d = new Date(toeditCardgroup.dueDate)
             setSelectedDate(d)
-
-            setTime( d.getHours()+":"+d.getMinutes() )
+            console.log("æ",d.getHours()+":"+ String(d.getMinutes()).padStart(2, "0"))            
+            setTime( d.getHours()+":"+ String(d.getMinutes()).padStart(2, "0") )
 
         }
     }, [open])

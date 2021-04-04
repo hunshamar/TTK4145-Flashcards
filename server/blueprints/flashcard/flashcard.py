@@ -3,7 +3,10 @@ from db import db
 #import parents
 from ..user.user import User, add_user
 from ..cardgroup.cardgroup import Cardgroup, get_cardgroup
+# from  ..collective_deck.collective_deck import get_collective_deck
 import datetime
+import statistics
+
 
 
 class Flashcard(db.Model):
@@ -13,14 +16,18 @@ class Flashcard(db.Model):
     front = db.Column(db.String(2048))
     back = db.Column(db.String(2048))
 
+
+    average_rating = db.Column(db.Float)
+    average_difficulty = db.Column(db.Float)
+
     # children
     ratings = db.relationship("Cardrating", cascade="all, delete-orphan", backref="flashcard")
 
-    average_rating = db.Column(db.Integer)
 
     # Parents
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     cardgroup_id = db.Column(db.Integer, db.ForeignKey("cardgroup.id"))
+    collective_deck_id = db.Column(db.Integer, db.ForeignKey("collective_deck.id"))
 
     def calculate_average_rating(self):
         sum = 0
@@ -28,20 +35,27 @@ class Flashcard(db.Model):
             print("no ratings on card")
             self.average_rating = None
         else: 
-            for rating in self.ratings:
-                if rating.is_complete():
-                    sum += rating.quality_rating
-            average = sum / len(self.ratings)
-            print(f"rated {len(self.ratings)}, sum={sum}, return av ={average}")
-            self.average_rating = int(average)
+            print("rat on card")
+            qr = [rating.quality_rating for rating in self.ratings if rating.is_complete()]
+            d = [rating.difficulty for rating in self.ratings if rating.is_complete()]
+            
+            self.average_rating = statistics.mean(qr)
+            self.average_difficulty = statistics.mean(d)
+            print("jahm")
+            db.session.commit()
 
+    def peerreview_due_date_ended(self):
+        return Cardgroup.query.get(self.cardgroup_id).peer_review_due_date_ended()      
 
     def to_dict(self):        
 
-        if not self.average_rating and Cardgroup.query.get(self.cardgroup_id).due_date < datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None):
-            self.calculate_average_rating() 
+        if not self.average_rating and self.peerreview_due_date_ended(): 
+            print("ended", self.id, self.average_rating)
+            self.calculate_average_rating()
+        else:
+            print("not ended", self.id)
 
-        print("did it work", self.average_rating)
+        n_ratings = len([rating for rating in self.ratings if rating.is_complete()])
 
         return {
             "id": self.id, 
@@ -49,8 +63,10 @@ class Flashcard(db.Model):
             "back": self.back,
             "user": User.query.get(self.user_id).to_dict(),
             "cardgroup": self.cardgroup_id,
-            "nRatings": len(self.ratings),
+            "nRatings": n_ratings,
             "averageRating": self.average_rating,
+            "averageDifficulty": self.average_difficulty,
+            "collectiveDeckId": self.collective_deck_id
         }
 
     def public_to_dict(self):

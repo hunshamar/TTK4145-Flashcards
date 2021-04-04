@@ -12,10 +12,12 @@ const HTMLTextField = ({ onChange, value, useIndent, inputProps, fullWidth, requ
     const inputRef = useRef()
 
     const addTabs = e => {
-        console.log(e.shiftKey)
+        if (!indent){
+            return;
+        }
+
         if (e.key === "Tab") {
             e.preventDefault()
-            console.log(inputRef)
 
             const { selectionStart, selectionEnd } = e.target
 
@@ -26,7 +28,6 @@ const HTMLTextField = ({ onChange, value, useIndent, inputProps, fullWidth, requ
 
 
                 if (value[selectionStart - 1] == "\t") {
-                    console.log("true yes")
                     let newValue = value.substring(0, selectionStart - 1) + value.substring(selectionEnd)
                     inputRef.current.value = newValue
                     onChange(newValue)
@@ -54,12 +55,14 @@ const HTMLTextField = ({ onChange, value, useIndent, inputProps, fullWidth, requ
         }
     }
 
+    
+
     return (
         <TextField
             // onKeyDown={addTabs}
             inputRef={inputRef}
 
-            onKeyDown={indent ? addTabs : ""}
+            onKeyDown={addTabs}
 
             onChange={e => onChange(e.target.value)}
             fullWidth={fullWidth}

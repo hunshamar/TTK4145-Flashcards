@@ -97,8 +97,7 @@ const CreatePeerreview = (props) => {
       <Dialog onClose={handleClose} 
         className={classes.dialog}
 
-       open={open} style={{ margin: "100px"}}>
-          <ConfirmDialog></ConfirmDialog>
+       open={open} >
             
             <div style={{margin: "40px 40px"}}> 
 

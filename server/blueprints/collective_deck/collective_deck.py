@@ -1,0 +1,104 @@
+from db import db
+import datetime as datetime
+
+# from ..flashcard.flashcard import Flashcard
+
+from ..flashcard.flashcard import Flashcard
+from ..cardgroup.cardgroup import Cardgroup
+
+class CollectiveDeck(db.Model):
+    __tablename__ = "collective_deck"
+
+    # title = db.Column(db.String(256))
+    id = db.Column(db.Integer, primary_key=True)
+    flashcards = db.relationship("Flashcard", backref="collective_deck")
+
+    def get_cardgroups(self):
+        print("find")
+        cardgroups = {Cardgroup.query.filter_by(id = f.cardgroup_id).first() for f in self.flashcards}
+        return cardgroups
+
+    def to_dict(self):
+
+        
+        return {
+            "id": self.id,
+            "flashcards": [f.to_dict() for f in self.flashcards]
+        }
+
+
+def get_cardgroups_in_collective_deck():
+    collective_deck = get_collective_deck()
+    cardgroups = collective_deck.get_cardgroups()
+    return [c.to_dict() for c in cardgroups]
+
+def create_collective_deck():
+
+    collective_deck = CollectiveDeck()
+    db.session.add(collective_deck)
+    db.session.commit()
+    return collective_deck
+
+def get_collective_deck_admin():
+    collective_decks =  CollectiveDeck.query.all()
+
+    if len(collective_decks) > 1:
+        raise Exception("More than one collective deck found")
+    if not len(collective_decks):
+        return create_collective_deck()
+    else:
+        return collective_decks[0]
+    
+def get_collective_deck():
+    collective_decks =  CollectiveDeck.query.all()
+    if len(collective_decks) > 1:
+        raise Exception("More than one collective deck found")
+    if not len(collective_decks):
+        raise Exception("No collective deck found")
+    else:
+        return collective_decks[0]
+
+def add_to_collective_deck(flashcards):
+
+    got_flashcards = [Flashcard.query.get(f["id"]) for f in flashcards]
+    if len(got_flashcards) != len(flashcards):
+        raise Exception("Error. Could not get all falshcards")
+
+    collective_deck = get_collective_deck_admin()
+
+    changed_cards = []
+
+    for f in got_flashcards:
+        if not f.peerreview_due_date_ended():
+            raise Exception("One or more of selected cards. Peer review due date not ended")
+
+        if f not in collective_deck.flashcards:
+            collective_deck.flashcards.append(f)
+            changed_cards.append(f)
+
+
+    db.session.commit()
+
+    return [f.to_dict() for f in changed_cards]
+
+def remove_from_collective_deck(flashcards):
+
+    got_flashcards = [Flashcard.query.get(f["id"]) for f in flashcards]
+    if len(got_flashcards) != len(flashcards):
+        raise Exception("Error. Could not get all falshcards")
+
+    collective_deck = get_collective_deck()
+    changed_cards = []
+
+    for f in got_flashcards:
+        if not f.peerreview_due_date_ended():
+            raise Exception("One or more of selected cards. Peer review due date not ended")
+
+        if f in collective_deck.flashcards:
+            collective_deck.flashcards.remove(f)
+            changed_cards.append(f)
+
+    db.session.commit()
+
+    return [f.to_dict() for f in changed_cards]
+

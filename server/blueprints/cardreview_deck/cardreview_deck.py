@@ -10,15 +10,15 @@ class CardreviewDeck(db.Model):
 
     # title = db.Column(db.String(256))
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(256))
     cardreviews = db.relationship("Cardreview", cascade="all, delete", backref="cardreview_deck")
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
 
     def to_dict(self):
-
-        
         return {
             "id": self.id,
+            "title": self.title,
             "user_id": self.user_id,
             "cardreviews": [c.to_dict() for c in self.cardreviews]
         }
@@ -26,11 +26,11 @@ class CardreviewDeck(db.Model):
     def get_cardreviews(self):
         return [c.to_dict() for c in self.cardreviews]
 
-    
 
-def create_cardreview_deck(user_id):
 
-    cardreview_deck = CardreviewDeck(user_id=user_id)
+def create_cardreview_deck(title, user_id):
+
+    cardreview_deck = CardreviewDeck(title=title, user_id=user_id)
     db.session.add(cardreview_deck)
     db.session.commit()
     return cardreview_deck

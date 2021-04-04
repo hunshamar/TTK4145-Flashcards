@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { SET_ALERT, CREATE_CARD, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARDS, LOAD_CARD, SET_LOADING, CLEAR_CARDS } from '../actionTypes';
+import { SET_ALERT, CREATE_CARD, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARDS, LOAD_CARD, UPDATE_CARDS, SET_LOADING, CLEAR_CARDS } from '../actionTypes';
 import { refreshTokens } from './authActions';
 
 export const addCard = (card) => async( dispatch, getState) => {
@@ -222,6 +222,63 @@ export const deleteCard = (card) => async (dispatch, getState) => {
 
 }
 
+export const addCardsToCollectiveDeck = (flashcards) => async( dispatch, getState) => {
+    await refreshTokens()
+    axios.post("/api/admin/collective-deck/flashcards", {
+        flashcards
+        }, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("user_token")
+            }
+        })
+        .then(res => {
+            console.log("returned hhh")
+            console.log(res.data)
+            if(res.data.error){
+                console.log("error")
+                throw new Error(res.data.error)
+            }
+
+            const updatedCards = res.data
+            dispatch({type: UPDATE_CARDS, payload: updatedCards})
+            let alert = {severity: updatedCards.length ? "success" : "info", text: updatedCards.length+" cards added to collective deck "}
+            dispatch({type: SET_ALERT, payload: alert})
+        })
+        .catch(err => {
+            console.log(err.toString())
+            let alert = {severity: "error", text: err.toString()}
+            dispatch({type: SET_ALERT, payload: alert})
+        })    
+};
+
+export const removeCardsFromCollectiveDeck = (flashcards) => async( dispatch, getState) => {
+    await refreshTokens()
+    axios.delete("/api/admin/collective-deck/flashcards", 
+         {
+             data: {flashcards},
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("user_token")
+            }
+        })
+        .then(res => {
+            console.log("returned hhh")
+            console.log(res.data)
+            if(res.data.error){
+                console.log("error")
+                throw new Error(res.data.error)
+            }
+
+            const updatedCards = res.data
+            dispatch({type: UPDATE_CARDS, payload: updatedCards})
+            let alert = {severity: updatedCards.length ? "success" : "info", text: updatedCards.length+" cards removed from collective deck "}
+            dispatch({type: SET_ALERT, payload: alert})
+        })
+        .catch(err => {
+            console.log(err.toString())
+            let alert = {severity: "error", text: err.toString()}
+            dispatch({type: SET_ALERT, payload: alert})
+        })    
+};
 
 
 

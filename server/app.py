@@ -7,6 +7,8 @@ from blueprints.cardrating.routes import cardratingBlueprint
 from blueprints.peerreview.routes import peerreviewBlueprint
 from blueprints.cardreview_deck.routes import cardreviewDeckBlueprint
 from blueprints.cardreview.routes import cardreviewBlueprint
+from blueprints.collective_deck.routes import collectiveDeckBlueprint
+from blueprints.user_flashcard_deck.routes import userFlashcardDeckBlueprint
 
 from blueprints.user.user import User
 from db import db
@@ -34,7 +36,7 @@ manager.add_command("db", MigrateCommand)
 if os.environ.get("FLASK_DEBUG"):
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.db"
 else:
-    app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://bfdilpajpjblic:97f2ddb3205fcfaa87e8a1fe5390063eb547a3386c6e4a1c647975f76ca894a5@ec2-54-155-208-5.eu-west-1.compute.amazonaws.com:5432/dctjtuqf2vfpip"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("POSTGRES_URI")
 
 
 
@@ -56,6 +58,8 @@ app.register_blueprint(cardratingBlueprint)
 app.register_blueprint(peerreviewBlueprint)
 app.register_blueprint(cardreviewDeckBlueprint)
 app.register_blueprint(cardreviewBlueprint)
+app.register_blueprint(collectiveDeckBlueprint)
+app.register_blueprint(userFlashcardDeckBlueprint)
 
 @app.route("/init")
 def init():   

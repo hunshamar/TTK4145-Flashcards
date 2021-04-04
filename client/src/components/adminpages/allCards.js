@@ -2,17 +2,17 @@ import { PageWrapper } from "../../static/wrappers"
 import { useDispatch, useSelector } from 'react-redux';
 import userReducer from '../../store/reducers/userReducer';
 import { useEffect } from 'react';
-import {  getUsersStatus } from '../../store/actions/userActions';
+import { getUsersStatus } from '../../store/actions/userActions';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import CardgroupSelect from '../submodules/cardgroupselect';
 import { useState } from 'react';
-import { Typography } from "@material-ui/core";
-import { loadCardgroupFlashcards } from "../../store/actions/cardActions";
+import { Button, Grid, Typography } from "@material-ui/core";
+import { addCardsToCollectiveDeck, loadCardgroupFlashcards, removeCardsFromCollectiveDeck } from "../../store/actions/cardActions";
 import CardDialog from "../dialogs/cardDialog";
 import Loading from "../notifications/loading";
 
 
- const AllCards = () => {
+const AllCards = () => {
 
     const dispatch = useDispatch()
     const cards = useSelector(state => state.cardReducer.cards)
@@ -25,59 +25,118 @@ import Loading from "../notifications/loading";
 
 
     useEffect(() => {
-        dispatch(loadCardgroupFlashcards(cardGroupId)) 
+        dispatch(loadCardgroupFlashcards(cardGroupId))
         console.log("status")
-        
+
     }, [dispatch, cardGroupId])
-    
+
     console.log("cards")
     console.log(cards)
 
     const columns = [
         { field: 'username', headerName: 'Username', width: 130 },
-        { field: 'front', headerName: 'Card Front', width: 130 },
-        { field: 'back', headerName: 'Card Back', width: 130 },
-        { field: 'nRatings', headerName: 'N Ratings', width: 130 },
-        { field: 'averageRating', headerName: 'Avg Rating', width: 130 },
-    ]      
+        { field: 'front', headerName: 'Front', width: 100 },
+        { field: 'back', headerName: 'Back', width: 100 },
+        { field: 'nRatings', headerName: 'n_ratings', width: 120 },
+        { field: 'averageRating', headerName: 'Avg rating', width: 90 },
+        { field: 'averageDifficulty', headerName: 'Avg difficulty', width: 90 },
+        { field: 'collectiveDeckId', headerName: 'Collective Deck', width: 110 },
+    ]
 
-    let rows = cards.map(c => (
-        {
-            id: c.id,
-            name: c.user ? c.user.name: "",
-            username: c.user ? c.user.username: "",
-            front: c.front,
-            back: c.back,
-            nRatings: c.nRatings,
-            averageRating: c.averageRating
-        }
-    ))
-    
-    const handleClick = e => {
+    let rows = []
+    if (cards.length){
+        rows = cards.map(c => (
+            {
+                id: c.id,
+                name: c.user ? c.user.name : "",
+                username: c.user ? c.user.username : "",
+                front: c.front,
+                back: c.back,
+                nRatings: c.nRatings,
+                averageRating: c.averageRating,
+                averageDifficulty: c.averageDifficulty,
+                collectiveDeckId: c.collectiveDeckId
+            }
+        ))
+    }
+
+    const handleClick = (e, a) => {
+        // e.preventdefault()
+        a.preventDefault();
+
         console.log("print", e.row)
         setSelectedCard(e.row)
         setOpenCard(true)
     }
-    
+
+    const addToCollectiveDeck = () => {
+
+        const cardIdArr =  (selectionModel.map(id => {
+            return ({id: id})
+        }))
+        dispatch(addCardsToCollectiveDeck(cardIdArr))
+        setSelectionModel([])
+
+    }
+
+    const removeFromCollectiveDeck = () => {
+        const cardIdArr =  (selectionModel.map(id => {
+            return ({id: id})
+        }))
+        dispatch(removeCardsFromCollectiveDeck(cardIdArr))
+        setSelectionModel([])
+
+    }
+
+    const [selectionModel, setSelectionModel ] = useState([])
+
+    console.log("seal", selectionModel)
+
     console.log("cgid", cardGroupId)
     return (
-        <PageWrapper>       
+        <PageWrapper>
             <CardDialog open={openCard} onClose={() => setOpenCard(false)} card={selectedCard} />
-            <div style={{marginBottom: "15px"}} >
-                <CardgroupSelect onChange={setCardGroupId} showFirst />
-            </div>
 
-                <div style={{ height: "400px", width: '100%' }}>
 
-                {loading ? <Loading /> : 
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <CardgroupSelect onChange={setCardGroupId} showFirst />
+                </Grid>
+                <Grid item xs={6} >
+                    <Button fullWidth variant="contained" color="secondary" onClick={removeFromCollectiveDeck}>Remove {selectionModel.length} Cards from the Collective Deck</Button>
+                </Grid>
+                <Grid item xs={6}>
+                    <Button fullWidth variant="contained" color="primary" onClick={addToCollectiveDeck}>Add {selectionModel.length} Selected Cards to Collective Deck</Button>
+                </Grid>
+                <Grid item xs={12}>
+                    {loading ? <Loading /> :
 
-                cards.length ? 
-                <DataGrid 
-                    onCellClick={e => handleClick(e)} rows={rows} columns={columns} pageSize={10}                   
-                />
-                : "No flashcards for this cardgroup"
-                }
-            </div>
+                    cards.length ?
+                        <DataGrid
+                            checkboxSelection
+                            pageSize={5}
+                            autoHeight
+                            disableSelectionOnClick={true}
+                            rowsPerPageOptions={[5, 10, 20, 50, 100, 500, 1000]}
+                            onRowClick={handleClick}
+                            rows={rows} columns={columns}
+                            selectionModel={selectionModel}
+
+                            onSelectionModelChange={(newSelection) => {
+                                setSelectionModel(newSelection.selectionModel);
+                            }
+                            }
+
+                        />
+                        : "No flashcards for this cardgroup found"
+                    }
+
+                </Grid>
+            </Grid>
+
+
+
+            {/* </div> */}
         </PageWrapper>
     )
 }
@@ -96,7 +155,7 @@ export default AllCards
 // const AllCards = props => {
 
 //     const cards = useSelector(state => state.cardReducer.cards)
-    
+
 //     const dispatch = useDispatch();
 
 //     useEffect(() => {
