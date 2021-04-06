@@ -53,7 +53,7 @@ const CreateCardGroup = ({ onClose, selectedValue, open, toeditCardgroup }) => {
             let d = new Date(toeditCardgroup.dueDate)
             setSelectedDate(d)
             console.log("æ",d.getHours()+":"+ String(d.getMinutes()).padStart(2, "0"))            
-            setTime( d.getHours()+":"+ String(d.getMinutes()).padStart(2, "0") )
+            setTime( String(d.getHours()).padStart(2, "0")+":"+ String(d.getMinutes()).padStart(2, "0") )
 
         }
     }, [open])

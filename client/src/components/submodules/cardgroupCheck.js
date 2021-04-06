@@ -1,11 +1,16 @@
-import { Checkbox, FormControlLabel, FormGroup } from "@material-ui/core"
+import { Checkbox, FormControlLabel, FormGroup, makeStyles } from "@material-ui/core"
 
 
-
+const useStyles = makeStyles({
+    input: {
+      height: "20px",
+      boxSizing: "border-box" // <-- add this
+    }
+  });
 
 
 const CardgroupCheck = ({cardgroups, checkedCardgroups, setCheckedCardgroups}) => {
-
+    const classes=useStyles()
 
     console.log("checkededdd", checkedCardgroups)
     console.log(cardgroups)
@@ -26,11 +31,10 @@ const CardgroupCheck = ({cardgroups, checkedCardgroups, setCheckedCardgroups}) =
 
     return (
         <div>
-            checked {JSON.stringify(checkedCardgroups)}
             <FormGroup>
             {cardgroups.map((cardgroup,i) => (
                     <FormControlLabel key={cardgroup.id}
-                    control={<Checkbox checked={checkedCardgroups.includes(cardgroup.id)} onChange={handleChange} id={cardgroup.id.toString()} />}
+                    control={<Checkbox color="primary" className={classes.input} checked={checkedCardgroups.includes(cardgroup.id)} onChange={handleChange} id={cardgroup.id.toString()} />}
                     label={cardgroup.title}
                 />
               

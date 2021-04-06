@@ -18,6 +18,29 @@ def collective_deck_get():
     return jsonify(get_collective_deck().to_dict())
 
 
+@collectiveDeckBlueprint.route("/api/collective-deck/flashcards", methods=["GET"])
+# @jwt_required
+# @admin_only
+def collective_deck_get_flashcards():
+    try:
+
+        difficulty_min =  request.args.get("difficulty-min", default=0)
+        difficulty_max =  request.args.get("difficulty-max", default=10)
+        cardgroup_ids = request.args.get("cardgroup-id", default="all")
+        n_cards       = request.args.get("ncards", default="all")
+        id_only       = request.args.get("id-only", default=False)
+
+
+        if cardgroup_ids != "all":
+            cardgroup_ids = [int(s) for s in cardgroup_ids.split(',')]
+
+        return jsonify(get_random_collective_deck_flashcards(int(difficulty_min), int(difficulty_max), cardgroup_ids, n_cards, id_only))
+
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
+
+
 @collectiveDeckBlueprint.route("/api/admin/collective-deck/flashcards", methods=["POST"])
 @jwt_required
 @admin_only

@@ -121,25 +121,39 @@ def cardrating_delete(cid):
 @cardratingBlueprint.route("/api/cardratings")
 # @jwt_required
 def ratings():    
-    sleep(DELAY_S)
-    return jsonify(get_all_ratings())
+    try: 
+
+        sleep(DELAY_S)
+        return jsonify(get_all_ratings())
+
+
+    except Exception as e:
+        print(e)
+        return(jsonify({"error": str(e)})) 
+
 
 @cardratingBlueprint.route("/api/currentuser/cardrating/<rid>/duplicates", methods=["PATCH"])
 @jwt_required
-def cardrating_add_duplicte(rid):    
-    sleep(DELAY_S)
+def cardrating_add_duplicte(rid):  
 
-    uid = get_jwt_identity()
+    try: 
 
+        sleep(DELAY_S)
 
-    duplicates = request.json["duplicates"]
-    print(duplicates)
-
-    edit_duplicates(uid, rid, duplicates)
+        uid = get_jwt_identity()
 
 
-    return jsonify(get_all_ratings())
+        duplicates = request.json["duplicates"]
+        print(duplicates)
 
+        edit_duplicates(uid, rid, duplicates)
+
+
+        return jsonify(edit_duplicates(uid, rid, duplicates))
+
+    except Exception as e:
+        print(e)
+        return(jsonify({"error": str(e)})) 
 
 
 

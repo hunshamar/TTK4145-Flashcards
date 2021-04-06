@@ -33,7 +33,7 @@ const cardReducer = (state = initState, action) => {
             console.log("got card", action.payload)
             return {
                 ...state, 
-                cards: action.payload,
+                cards: [action.payload],
             }
         
         case LOAD_CARDS:

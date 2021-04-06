@@ -36,7 +36,7 @@ class Peerreview(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     # children
-    flashcards = db.relationship("Flashcard", secondary=peer_review_cards, backref="flashcard")
+    flashcards = db.relationship("Flashcard", secondary=peer_review_cards, backref="peer_review")
     ratings = db.relationship("Cardrating", backref="cardrating")
     
     # flashcard_ids = db.Column(db.ARRAY(db.Integer)

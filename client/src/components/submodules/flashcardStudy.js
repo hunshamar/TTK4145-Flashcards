@@ -1,12 +1,18 @@
 import { Divider, Grid, Typography, Button } from "@material-ui/core"
-import { useState } from 'react';
+
+import { useState,useEffect } from 'react';
 
 import DOMPurify from 'dompurify';
+import DivHTMLSanatized from "./divHTMLSanitized";
 
 
-const FlashcardStudy = ({flashcard, style, revealback}) => {
+const FlashcardStudy = ({flashcard, style, revealback, externalReveal=false}) => {
     
-    const [reveal, setReveal] = useState(revealback)
+    useEffect(() => {
+        console.log("rrr")
+    }, revealback)
+
+    const [reveal, setReveal] = useState(false)
 
     return (
         <div style={style}>
@@ -16,7 +22,8 @@ const FlashcardStudy = ({flashcard, style, revealback}) => {
                         Front:
                     </Typography>
                     <Typography variant="body2" style={{marginTop: "auto", overflow: "hidden"}}>
-                        <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(flashcard.front)}} />
+                        <DivHTMLSanatized text={flashcard.front}/>
+
                     </Typography>
                 </Grid>
                 <Grid item xs={12}  >
@@ -25,16 +32,17 @@ const FlashcardStudy = ({flashcard, style, revealback}) => {
                 <Grid item xs={12} style={{textAlign: "center", minHeight: "100px", minWidth: "300px"}}>
 
                    
-                    {reveal ? 
+                    {revealback || reveal? 
                      <div>
                         <Typography variant="caption" color="textSecondary">
                             Back:
                         </Typography>
                         <Typography variant="body2">
-                            <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(flashcard.back)}} />
+                        <DivHTMLSanatized text={flashcard.back}/>
                         </Typography>
                     </div>
                     :
+                    externalReveal ? "" : 
                     <Button variant="contained" color="primary" style={{marginTop: "25px"}} onClick={() => setReveal(true)}> 
                         Show Answer
                     </Button>}

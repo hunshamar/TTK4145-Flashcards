@@ -29,20 +29,21 @@ class Flashcard(db.Model):
     cardgroup_id = db.Column(db.Integer, db.ForeignKey("cardgroup.id"))
     collective_deck_id = db.Column(db.Integer, db.ForeignKey("collective_deck.id"))
 
+
     def calculate_average_rating(self):
-        sum = 0
-        if not len(self.ratings):
-            print("no ratings on card")
-            self.average_rating = None
-        else: 
-            print("rat on card")
-            qr = [rating.quality_rating for rating in self.ratings if rating.is_complete()]
-            d = [rating.difficulty for rating in self.ratings if rating.is_complete()]
-            
+        
+        print("rat on card")
+        qr = [rating.quality_rating for rating in self.ratings if rating.is_complete()]
+        d = [rating.difficulty for rating in self.ratings if rating.is_complete()]
+        
+        if len(qr):
             self.average_rating = statistics.mean(qr)
+
+        
+        if len(d):
             self.average_difficulty = statistics.mean(d)
-            print("jahm")
-            db.session.commit()
+
+        db.session.commit()
 
     def peerreview_due_date_ended(self):
         return Cardgroup.query.get(self.cardgroup_id).peer_review_due_date_ended()      
@@ -50,10 +51,8 @@ class Flashcard(db.Model):
     def to_dict(self):        
 
         if not self.average_rating and self.peerreview_due_date_ended(): 
-            print("ended", self.id, self.average_rating)
             self.calculate_average_rating()
-        else:
-            print("not ended", self.id)
+        
 
         n_ratings = len([rating for rating in self.ratings if rating.is_complete()])
 
@@ -120,14 +119,16 @@ def init_cards():
     users = User.query.all()
     
     for c in Cardgroup.query.all():
-
+        
         for u in users:
             for i in range(c.number_of_cards_due):
                 front = f" for chapter {c.title} this is user with username {u.username}'s question nr {i+1} "
                 back = f" for chapter {c.title}  this is user with username {u.username}'s answer nr {i+1} "
 
-                add_flashcard(front, back, u.id, c.id)
-            
+                try: 
+                    add_flashcard(front, back, u.id, c.id)
+                except Exception:
+                    pass
 
 
 def add_flashcard(front, back, userid, cardgroupid):

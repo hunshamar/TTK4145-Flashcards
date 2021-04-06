@@ -98,7 +98,10 @@ export const loadCardGroupUserFlashcards = (cardgroupId) => async dispatch => {
             console.log(cards)
             dispatch({type: LOAD_CARDS, payload: cards})
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            let alert = {severity: "error", text: err.toString() + " when attempting to get card"}
+            dispatch({type: SET_ALERT, payload: alert})  
+        })
 
 
     dispatch({type: SET_LOADING, payload: false})
@@ -188,7 +191,69 @@ export const loadPeerReviewFlashcards = (peerreviewid) => async (dispatch, getSt
 
 
 
-export const clearCardReducer = () => async (dispatch) => {
+export const getNextCardInUserDeck = (deckId) => async (dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})
+    await refreshTokens()
+    await axios.get(`/api/currentuser/user-flashcard-decks/${deckId}/flashcard`,
+    {headers: { 
+        Authorization: "Bearer " +localStorage.getItem("user_token") 
+    }}
+    ).then(response => {
+        if(response.data.error){
+            throw new Error(response.data.error)
+        }
+        const card = response.data
+        console.log("response card")
+        console.log(card)
+        dispatch({type: LOAD_CARD, payload: card})
+    })
+    .catch(err => {
+        console.log("error hier")
+        let alert = {severity: "error", text: err.toString() + " when attempting to get card"}
+        dispatch({type: SET_ALERT, payload: alert})  
+    })
+
+    dispatch({type: SET_LOADING, payload: false})
+
+}
+
+
+
+
+
+export const getCollectiveDeckFlashcards = ({cardgroupIds="all", difficultyMin=0, difficultyMax=10, numberOfCards="all", idOnly=false} = {}) => async (dispatch, getState) => {
+    dispatch({type: SET_LOADING, payload: true})
+    await refreshTokens()
+
+
+    console.log(typeof difficulties !== undefined)
+
+    await axios.get(`/api/collective-deck/flashcards?cardgroup-id=${cardgroupIds}&difficulty-min=${difficultyMin}&difficulty-max=${difficultyMax}&ncards=${numberOfCards}${idOnly ? "&id-only=true" : ""}`,
+    {headers: {  
+        Authorization: "Bearer " +localStorage.getItem("user_token") 
+    }}
+    ).then(response => {
+        if(response.data.error){
+            throw new Error(response.data.error)
+        }
+
+        const cards = response.data
+        console.log("lmlmlml")
+        console.log(cards)
+        dispatch({type: LOAD_CARDS, payload: cards})
+    })
+    .catch(err => {
+        let alert = {severity: "error", text: err.toString() + " when attempting to get card"}
+        dispatch({type: SET_ALERT, payload: alert})  
+    })
+
+    dispatch({type: SET_LOADING, payload: false})
+
+}
+
+
+
+export const clearCardReducer = () => (dispatch) => {
 
 
     console.log("alert tthh")

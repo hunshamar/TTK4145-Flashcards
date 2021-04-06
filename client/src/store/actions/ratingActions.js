@@ -174,6 +174,7 @@ export const getRating = (cardId) => async (dispatch, getState) => {
 
 
 export const getRatingsInPeerreview = (peerreviewid) => async (dispatch, getState) => {
+    dispatch({ type: SET_LOADING, payload: true })
     await refreshTokens()
     console.log("Is this ratings her ja")
     await axios.get("/api/currentuser/peerreview/" + peerreviewid + "/cardratings",
@@ -207,6 +208,7 @@ export const getRatingsInPeerreview = (peerreviewid) => async (dispatch, getStat
             dispatch({ type: SET_ALERT, payload: alert })
         })
 
+    dispatch({ type: SET_LOADING, payload: false })
     // console.log("async call up in hier", rating)
 
 };

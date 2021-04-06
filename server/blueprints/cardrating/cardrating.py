@@ -117,6 +117,9 @@ def edit_duplicates(user_id, rating_id, duplicates):
     rating = Cardrating.query.get(rating_id)
     peerreview = Peerreview.query.get(rating.peerreview_id)
     current_gmt_time = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+    print("curryy", current_gmt_time)
+    print(peerreview.due_date)
+
     if current_gmt_time > peerreview.due_date:
         raise Exception("Error. Due date for rating exceeded")
 
@@ -154,7 +157,8 @@ def edit_duplicates(user_id, rating_id, duplicates):
 
     db.session.commit()
 
-    return "success"
+    peerreview.id
+    return [r.to_dict() for r in Cardrating.query.filter_by(peerreview_id=peerreview.id).order_by(Cardrating.id).all()]
 
 def add_ratings_to_peerreview(user_id, peerreview_id):
     peerreview = Peerreview.query.get(peerreview_id)
@@ -177,12 +181,12 @@ def add_ratings_to_peerreview(user_id, peerreview_id):
 
         db.session.commit()
 
-        return peerreview.get_ratings()
+        return [r.to_dict() for r in Cardrating.query.filter_by(peerreview_id=peerreview.id).order_by(Cardrating.id).all()]
 
     else:
         print("yesssum")
         print(peerreview.get_ratings())
-        return peerreview.get_ratings()
+        return [r.to_dict() for r in Cardrating.query.filter_by(peerreview_id=peerreview.id).order_by(Cardrating.id).all()]
 
 
 def save_difficulty_rating(user_id, rating_id, difficulty_rating):

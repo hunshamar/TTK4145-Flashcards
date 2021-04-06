@@ -5,6 +5,7 @@ import datetime as datetime
 
 from ..flashcard.flashcard import Flashcard
 from ..cardgroup.cardgroup import Cardgroup
+import random
 
 class CollectiveDeck(db.Model):
     __tablename__ = "collective_deck"
@@ -14,8 +15,11 @@ class CollectiveDeck(db.Model):
     flashcards = db.relationship("Flashcard", backref="collective_deck")
 
     def get_cardgroups(self):
-        print("find")
-        cardgroups = {Cardgroup.query.filter_by(id = f.cardgroup_id).first() for f in self.flashcards}
+        cardgroup_ids = {f.cardgroup_id for f in self.flashcards}
+        cardgroups = (Cardgroup.query
+            .filter(Cardgroup.id.in_(cardgroup_ids))
+            .order_by(Cardgroup.id)
+        )
         return cardgroups
 
     def to_dict(self):
@@ -80,6 +84,33 @@ def add_to_collective_deck(flashcards):
     db.session.commit()
 
     return [f.to_dict() for f in changed_cards]
+
+def get_random_collective_deck_flashcards(difficulty_min, difficulty_max, cardgroup_ids, n_cards,id_only):
+
+    queries = [
+        Flashcard.average_difficulty >= difficulty_min,
+        Flashcard.average_difficulty <= difficulty_max,
+        Flashcard.collective_deck_id > 0
+    ]
+    if cardgroup_ids != "all":
+        queries.append(Flashcard.cardgroup_id.in_(cardgroup_ids))
+
+    flashcards = Flashcard.query.filter(
+        *queries
+    ).all()
+
+    if n_cards != "all":
+        n_cards = int(n_cards)
+        if n_cards > len(flashcards):
+            raise Exception("Error, number of cards exceeds...")
+        flashcards = flashcards[:n_cards]
+
+
+    if id_only:
+        return [{"id": f.id } for f in flashcards]
+    else:    
+        return [f.to_dict() for f in flashcards]
+
 
 def remove_from_collective_deck(flashcards):
 

@@ -16,7 +16,7 @@ export const dateJSONToString = date => {
 
     let d = new Date(date)
     try{
-        return `${daysInWeek[d.getDay()]}, ${monthNames[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} ${d.getHours()}:${(d.getMinutes()<10?'0':'') + d.getMinutes() } `
+        return `${daysInWeek[d.getDay()]}, ${monthNames[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} ${(d.getHours()<10?'0':'') + d.getHours() }:${(d.getMinutes()<10?'0':'') + d.getMinutes() } `
     }
     catch{
         return "Date error"

@@ -15,6 +15,7 @@ const Study = () => {
     const redirectToUserDecks = () => {
         history.push("/user-decks")
     }
+    redirectToUserDecks()
 
 
 

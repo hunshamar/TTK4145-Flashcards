@@ -6,6 +6,7 @@ import RotateLeft from "@material-ui/icons/RotateLeft";
 import { styled } from '@material-ui/core/styles';
 import { useRef } from "react";
 import HTMLTextField from "../submodules/HTMLTextField";
+import DivHTMLSanatized from "../submodules/divHTMLSanitized";
 
 
 
@@ -229,7 +230,7 @@ const HTMLGuide = () => {
                         <b>HTML Result:</b> <br />
                     </Typography>
                     <Box border={1} borderColor="secondary.light" borderRadius={5} align="center" style={{ height: "auto", backgroundColor: "white", color: "black" }} >
-                        <div dangerouslySetInnerHTML={{ __html: HTMLString }} />
+                        <DivHTMLSanatized text={HTMLString}/>
                     </Box>
 
                 </Grid>
