@@ -7,7 +7,10 @@ from ..cardgroup.cardgroup import Cardgroup, get_cardgroup
 import datetime
 import statistics
 
-
+duplicate_flashcards = db.Table("duplicate_flashcards",
+    db.Column("left_flashcard_id", db.Integer, db.ForeignKey("flashcard.id"), primary_key=True),
+    db.Column("right_flashcard_id", db.Integer, db.ForeignKey("flashcard.id"), primary_key=True)
+)
 
 class Flashcard(db.Model):
     __tablename__ = "flashcard"
@@ -29,13 +32,31 @@ class Flashcard(db.Model):
     cardgroup_id = db.Column(db.Integer, db.ForeignKey("cardgroup.id"))
     collective_deck_id = db.Column(db.Integer, db.ForeignKey("collective_deck.id"))
 
+    #siblings
+    duplicate_cards = db.relationship("Flashcard",
+                    secondary=duplicate_flashcards,
+                    primaryjoin=id==duplicate_flashcards.c.left_flashcard_id,
+                    secondaryjoin=id==duplicate_flashcards.c.right_flashcard_id,
+                    backref="left_flashcards"
+    )
 
     def calculate_average_rating(self):
         
-        print("rat on card")
+        print("duplicate on card", self.front)
         qr = [rating.quality_rating for rating in self.ratings if rating.is_complete()]
         d = [rating.difficulty for rating in self.ratings if rating.is_complete()]
-        
+        duplicates_lists = [rating.duplicates for rating in self.ratings if rating.is_complete()]
+
+        # duplicates_empty = []
+        self.duplicate_cards = []
+        for dup_list in duplicates_lists:
+            for dup in dup_list:
+                if dup:
+                    if dup.flashcard not in self.duplicate_cards:
+                        self.duplicate_cards.append(dup.flashcard)
+
+
+
         if len(qr):
             self.average_rating = statistics.mean(qr)
 
@@ -50,7 +71,7 @@ class Flashcard(db.Model):
 
     def to_dict(self):        
 
-        if not self.average_rating and self.peerreview_due_date_ended(): 
+        if not (self.average_rating and self.average_difficulty) and self.peerreview_due_date_ended(): 
             self.calculate_average_rating()
         
 
@@ -65,6 +86,7 @@ class Flashcard(db.Model):
             "nRatings": n_ratings,
             "averageRating": self.average_rating,
             "averageDifficulty": self.average_difficulty,
+            "duplicates": [f.public_to_dict() for f in self.duplicate_cards],
             "collectiveDeckId": self.collective_deck_id
         }
 

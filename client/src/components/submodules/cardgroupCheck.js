@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, FormGroup, makeStyles } from "@material-ui/core"
+import { Checkbox, FormControlLabel, FormGroup, makeStyles, Typography } from "@material-ui/core"
 
 
 const useStyles = makeStyles({
@@ -28,6 +28,11 @@ const CardgroupCheck = ({cardgroups, checkedCardgroups, setCheckedCardgroups}) =
 
     }
 
+    if (!cardgroups.length){
+        return(
+            <Typography variant="body" color="textSecondary">No cardgroups in collective deck</Typography>
+        )
+    }
 
     return (
         <div>

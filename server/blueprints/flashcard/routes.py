@@ -106,8 +106,6 @@ def status(cgid):
 @jwt_required
 def cardgroup_user_flashcardscards(cgid):
     sleep(DELAY_S)
-    print("her her")
-    print(type(cgid), "find this")
     uid = get_jwt_identity()
     try:
         return jsonify(get_user_flashcards_from_cardgroup(int(cgid), int(uid)))

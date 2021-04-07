@@ -6,14 +6,18 @@ import { getUsersStatus } from '../../store/actions/userActions';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import CardgroupSelect from '../submodules/cardgroupselect';
 import { useState } from 'react';
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button, Grid, Typography,makeStyles } from "@material-ui/core";
 import { addCardsToCollectiveDeck, loadCardgroupFlashcards, removeCardsFromCollectiveDeck } from "../../store/actions/cardActions";
 import CardDialog from "../dialogs/cardDialog";
 import Loading from "../notifications/loading";
 
+// const useStyles = makeStyles(theme => ({
+    
+// }))
 
 const AllCards = () => {
 
+    // const classes = useStyles()
     const dispatch = useDispatch()
     const cards = useSelector(state => state.cardReducer.cards)
     const [openCard, setOpenCard] = useState(false);
@@ -34,19 +38,23 @@ const AllCards = () => {
     console.log(cards)
 
     const columns = [
+        { field: 'id', headerName: 'id', width: 65 },
         { field: 'username', headerName: 'Username', width: 130 },
         { field: 'front', headerName: 'Front', width: 100 },
         { field: 'back', headerName: 'Back', width: 100 },
         { field: 'nRatings', headerName: 'n_ratings', width: 120 },
-        { field: 'averageRating', headerName: 'Avg rating', width: 90 },
-        { field: 'averageDifficulty', headerName: 'Avg difficulty', width: 90 },
+        { field: 'averageRating', headerName: 'rating avg', width: 120 },
+        { field: 'averageDifficulty', headerName: 'difficulty avg', width: 120 },
+        { field: 'duplicates', headerName: 'duplicate ids', width: 140 },
         { field: 'collectiveDeckId', headerName: 'Collective Deck', width: 110 },
     ]
 
     let rows = []
     if (cards.length){
-        rows = cards.map(c => (
-            {
+        rows = cards.map(c => {
+            let duplicates_string = c.duplicates.map(d => d.id).join(",")
+            console.log(duplicates_string)
+            return({
                 id: c.id,
                 name: c.user ? c.user.name : "",
                 username: c.user ? c.user.username : "",
@@ -55,9 +63,10 @@ const AllCards = () => {
                 nRatings: c.nRatings,
                 averageRating: c.averageRating,
                 averageDifficulty: c.averageDifficulty,
-                collectiveDeckId: c.collectiveDeckId
-            }
-        ))
+                collectiveDeckId: c.collectiveDeckId,
+                duplicates: duplicates_string
+            })
+        })
     }
 
     const handleClick = (e, a) => {
@@ -113,6 +122,7 @@ const AllCards = () => {
 
                     cards.length ?
                         <DataGrid
+                            // className={classes.inCollective}
                             checkboxSelection
                             pageSize={5}
                             autoHeight

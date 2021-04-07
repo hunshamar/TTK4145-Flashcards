@@ -115,7 +115,7 @@ const CardView = props => {
                 :
                 <div style={{ color: "grey", marginTop: "150px" }}>
                     <Typography variant="h5">No cards</Typography>
-                    <Typography variant="body1">Add cards using the <i>Add Flashcard</i> button</Typography>
+                    <Typography variant="body1">Create flashcards using the <i>Create Flashcard</i> button</Typography>
                 </div>}
 
 

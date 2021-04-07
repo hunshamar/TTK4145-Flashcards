@@ -112,7 +112,7 @@ const CardGroupPage = props => {
             {cardgroup ?
                 <Grid container spacing={6}>
                     <Grid item xs={8}>
-                        <Typography variant="h4">Add Flashcards to {cardgroup.title}</Typography>
+                        <Typography variant="h4">Create Flashcards in {cardgroup.title}</Typography>
                         <Typography variant="body2">{cardgroup.numberOfCardsDue} cards are due {dateJSONToString(cardgroup.dueDate)}
                         </Typography>
 
@@ -125,7 +125,7 @@ const CardGroupPage = props => {
 
                     <Grid item xs={4}>
                         <Button fullWidth style={{ height: "80px" }} className={classes.addButton} variant="outlined" onClick={handleClickOpen}>
-                            + Add Flashcard
+                            + Create Flashcard
                     </Button>
 
                         <Progress x={cards.length} y={cardgroup.numberOfCardsDue} body="You've created" style={{ margin: "40px 0px" }} />

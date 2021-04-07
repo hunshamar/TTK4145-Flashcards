@@ -16,16 +16,33 @@ export const TagTitle = styled(Box)({
     display: "inline-block"
 })
 
+const TagListElement = ({tag, desc}) => {
 
 
-const TagListItem = ({ tag, desc }) => {
+    return(
+        <React.Fragment>
+            <Grid item xs={1}>
+            </Grid>
+            <Grid item xs={4}>
+                {tag}
+            </Grid>
+            <Grid item xs={8}>
+                {desc}
+            </Grid>
+        </React.Fragment>
+    )
+}
+
+
+
+const HTMLTagListItem = ({ tag, desc }) => {
 
     return (
         <React.Fragment>
-            <Grid item xs={6}>
-                {tag}
+            <Grid item xs={3} style={{marginLeft: "20px"}}>
+                {"\t"} <b>{tag}</b>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={8}>
                 {desc}
             </Grid>
         </React.Fragment>
@@ -141,24 +158,26 @@ const HTMLGuide = () => {
                 <Grid item xs={12}>
                     <Typography variant="body2" color="textSecondary">
                         <b>Usefull HTML components (Tags):</b> <br />
-                        <ul>
-                            <li><TagTitle>{"<h1>...</h1>"}</TagTitle>Headings - h1 is the largest. h6 is the smallest </li>
-                            <li><TagTitle>{"<div>...</div>"}</TagTitle>Division. Can be used as containers, to style multiple objects </li>
-                            <li><TagTitle>{"<p>...</p>"}</TagTitle>Paragraphs </li>
-                            <li><TagTitle>{"<b>...</b>"}</TagTitle><b>bold</b> </li>
-                            <li><TagTitle>{"<i>...</i>"}</TagTitle><i>Italics</i> </li>
-                            <li><TagTitle>{"<u>...</u>"}</TagTitle><u>Underlined</u> </li>
-                            <li><TagTitle>{"<br/>"}</TagTitle>Line Break </li>
-                            <li>
-                                <TagTitle>{'<img src="">...</img>'}</TagTitle>
-                                 Image. Must be url. Recomended to use <Link color="textPrimary" href="https://postimages.org/">postimages</Link>.
-                                Upload->copy Direct Link
-                            </li>
-                            <li><TagTitle>{"<ul>...</ul>"}</TagTitle>Unordered list </li>
-                            <li><TagTitle>{"<ol>...</ol>"}</TagTitle>Ordered list </li>
-                            <li><TagTitle>{"<li>...</li>"}</TagTitle>List item </li>
-                            <li><TagTitle>{"<code>...</code>"}</TagTitle>Code.  The content inside is displayed in the browser's default monospace font  </li>
-                        </ul>
+                        <Grid container spacing={0}>
+                            
+
+                            <HTMLTagListItem tag={"<h1>...</h1>"} desc={"Headings - h1 is the largest. h6 is the smallest "} />
+                            <HTMLTagListItem tag={"<div>...</div>"} desc={"Division. Can be used as containers, to style multiple objects "} />
+                            <HTMLTagListItem tag={"<p>...</p>"} desc={"Paragraphs "} />
+                            <HTMLTagListItem tag={"<b>...</b>"} desc={"Bold text"} />
+                            <HTMLTagListItem tag={"<i>...</i>"} desc={"Italics text"} />
+                            <HTMLTagListItem tag={"<u>...</u>"} desc={"Underlined text"} />
+                            <HTMLTagListItem tag={"<br/>"} desc={"Line Break "} />
+      
+                            <HTMLTagListItem tag={'<img src=""/>'} desc={'Image. Must be url. Recomended to use  https://postimages.org/ for upload'}  />
+
+
+                            <HTMLTagListItem tag={"<ul>...</ul>"} desc={"Unordered list "} />
+                            <HTMLTagListItem tag={"<ol>...</ol>"} desc={"Ordered list "} />
+                            <HTMLTagListItem tag={"<li>...</li>"} desc={"List item "} />
+                            <HTMLTagListItem tag={"<code>...</code>"} desc={"Code.  The content inside is displayed in the browser's default monospace font "} />
+
+                        </Grid>
                     </Typography>
                 </Grid>
 

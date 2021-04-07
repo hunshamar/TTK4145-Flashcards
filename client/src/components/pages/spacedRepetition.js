@@ -33,7 +33,7 @@ const SpacedRepetition =  () => {
                         <Divider />
                     </Grid> 
                     <Grid item xs={12}>
-                        <Button variant="contained" color="secondary" onClick={addCardsToReview} >Add Cards to Deck</Button>
+                        <Button variant="contained" color="secondary" onClick={addCardsToReview} >Add Flashcards to Deck</Button>
                     </Grid>
                     <Grid item xs={12}>
                         Cards in Deck: {cardreviewDeck.cardreviews.length}

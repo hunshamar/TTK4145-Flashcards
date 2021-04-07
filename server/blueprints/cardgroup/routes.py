@@ -23,7 +23,7 @@ def cardgroups_all():
 
 @cardgroupBlueprint.route("/api/cardgroups/<cgid>", methods=["GET"])
 def cardgroups(cgid):   
-    sleep(DELAY_S) 
+    sleep(DELAY_S)   
     try:
         return jsonify(get_cardgroup(int(cgid)).to_dict())
     except Exception as e:
@@ -98,7 +98,6 @@ def cardgroups_delete(cgid):
 @admin_only
 def cardgroup_flashcards(cgid):
     sleep(DELAY_S)
-    print(type(cgid), "find this")
     try:
 
         cardgroup = Cardgroup.query.get(int(cgid))

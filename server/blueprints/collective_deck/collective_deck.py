@@ -43,7 +43,7 @@ def create_collective_deck():
     db.session.commit()
     return collective_deck
 
-def get_collective_deck_admin():
+def get_collective_deck():
     collective_decks =  CollectiveDeck.query.all()
 
     if len(collective_decks) > 1:
@@ -53,14 +53,14 @@ def get_collective_deck_admin():
     else:
         return collective_decks[0]
     
-def get_collective_deck():
-    collective_decks =  CollectiveDeck.query.all()
-    if len(collective_decks) > 1:
-        raise Exception("More than one collective deck found")
-    if not len(collective_decks):
-        raise Exception("No collective deck found")
-    else:
-        return collective_decks[0]
+# def get_collective_deck():
+#     # collective_decks =  CollectiveDeck.query.all()
+#     # if len(collective_decks) > 1:
+#     #     raise Exception("More than one collective deck found")
+#     # if not len(collective_decks):
+#     #     raise Exception("No collective deck found")
+#     # else:
+#     #     return collective_decks[0]
 
 def add_to_collective_deck(flashcards):
 
@@ -68,7 +68,7 @@ def add_to_collective_deck(flashcards):
     if len(got_flashcards) != len(flashcards):
         raise Exception("Error. Could not get all falshcards")
 
-    collective_deck = get_collective_deck_admin()
+    collective_deck = get_collective_deck()
 
     changed_cards = []
 

@@ -33,7 +33,7 @@ const UserDecksPage = () => {
                     </Grid>
                 <Grid item xs={12}>
                     <Typography variant="body2" color="textSecondary">
-                        Create decks with random flashcards from the collective deck and study <br/>
+                        Create decks with random flashcards from the collective deck and study. <br/>
                         Decks are automatically deleted after they are finished, but you can create new ones.
                     </Typography>
                 </Grid>

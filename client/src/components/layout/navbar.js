@@ -139,7 +139,7 @@ const Navbar = props => {
 
             <React.Fragment>
                 <ListItem>
-                    <NavLink className={classes.navlink}  to="/addcards"> Add Cards</NavLink>
+                    <NavLink className={classes.navlink}  to="/addcards"> Create Flashcards</NavLink>
                 </ListItem>
                 <ListItem>
                     <NavLink className={classes.navlink}  to="/peerreview"> Peer Review</NavLink>
