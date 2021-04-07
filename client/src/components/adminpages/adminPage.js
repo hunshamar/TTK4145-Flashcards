@@ -1,20 +1,10 @@
-import { Redirect, useHistory } from "react-router-dom"
-
-
-
-
-
+import { Redirect, useHistory } from "react-router-dom";
 
 const AdminPage = () => {
+  const history = useHistory();
+  history.push("/adminpage/users");
 
-    const history = useHistory()
-    history.push("/adminpage/users")
+  return <div></div>;
+};
 
-    return(
-        <div>
-
-        </div>
-    )
-}
-
-export default AdminPage
+export default AdminPage;

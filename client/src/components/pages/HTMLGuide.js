@@ -1,56 +1,44 @@
-import { Divider, Grid, Typography, TextField, Box, Link, InputAdornment, Tooltip, IconButton, withStyles } from "@material-ui/core"
-import { PageWrapper } from "../../static/wrappers"
-import React, { useState } from 'react';
-import RotateLeftIcon from '@material-ui/icons/RotateLeft';
+import {
+  Divider,
+  Grid,
+  Typography,
+  TextField,
+  Box,
+  Link,
+  InputAdornment,
+  Tooltip,
+  IconButton,
+  withStyles,
+} from "@material-ui/core";
+import { PageWrapper } from "../../static/wrappers";
+import React, { useState } from "react";
+import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import RotateLeft from "@material-ui/icons/RotateLeft";
-import { styled } from '@material-ui/core/styles';
+import { styled } from "@material-ui/core/styles";
 import { useRef } from "react";
 import HTMLTextField from "../submodules/HTMLTextField";
 import DivHTMLSanatized from "../submodules/divHTMLSanitized";
 
-
-
 export const TagTitle = styled(Box)({
-    fontWeight: "bold",
-    width: "150px",
-    display: "inline-block"
-})
-
-const TagListElement = ({tag, desc}) => {
-
-
-    return(
-        <React.Fragment>
-            <Grid item xs={1}>
-            </Grid>
-            <Grid item xs={4}>
-                {tag}
-            </Grid>
-            <Grid item xs={8}>
-                {desc}
-            </Grid>
-        </React.Fragment>
-    )
-}
-
-
+  fontWeight: "bold",
+  width: "150px",
+  display: "inline-block",
+});
 
 const HTMLTagListItem = ({ tag, desc }) => {
+  return (
+    <React.Fragment>
+      <Grid item xs={3} style={{ marginLeft: "20px" }}>
+        {"\t"} <b>{tag}</b>
+      </Grid>
+      <Grid item xs={8}>
+        {desc}
+      </Grid>
+    </React.Fragment>
+  );
+};
 
-    return (
-        <React.Fragment>
-            <Grid item xs={3} style={{marginLeft: "20px"}}>
-                {"\t"} <b>{tag}</b>
-            </Grid>
-            <Grid item xs={8}>
-                {desc}
-            </Grid>
-        </React.Fragment>
-    )
-}
-
-const exampleString =
-    `
+const exampleString = `
 <div style="font-size: 70%">
 \t<h1> This is a Heading </h1>
 \t<h2> This is a smaller Heading </h2>
@@ -105,159 +93,193 @@ const exampleString =
 \t\t</ol>
 \t</div>
 </div>
-`
+`;
 
 const HTMLGuide = () => {
+  const [HTMLString, setHTMLString] = useState(exampleString);
 
-    const [HTMLString, setHTMLString] = useState(exampleString)
+  const inputRef = useRef();
 
-    const inputRef = useRef()
+  const addTabs = (e) => {
+    console.log(e.key);
+    if (e.key === "Tab") {
+      e.preventDefault();
+      console.log(inputRef);
 
-    const addTabs = e => {
-        console.log(e.key)
-        if (e.key === "Tab") {
-            e.preventDefault()
-            console.log(inputRef)
+      const { selectionStart, selectionEnd } = e.target;
 
-            const { selectionStart, selectionEnd } = e.target
+      const tab = "\t";
 
-            const tab = "\t"
+      const newHTMLString =
+        HTMLString.substring(0, selectionStart) +
+        tab +
+        HTMLString.substring(selectionEnd);
 
-            const newHTMLString =
-                HTMLString.substring(0, selectionStart) +
-                tab +
-                HTMLString.substring(selectionEnd)
+      // setHTMLString(newHTMLString)
 
-            // setHTMLString(newHTMLString)
+      inputRef.current.value = newHTMLString;
+      setHTMLString(newHTMLString);
 
-            inputRef.current.value = newHTMLString
-            setHTMLString(newHTMLString)
-
-            inputRef.current.selectionStart = inputRef.current.selectionEnd = selectionStart + tab.length
-
-        }
-
-
+      inputRef.current.selectionStart = inputRef.current.selectionEnd =
+        selectionStart + tab.length;
     }
+  };
 
-    return (
-        <PageWrapper>
-            <Grid container spacing={1}>
-                <Grid item xs={12}  >
-                    <Typography variant="h4" gutterBottom >
-                        HTML Guide With Examples
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" >
-                        This is meant as a short guide for simple HTML / CSS that can be added to flashcards.
-                        Check out <Link color="textPrimary" href="https://www.w3schools.com/html/">W3schools HTML tutorial</Link> for a better tutorial and more examples
-                    </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                    <Divider />
-                </Grid>
-                <Grid item xs={12}>
-                    <Typography variant="body2" color="textSecondary">
-                        <b>Usefull HTML components (Tags):</b> <br />
-                        <Grid container spacing={0}>
-                            
+  return (
+    <PageWrapper>
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Typography variant="h4" gutterBottom>
+            HTML Guide With Examples
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            This is meant as a short guide for simple HTML / CSS that can be
+            added to flashcards. Check out{" "}
+            <Link color="textPrimary" href="https://www.w3schools.com/html/">
+              W3schools HTML tutorial
+            </Link>{" "}
+            for a better tutorial and more examples
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="body2" color="textSecondary">
+            <b>Usefull HTML components (Tags):</b> <br />
+            <Grid container spacing={0}>
+              <HTMLTagListItem
+                tag={"<h1>...</h1>"}
+                desc={"Headings - h1 is the largest. h6 is the smallest "}
+              />
+              <HTMLTagListItem
+                tag={"<div>...</div>"}
+                desc={
+                  "Division. Can be used as containers, to style multiple objects "
+                }
+              />
+              <HTMLTagListItem tag={"<p>...</p>"} desc={"Paragraphs "} />
+              <HTMLTagListItem tag={"<b>...</b>"} desc={"Bold text"} />
+              <HTMLTagListItem tag={"<i>...</i>"} desc={"Italics text"} />
+              <HTMLTagListItem tag={"<u>...</u>"} desc={"Underlined text"} />
+              <HTMLTagListItem tag={"<br/>"} desc={"Line Break "} />
 
-                            <HTMLTagListItem tag={"<h1>...</h1>"} desc={"Headings - h1 is the largest. h6 is the smallest "} />
-                            <HTMLTagListItem tag={"<div>...</div>"} desc={"Division. Can be used as containers, to style multiple objects "} />
-                            <HTMLTagListItem tag={"<p>...</p>"} desc={"Paragraphs "} />
-                            <HTMLTagListItem tag={"<b>...</b>"} desc={"Bold text"} />
-                            <HTMLTagListItem tag={"<i>...</i>"} desc={"Italics text"} />
-                            <HTMLTagListItem tag={"<u>...</u>"} desc={"Underlined text"} />
-                            <HTMLTagListItem tag={"<br/>"} desc={"Line Break "} />
-      
-                            <HTMLTagListItem tag={'<img src=""/>'} desc={'Image. Must be url. Recomended to use  https://postimages.org/ for upload'}  />
+              <HTMLTagListItem
+                tag={'<img src=""/>'}
+                desc={
+                  "Image. Must be url. Recomended to use  https://postimages.org/ for upload"
+                }
+              />
 
+              <HTMLTagListItem tag={"<ul>...</ul>"} desc={"Unordered list "} />
+              <HTMLTagListItem tag={"<ol>...</ol>"} desc={"Ordered list "} />
+              <HTMLTagListItem tag={"<li>...</li>"} desc={"List item "} />
+              <HTMLTagListItem
+                tag={"<code>...</code>"}
+                desc={
+                  "Code.  The content inside is displayed in the browser's default monospace font "
+                }
+              />
+            </Grid>
+          </Typography>
+        </Grid>
 
-                            <HTMLTagListItem tag={"<ul>...</ul>"} desc={"Unordered list "} />
-                            <HTMLTagListItem tag={"<ol>...</ol>"} desc={"Ordered list "} />
-                            <HTMLTagListItem tag={"<li>...</li>"} desc={"List item "} />
-                            <HTMLTagListItem tag={"<code>...</code>"} desc={"Code.  The content inside is displayed in the browser's default monospace font "} />
-
-                        </Grid>
-                    </Typography>
-                </Grid>
-
-
-                {/* <Grid item xs={12}>
+        {/* <Grid item xs={12}>
                    <Divider />
                 </Grid> */}
-                <Grid item xs={12}>
-                    <Typography variant="body2" color="textSecondary">
-                        <b>Styling:</b> <br />
-                        If you wish to style components, you can add a style prop.
-                        For example: <br />
-                        <code>{'<p style="color: white; background-color: red"> Hello </p>'}</code> <br />
-                        will return a paragraph, with red background color and white text color.
-                        <br />
-                        Check out <Link color="textPrimary" href="https://www.w3schools.com/html/html_css.asp" >W3Schools CSS Tutorial     </Link>     <br />
-                        for more examples
+        <Grid item xs={12}>
+          <Typography variant="body2" color="textSecondary">
+            <b>Styling:</b> <br />
+            If you wish to style components, you can add a style prop. For
+            example: <br />
+            <code>
+              {'<p style="color: white; background-color: red"> Hello </p>'}
+            </code>{" "}
+            <br />
+            will return a paragraph, with red background color and white text
+            color.
+            <br />
+            Check out{" "}
+            <Link
+              color="textPrimary"
+              href="https://www.w3schools.com/html/html_css.asp"
+            >
+              W3Schools CSS Tutorial{" "}
+            </Link>{" "}
+            <br />
+            for more examples
+          </Typography>
+        </Grid>
 
+        <Grid item xs={12}>
+          <Typography variant="body2" color="textSecondary">
+            <b>Test:</b> <br />
+            Below is an example with some HTML tags <br />
+            You are welcome to change the HTML in the textfield and try your own{" "}
+            <br />A much better alternative is to use{" "}
+            <Link
+              color="textPrimary"
+              href="https://www.w3schools.com/tryit/tryit.asp?filename=tryhtml_default"
+            >
+              W3Schools Online HTML Code Editor{" "}
+            </Link>{" "}
+            <br />
+            You can also create a HTML file in VS Code and open it using the web
+            browser. <br />
+            Keep the HTML simple for flashcards.
+          </Typography>
+        </Grid>
 
+        <Grid item xs={7}>
+          <Typography variant="caption" color="textSecondary">
+            <b>HTML Input:</b> <br />
+          </Typography>
+          <HTMLTextField
+            onChange={setHTMLString}
+            value={HTMLString}
+            fullWidth
+            required
+            multiline
+            useIndent
+            inputProps={{
+              style: {
+                padding: "0px",
+                fontSize: "12px",
+              },
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  style={{ margin: "auto 0 15px" }}
+                >
+                  <div>
+                    <Tooltip title="Reset Example">
+                      <IconButton onClick={(e) => setHTMLString(exampleString)}>
+                        <RotateLeftIcon color="secondary" />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={5}>
+          <Typography variant="caption" color="textSecondary">
+            <b>HTML Result:</b> <br />
+          </Typography>
+          <Box
+            border={1}
+            borderColor="secondary.light"
+            borderRadius={5}
+            align="center"
+            style={{ height: "auto", backgroundColor: "white", color: "black" }}
+          >
+            <DivHTMLSanatized text={HTMLString} />
+          </Box>
+        </Grid>
+      </Grid>
+    </PageWrapper>
+  );
+};
 
-                        </Typography>
-                </Grid>
-
-                <Grid item xs={12}>
-                    <Typography variant="body2" color="textSecondary">
-                        <b>Test:</b> <br />
-                        Below is an example with some HTML tags <br />
-                        You are welcome to change the HTML in the textfield and try your own     <br />
-                        A much  better alternative is to use <Link color="textPrimary" href="https://www.w3schools.com/tryit/tryit.asp?filename=tryhtml_default" >W3Schools Online HTML Code Editor     </Link>     <br />
-                        You can also create a HTML file in VS Code and open it using the web browser. <br />
-                        Keep the HTML simple for flashcards.
-                    </Typography>
-                </Grid>
-
-
-
-                <Grid item xs={7} >
-                    <Typography variant="caption" color="textSecondary">
-                        <b>HTML Input:</b> <br />
-                    </Typography>
-                    <HTMLTextField
-                        onChange={setHTMLString}
-                        value={HTMLString}
-                        fullWidth
-                        required
-                        multiline
-                        useIndent
-                        inputProps={{
-                            style: {
-                                padding: "0px",
-                                fontSize: "12px"
-                            },
-                            endAdornment: <InputAdornment position="end" style={{ margin: "auto 0 15px" }}>
-                                <div>
-                                    <Tooltip title="Reset Example">
-                                        <IconButton onClick={e => setHTMLString(exampleString)} >
-                                            <RotateLeftIcon color="secondary" />
-                                        </IconButton>
-                                    </Tooltip>
-                                </div>
-                            </InputAdornment>,
-                        }}
-
-                    />
-
-                </Grid>
-                <Grid item xs={5}>
-                    <Typography variant="caption" color="textSecondary">
-                        <b>HTML Result:</b> <br />
-                    </Typography>
-                    <Box border={1} borderColor="secondary.light" borderRadius={5} align="center" style={{ height: "auto", backgroundColor: "white", color: "black" }} >
-                        <DivHTMLSanatized text={HTMLString}/>
-                    </Box>
-
-                </Grid>
-
-            </Grid>
-
-        </PageWrapper>
-    )
-}
-
-export default HTMLGuide
+export default HTMLGuide;

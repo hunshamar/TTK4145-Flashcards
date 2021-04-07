@@ -1,91 +1,84 @@
-import { PageWrapper } from "../../static/wrappers"
-import { useDispatch, useSelector } from 'react-redux';
-import userReducer from '../../store/reducers/userReducer';
-import { useEffect } from 'react';
-import { getUsersStatus } from '../../store/actions/userActions';
-import { DataGrid } from '@material-ui/data-grid';
-import CardgroupSelect from '../submodules/cardgroupselect';
-import { useState } from 'react';
+import { PageWrapper } from "../../static/wrappers";
+import { useDispatch, useSelector } from "react-redux";
+import userReducer from "../../store/reducers/userReducer";
+import { useEffect } from "react";
+import { getUsersStatus } from "../../store/actions/userActions";
+import { DataGrid } from "@material-ui/data-grid";
+import CardgroupSelect from "../submodules/cardgroupselect";
+import { useState } from "react";
 import { Typography } from "@material-ui/core";
 import { dateJSONToString } from "../../utils/datehandling";
 import Loading from "../notifications/loading";
 
-
 const DeliveryStatus = () => {
+  const dispatch = useDispatch();
+  // const users = useSelector(state => state.userReducer.users)
+  const status = useSelector((state) => state.userReducer.status);
 
-    const dispatch = useDispatch()
-    // const users = useSelector(state => state.userReducer.users)
-    const status = useSelector(state => state.userReducer.status)
+  const [cardGroupId, setCardGroupId] = useState(0);
+  const loading = useSelector((state) => state.loadingReducer.loading);
 
-    const [cardGroupId, setCardGroupId] = useState(0)
-    const loading = useSelector(state => state.loadingReducer.loading)
+  useEffect(() => {
+    dispatch(getUsersStatus(cardGroupId));
+    console.log("status");
+    console.log(status);
+  }, [dispatch, cardGroupId]);
 
+  console.log("usars");
 
-    useEffect(() => {
-        dispatch(getUsersStatus(cardGroupId))
-        console.log("status")
-        console.log(status)
-    }, [dispatch, cardGroupId])
+  const columns = [
+    { field: "username", headerName: "Username", width: 130 },
+    { field: "delivered", headerName: "Delivered", type: "number", width: 130 },
+    {
+      field: "toDeliver",
+      headerName: "To Deliver",
+      type: "number",
+      width: 130,
+    },
+    { field: "complete", headerName: "Complete", type: "number", width: 130 },
+  ];
 
-    console.log("usars")
+  let rows = status.map((s) => ({
+    id: s.user.id,
+    username: s.user.username,
+    delivered: s.delivered,
+    toDeliver: s.cardgroup.numberOfCardsDue,
+    complete: s.delivered == s.cardgroup.numberOfCardsDue ? true : false,
+  }));
 
+  console.log("cgid", cardGroupId);
 
+  return (
+    <PageWrapper>
+      <div style={{ marginBottom: "15px" }}>
+        <CardgroupSelect onChange={setCardGroupId} showFirst />
+      </div>
 
-    const columns = [
-        { field: 'username', headerName: 'Username', width: 130 },
-        { field: 'delivered', headerName: 'Delivered', type: "number", width: 130 },
-        {
-            field: 'toDeliver',
-            headerName: 'To Deliver',
-            type: 'number',
-            width: 130,
-        },
-        { field: 'complete', headerName: 'Complete', type: "number", width: 130 },
-    ]
+      {loading ? (
+        <Loading />
+      ) : status.length ? (
+        <div>
+          <Typography variant="subtitle2" style={{ marginTop: "20px" }}>
+            {status[0]
+              ? "Due: " + dateJSONToString(status[0].cardgroup.dueDate)
+              : "Due:"}
+          </Typography>
 
-    let rows = status.map(s => (
-        {
-            id: s.user.id,
-            username: s.user.username,
-            delivered: s.delivered,
-            toDeliver: s.cardgroup.numberOfCardsDue,
-            complete: s.delivered == s.cardgroup.numberOfCardsDue ? true : false
-        }
-    ))
+          <div style={{ height: "400px", width: "100%" }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={5}
+              autoHeight
+              rowsPerPageOptions={[5, 10, 20, 50, 100, 500, 1000]}
+            />
+          </div>
+        </div>
+      ) : (
+        "No status found"
+      )}
 
-
-
-    console.log("cgid", cardGroupId)
-
-
-    return (
-        <PageWrapper>
-
-            <div style={{ marginBottom: "15px" }} >
-                <CardgroupSelect onChange={setCardGroupId} showFirst />
-            </div>
-
-            {loading ? <Loading /> :
-
-                status.length ?
-                    <div>
-                        <Typography variant="subtitle2" style={{ marginTop: "20px" }}>
-                            {status[0] ? "Due: " + dateJSONToString(status[0].cardgroup.dueDate) : "Due:"}
-                        </Typography>
-
-                        <div style={{ height: "400px", width: '100%' }}>
-                            <DataGrid rows={rows} columns={columns}
-                                pageSize={5}
-                                autoHeight
-                                rowsPerPageOptions={[5, 10, 20, 50, 100, 500, 1000]}
-                            />
-                        </div>
-
-                    </div>
-                    : "No status found"
-            }
-
-            {/* {loading ? <Loading /> : 
+      {/* {loading ? <Loading /> : 
 
             status.length ? 
             <div>
@@ -99,8 +92,8 @@ const DeliveryStatus = () => {
             </div>
             : 
             ""} */}
-        </PageWrapper>
-    )
-}
+    </PageWrapper>
+  );
+};
 
-export default DeliveryStatus
+export default DeliveryStatus;

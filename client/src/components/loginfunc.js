@@ -1,34 +1,30 @@
 import { Redirect, useHistory } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { signInCallack } from '../store/actions/authActions';
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { signInCallack } from "../store/actions/authActions";
 import authReducer from "../store/reducers/authReducer";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import Loading from "./notifications/loading";
-import {PageWrapper} from "../static/wrappers"
-
+import { PageWrapper } from "../static/wrappers";
 
 const LogInFunc = () => {
-    const dispatch = useDispatch();    
-    const loggedIn = useSelector(state => state.authReducer.loggedIn)
+  const dispatch = useDispatch();
+  const loggedIn = useSelector((state) => state.authReducer.loggedIn);
 
-    useEffect(() => {
-        dispatch(signInCallack())
-    }, [dispatch])   
+  useEffect(() => {
+    dispatch(signInCallack());
+  }, [dispatch]);
 
-    const history = useHistory()
-    if (loggedIn){
-      history.push("/")
-    }
+  const history = useHistory();
+  if (loggedIn) {
+    history.push("/");
+  }
 
+  return (
+    <PageWrapper>
+      <Loading />
+    </PageWrapper>
+  );
+};
 
-    return( 
-        <PageWrapper>
-          <Loading /> 
-        </PageWrapper>
-      )
-
-
-}
-
-export default LogInFunc
+export default LogInFunc;

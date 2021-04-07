@@ -1,169 +1,206 @@
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { loadCardGroupUserFlashcards } from "../../store/actions/cardActions";
+import CardView from "../submodules/cardview";
+import {
+  deleteCardgroup,
+  loadCardgroup,
+} from "../../store/actions/cardgroupActions";
+import {
+  Button,
+  Divider,
+  Grid,
+  LinearProgress,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
+import CreateCardDialog from "../dialogs/createCardDialog";
+import { PageWrapper } from "../../static/wrappers";
+import authReducer from "../../store/reducers/authReducer";
+import loadingReducer from "../../store/reducers/loadingReducer";
+import Loading from "../notifications/loading";
+import userReducer from "../../store/reducers/userReducer";
+import { Redirect } from "react-router-dom";
+import { dateJSONToString } from "../../utils/datehandling";
+import Progress from "../submodules/progress";
+import { useHistory } from "react-router-dom";
+import CreateCardGroup from "../dialogs/createCardGroup";
+import { SET_ALERT } from "../../store/actionTypes";
+import { infoAlert } from "../../store/actions/alertActions";
 
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
-import { loadCardGroupUserFlashcards } from '../../store/actions/cardActions';
-import CardView from '../submodules/cardview';
-import { deleteCardgroup, loadCardgroup } from '../../store/actions/cardgroupActions';
-import { Button, Divider, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
-import CreateCardDialog from '../dialogs/createCardDialog';
-import { PageWrapper } from "../../static/wrappers"
-import authReducer from '../../store/reducers/authReducer';
-import loadingReducer from '../../store/reducers/loadingReducer';
-import Loading from '../notifications/loading';
-import userReducer from '../../store/reducers/userReducer';
-import { Redirect } from 'react-router-dom';
-import { dateJSONToString } from '../../utils/datehandling';
-import Progress from '../submodules/progress';
-import { useHistory } from 'react-router-dom';
-import CreateCardGroup from '../dialogs/createCardGroup';
-import { SET_ALERT } from '../../store/actionTypes';
-
-
-const useStyles = makeStyles(theme => ({
-    addButton: {
-        backgroundColor: theme.palette.button.success.main,
-        color: "white",
-        border: "none",
-        align: "center",
-        '&:hover': {
-            background: theme.palette.button.success.dark,
-        }
+const useStyles = makeStyles((theme) => ({
+  addButton: {
+    backgroundColor: theme.palette.button.success.main,
+    color: "white",
+    border: "none",
+    align: "center",
+    "&:hover": {
+      background: theme.palette.button.success.dark,
     },
-    delButton: {
-        backgroundColor: theme.palette.button.error.main,
-        color: "white",
-        border: "none",
-        align: "center",
-        '&:hover': {
-            background: theme.palette.button.error.dark,
-        }
+  },
+  delButton: {
+    backgroundColor: theme.palette.button.error.main,
+    color: "white",
+    border: "none",
+    align: "center",
+    "&:hover": {
+      background: theme.palette.button.error.dark,
     },
+  },
+}));
 
-}))
+const CardGroupPage = (props) => {
+  console.log("prop");
+  console.log(props.match.params);
 
+  const classes = useStyles();
 
-const CardGroupPage = props => {
-    console.log("prop")
-    console.log(props.match.params)
+  const isAdmin = useSelector((state) => state.authReducer.isAdmin);
 
-    const classes = useStyles()
+  const cards = useSelector((state) => state.cardReducer.cards);
+  const cardgroup = useSelector(
+    (state) => state.cardgroupReducer.cardgroups[0]
+  );
+  const user = useSelector((state) => state.authReducer.loggedInUser);
+  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const [openEditCardgroup, setOpenEditCardgroup] = useState(false);
 
-    const isAdmin = useSelector(state => state.authReducer.isAdmin)
+  const loading = useSelector((state) => state.loadingReducer.loading);
 
-    const cards = useSelector(state => state.cardReducer.cards)
-    const cardgroup = useSelector(state => state.cardgroupReducer.cardgroups[0])
-    const user = useSelector(state => state.authReducer.loggedInUser)
-    const [open, setOpen] = useState(false);
-    const dispatch = useDispatch();
-    const [openEditCardgroup, setOpenEditCardgroup] = useState(false)
-
-    const loading = useSelector(state => state.loadingReducer.loading)
-
-    const handleClickOpen = () => {
-        if (cards.length >= cardgroup.numberOfCardsDue) {
-            let alert = { severity: "info", text: "All flashcards for this cardgroup delivered. Delete or edit existing cards" }
-            dispatch({ type: SET_ALERT, payload: alert })
-        } else {
-            setOpen(true);
-        }
-    };
-
-    const handleClose = (value) => {
-        setOpen(false);
-    };
-
-    const history = useHistory()
-    const handleDelete = () => {
-        if (window.confirm("Are you sure you want to delete cardgroup with all cards?")) {
-            dispatch(deleteCardgroup(cardgroup))
-            history.push("/addcards")
-        }
-
-    }
-
-    const handleEdit = () => {
-        setOpenEditCardgroup(true)
-    }
-
-    console.log("cardgr.:")
-    console.log(cardgroup)
-
-    useEffect(() => {
-        console.log("stuff and things")
-
-        console.log(cardgroup)
-        dispatch(loadCardGroupUserFlashcards(props.match.params.id))
-        dispatch(loadCardgroup(props.match.params.id))
-    }, [dispatch, props.match.params.id])
-
-    if (loading) {
-        return (
-            <PageWrapper>
-                <Loading />
-            </PageWrapper>
+  const handleClickOpen = () => {
+    if (cards.length >= cardgroup.numberOfCardsDue) {
+      dispatch(
+        infoAlert(
+          "All flashcards for this cardgroup delivered. Delete or edit existing cards"
         )
+      );
+    } else {
+      setOpen(true);
     }
-    else return (
-        <PageWrapper>
+  };
 
-            <CreateCardDialog open={open} onClose={handleClose} cardgroupId={props.match.params.id} />
-            <CreateCardGroup open={openEditCardgroup} onClose={() => setOpenEditCardgroup(false)} toeditCardgroup={cardgroup} />
+  const handleClose = (value) => {
+    setOpen(false);
+  };
 
-            {cardgroup ?
-                <Grid container spacing={6}>
-                    <Grid item xs={8}>
-                        <Typography variant="h4">Create Flashcards in {cardgroup.title}</Typography>
-                        <Typography variant="body2">{cardgroup.numberOfCardsDue} cards are due {dateJSONToString(cardgroup.dueDate)}
-                        </Typography>
+  const history = useHistory();
+  const handleDelete = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete cardgroup with all cards?"
+      )
+    ) {
+      dispatch(deleteCardgroup(cardgroup));
+      history.push("/addcards");
+    }
+  };
 
-                        <div style={{ marginTop: "40px" }}>
-                            <CardView cards={cards} />
-                        </div>
-                    </Grid>
+  const handleEdit = () => {
+    setOpenEditCardgroup(true);
+  };
 
+  console.log("cardgr.:");
+  console.log(cardgroup);
 
+  useEffect(() => {
+    console.log("stuff and things");
 
-                    <Grid item xs={4}>
-                        <Button fullWidth style={{ height: "80px" }} className={classes.addButton} variant="outlined" onClick={handleClickOpen}>
-                            + Create Flashcard
-                    </Button>
+    console.log(cardgroup);
+    dispatch(loadCardGroupUserFlashcards(props.match.params.id));
+    dispatch(loadCardgroup(props.match.params.id));
+  }, [dispatch, props.match.params.id]);
 
-                        <Progress x={cards.length} y={cardgroup.numberOfCardsDue} body="You've created" style={{ margin: "40px 0px" }} />
+  if (loading) {
+    return (
+      <PageWrapper>
+        <Loading />
+      </PageWrapper>
+    );
+  } else
+    return (
+      <PageWrapper>
+        <CreateCardDialog
+          open={open}
+          onClose={handleClose}
+          cardgroupId={props.match.params.id}
+        />
+        <CreateCardGroup
+          open={openEditCardgroup}
+          onClose={() => setOpenEditCardgroup(false)}
+          toeditCardgroup={cardgroup}
+        />
 
+        {cardgroup ? (
+          <Grid container spacing={6}>
+            <Grid item xs={8}>
+              <Typography variant="h4">
+                Create Flashcards in {cardgroup.title}
+              </Typography>
+              <Typography variant="body2">
+                {cardgroup.numberOfCardsDue} cards are due{" "}
+                {dateJSONToString(cardgroup.dueDate)}
+              </Typography>
 
-                        {isAdmin ?
+              <div style={{ marginTop: "40px" }}>
+                <CardView cards={cards} />
+              </div>
+            </Grid>
 
-                            <div>
-                                <Typography variant="subtitle2">Admin Functionality for This Cardgroup:</Typography>
-                                <Divider />
-                                <Button fullWidth style={{ height: "60px", margin: "10px 0" }} className={classes.delButton} variant="contained" onClick={handleDelete}>
-                                    Delete cardgroup and all cards
-                        </Button>
-                                <Button fullWidth style={{ height: "60px", margin: "10px 0" }} color="primary" variant="contained" onClick={handleEdit}>
-                                    Edit Cardgroup
-                        </Button>
-                            </div>
-                            : <div></div>}
+            <Grid item xs={4}>
+              <Button
+                fullWidth
+                style={{ height: "80px" }}
+                className={classes.addButton}
+                variant="outlined"
+                onClick={handleClickOpen}
+              >
+                + Create Flashcard
+              </Button>
 
-                    </Grid>
-                    <Grid item xs={7}>
+              <Progress
+                x={cards.length}
+                y={cardgroup.numberOfCardsDue}
+                body="You've created"
+                style={{ margin: "40px 0px" }}
+              />
 
-                    </Grid>
+              {isAdmin ? (
+                <div>
+                  <Typography variant="subtitle2">
+                    Admin Functionality for This Cardgroup:
+                  </Typography>
+                  <Divider />
+                  <Button
+                    fullWidth
+                    style={{ height: "60px", margin: "10px 0" }}
+                    className={classes.delButton}
+                    variant="contained"
+                    onClick={handleDelete}
+                  >
+                    Delete cardgroup and all cards
+                  </Button>
+                  <Button
+                    fullWidth
+                    style={{ height: "60px", margin: "10px 0" }}
+                    color="primary"
+                    variant="contained"
+                    onClick={handleEdit}
+                  >
+                    Edit Cardgroup
+                  </Button>
+                </div>
+              ) : (
+                <div></div>
+              )}
+            </Grid>
+            <Grid item xs={7}></Grid>
+          </Grid>
+        ) : (
+          <div>suo</div>
+        )}
+      </PageWrapper>
+    );
+};
 
-                </Grid> : <div>suo</div>}
-
-
-
-
-
-
-
-
-
-        </PageWrapper>
-    )
-
-
-}
-
-export default CardGroupPage
+export default CardGroupPage;

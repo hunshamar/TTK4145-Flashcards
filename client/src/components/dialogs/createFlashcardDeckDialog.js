@@ -1,227 +1,285 @@
-import { Button, Dialog, Grid, makeStyles, Slider, TextField, Typography } from "@material-ui/core"
+import {
+  Button,
+  Dialog,
+  Grid,
+  makeStyles,
+  Slider,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 
-import React, {useState, useEffect} from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { clearCardReducer, getCollectiveDeckFlashcards } from "../../store/actions/cardActions"
-import { loadCardgroups, loadCardgroupsInCollectiveDeck } from "../../store/actions/cardgroupActions"
-import { createUserFlashcardDeck } from "../../store/actions/userFlashcardDeckActions"
-import { SET_ALERT } from "../../store/actionTypes"
-import { difficultyToRange } from "../../utils/cardhandling"
-import Loading from "../notifications/loading"
-import CardgroupCheck from "../submodules/cardgroupCheck"
-import CardgroupSelect from "../submodules/cardgroupselect"
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearCardReducer,
+  getCollectiveDeckFlashcards,
+} from "../../store/actions/cardActions";
+import {
+  loadCardgroups,
+  loadCardgroupsInCollectiveDeck,
+} from "../../store/actions/cardgroupActions";
+import { createUserFlashcardDeck } from "../../store/actions/userFlashcardDeckActions";
+import { SET_ALERT } from "../../store/actionTypes";
+import { difficultyToRange } from "../../utils/cardhandling";
+import Loading from "../notifications/loading";
+import CardgroupCheck from "../submodules/cardgroupCheck";
+import CardgroupSelect from "../submodules/cardgroupselect";
+import { errorAlert } from "../../store/actions/alertActions";
 
-const useStyles = makeStyles(theme => ({
-    dialog: {
-        "& .MuiDialog-paperScrollPaper": {
-            maxHeight: "100vh",
-            maxWidth: "500px"
-        },
-    }
-}))
-
+const useStyles = makeStyles((theme) => ({
+  dialog: {
+    "& .MuiDialog-paperScrollPaper": {
+      maxHeight: "100vh",
+      maxWidth: "500px",
+    },
+  },
+}));
 
 const marks = [
-    {
-      value: 0,
-      label: 'easy',
-    },
-    {
-      value: 1,
-      label: 'normal',
-    },
-    {
-      value: 2,
-      label: 'hard',
-    },
-  ];
-  
+  {
+    value: 0,
+    label: "easy",
+  },
+  {
+    value: 1,
+    label: "normal",
+  },
+  {
+    value: 2,
+    label: "hard",
+  },
+];
 
-const CreateFlashCardDeckDialog = ({onClose, open}) => {
-    const classes = useStyles()
+const CreateFlashCardDeckDialog = ({ onClose, open }) => {
+  const classes = useStyles();
 
-    const [numberOfFlashcards, setNumberOfFlashcards] = useState(20)
-    const [checkedCardgroups, setCheckedCardgroups] = useState([])
-    const [difficulty, setDifficulty] = useState([0, 2  ]);
-    const [title, setTitle] = useState("")
+  const [numberOfFlashcards, setNumberOfFlashcards] = useState(20);
+  const [checkedCardgroups, setCheckedCardgroups] = useState([]);
+  const [difficulty, setDifficulty] = useState([0, 2]);
+  const [title, setTitle] = useState("");
 
+  const handleClose = () => {
+    onClose(false);
+  };
 
+  const dispatch = useDispatch();
+  useEffect(() => {
+    console.log("init create flashcard deck dialog");
+    dispatch(clearCardReducer());
+    dispatch(loadCardgroupsInCollectiveDeck());
+  }, []);
 
-    const handleClose = () => {
-        onClose(false);
-    };
+  console.log(checkedCardgroups);
+  const collective_deck_cards = useSelector((state) => state.cardReducer.cards);
+  const cardgroups = useSelector((state) => state.cardgroupReducer.cardgroups);
 
-    const dispatch = useDispatch()
-    useEffect(() => {
-        console.log("init create flashcard deck dialog")
-        dispatch(clearCardReducer())
-        dispatch(loadCardgroupsInCollectiveDeck())
-    }, [])
+  const getCheckedCardsCardgroupNames = () => {
+    return checkedCardgroups
+      .map((checked_id) => cardgroups.find((g) => g.id == checked_id).title)
+      .join(", ");
+  };
 
-    console.log(checkedCardgroups)
-    const collective_deck_cards = useSelector(state => state.cardReducer.cards)
-    const cardgroups = useSelector(state => state.cardgroupReducer.cardgroups)
+  const difficultyToString = () => {
+    console.log("diff", difficulty[0], difficulty[1]);
+    return marks
+      .filter((m) => m.value >= difficulty[0] && m.value <= difficulty[1])
+      .map((mark) => mark.label)
+      .join(", ");
+  };
 
-    const getCheckedCardsCardgroupNames = () => {
-        return checkedCardgroups.map(checked_id => (
-            cardgroups.find(g => g.id == checked_id).title
-        )).join(", ")
-    }    
+  useEffect(() => {
+    if (checkedCardgroups.length) {
+      const [difficultyMin, difficultyMax] = difficultyToRange(difficulty);
+      console.log(
+        `%c ${difficultyMin}, ${difficultyMax}`,
+        "background: #222; color: red"
+      );
 
-    const difficultyToString = () => {
-        console.log("diff", difficulty[0], difficulty[1])
-        return(
-            marks.filter(m => m.value >= difficulty[0] && m.value <= difficulty[1] ).map(mark => (
-                mark.label
-            )).join(", ")
-        )
-    }   
+      let cardgroupIds = checkedCardgroups.join();
 
-
-    useEffect(() => {
-
-        if (checkedCardgroups.length){
-            
-            const [difficultyMin, difficultyMax] = difficultyToRange(difficulty)
-            console.log(`%c ${difficultyMin}, ${difficultyMax}`, 'background: #222; color: red')
-
-            let cardgroupIds = checkedCardgroups.join()
-
-            dispatch(getCollectiveDeckFlashcards(
-                {difficultyMin, difficultyMax, cardgroupIds, idOnly: true}
-            ))
-        }
-    }, [difficulty, checkedCardgroups])
-
-    useEffect(() => {
-
-        if (!checkedCardgroups.length && collective_deck_cards.length){
-            dispatch(clearCardReducer())
-        }
-    }, [collective_deck_cards, checkedCardgroups])
-
-    difficultyToString()
-
-
-    console.log(getCheckedCardsCardgroupNames())
-
-    const submitDeck = (e) => {
-        e.preventDefault()
-        console.log("hø")
-        console.log(numberOfFlashcards)
-        console.log(collective_deck_cards)
-
-        if (numberOfFlashcards > collective_deck_cards.length){
-            console.log("fuck deg")
-            let alert = {severity: "error", text: "Error. Number of cards to study exceeds number of matching cards"}
-            dispatch({type: SET_ALERT, payload: alert})  
-        }
-
-        else {
-            dispatch(createUserFlashcardDeck({
-                flashcards: collective_deck_cards,
-                title,
-                nCards: numberOfFlashcards
-            })) 
-            .then((successfully_created) => {
-                if (successfully_created){
-                    onClose()
-                }
-            })
-        }
+      dispatch(
+        getCollectiveDeckFlashcards({
+          difficultyMin,
+          difficultyMax,
+          cardgroupIds,
+          idOnly: true,
+        })
+      );
     }
+  }, [difficulty, checkedCardgroups]);
 
-    return (
-        <Dialog onClose={handleClose} 
-        className={classes.dialog}
-       open={open} 
-       style={{ margin: "100px"}}
-       >    
-            <div style={{margin: "40px 40px"}}> 
+  useEffect(() => {
+    if (!checkedCardgroups.length && collective_deck_cards.length) {
+      dispatch(clearCardReducer());
+    }
+  }, [collective_deck_cards, checkedCardgroups]);
 
-            <form onSubmit={submitDeck} >
-            <Grid container spacing={2} >
+  difficultyToString();
 
-                
+  console.log(getCheckedCardsCardgroupNames());
 
-                <Grid item xs={12} >
-                    <Typography variant="h6" align="left" > Create New Flashcard Deck </Typography>
-                    <Typography variant="body2" align="left" color="textSecondary" > Create a custom deck of flashcards to review. The deck is deleted after it is completed
-                     </Typography>
-                </Grid>
-                <Grid item xs={12} >
-                
-                <TextField 
-                        color="secondary"
-                        onChange={e => setTitle(e.target.value)} 
-                        fullWidth 
-                        required 
-                        value={title}
-                        required
-                        variant="outlined" 
-                        label="Your flashcard deck name"/>
+  const submitDeck = (e) => {
+    e.preventDefault();
+    console.log("hø");
+    console.log(numberOfFlashcards);
+    console.log(collective_deck_cards);
 
-                </Grid>
+    if (numberOfFlashcards > collective_deck_cards.length) {
+      dispatch(
+        errorAlert(
+          "Error. Number of cards to study exceeds number of matching cards"
+        )
+      );
+    } else {
+      dispatch(
+        createUserFlashcardDeck({
+          flashcards: collective_deck_cards,
+          title,
+          nCards: numberOfFlashcards,
+        })
+      ).then((successfully_created) => {
+        if (successfully_created) {
+          onClose();
+        }
+      });
+    }
+  };
 
-                <Grid item xs={12}>
-                    <Typography variant="subtitle2"> Select one or more cardgroups to study </Typography>
-                    <div style={{padding: "10px 20px"}}>
-                    <CardgroupCheck cardgroups={cardgroups} checkedCardgroups={checkedCardgroups} setCheckedCardgroups={setCheckedCardgroups} />
-                    </div>
-                </Grid>
-
-                <Grid item xs={12}>
-                    <Typography variant="subtitle2"> Select difficulty range of flashcards </Typography>
-                    <div style={{padding: "10px 20px"}}>
-                    <Slider 
-                            value={difficulty}
-                            onChange={(e,difficulty) => setDifficulty(difficulty)}
-                            valueLabelDisplay="auto"
-                            aria-labelledby="range-slider"
-                            max={2}
-                            valueLabelDisplay={"off"}
-                            marks={marks}
-                            // getAriaValueText={valuetext}
-                    /> 
-                    </div>                
-                </Grid>
-
-                <Grid item xs={12}>
-                    Picking cards from chapters: <i style={{color: "blue"}}> {getCheckedCardsCardgroupNames()} </i> <br/>
-                    with difficulty <i style={{color: "blue"}}> {difficultyToString()} </i>
-                </Grid>
-
-                <Grid item xs={12}>
-                    <b style={{color: "blue"}}> <Loading alternative={collective_deck_cards.length ? collective_deck_cards.length : "0"} style={{ textAlign: "left", display: "inline   " }} size="12px" color="primary" /> </b> cards from collective deck matching your requirements
-                </Grid>
-
-            
-
-                <Grid item xs={12}>
-                    <TextField
-                        fullWidth
-                        color="secondary"
-                        id="outlined-number"
-                        label="Number of random flashcards to study"
-                        type="number"
-                        required
-                        value={numberOfFlashcards}
-                        onChange={e => setNumberOfFlashcards(e.target.value)} 
-                        variant="outlined"
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <Button variant="contained" onClick={handleClose} fullWidth color="primary"  >Cancel</Button>
-                </Grid>
-                <Grid item xs={6}>
-                <Button type="submit" fullWidth style={{backgroundColor: true ? "green" : "grey", color: "white"}}>Create your deck</Button>
-                </Grid>
-
+  return (
+    <Dialog
+      onClose={handleClose}
+      className={classes.dialog}
+      open={open}
+      style={{ margin: "100px" }}
+    >
+      <div style={{ margin: "40px 40px" }}>
+        <form onSubmit={submitDeck}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="h6" align="left">
+                {" "}
+                Create New Flashcard Deck{" "}
+              </Typography>
+              <Typography variant="body2" align="left" color="textSecondary">
+                {" "}
+                Create a custom deck of flashcards to review. The deck is
+                deleted after it is completed
+              </Typography>
             </Grid>
-                </form>
-            </div>
-        </Dialog> 
-    )
-}
+            <Grid item xs={12}>
+              <TextField
+                color="secondary"
+                onChange={(e) => setTitle(e.target.value)}
+                fullWidth
+                required
+                value={title}
+                required
+                variant="outlined"
+                label="Your flashcard deck name"
+              />
+            </Grid>
 
-export default CreateFlashCardDeckDialog
+            <Grid item xs={12}>
+              <Typography variant="subtitle2">
+                {" "}
+                Select one or more cardgroups to study{" "}
+              </Typography>
+              <div style={{ padding: "10px 20px" }}>
+                <CardgroupCheck
+                  cardgroups={cardgroups}
+                  checkedCardgroups={checkedCardgroups}
+                  setCheckedCardgroups={setCheckedCardgroups}
+                />
+              </div>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="subtitle2">
+                {" "}
+                Select difficulty range of flashcards{" "}
+              </Typography>
+              <div style={{ padding: "10px 20px" }}>
+                <Slider
+                  value={difficulty}
+                  onChange={(e, difficulty) => setDifficulty(difficulty)}
+                  valueLabelDisplay="auto"
+                  aria-labelledby="range-slider"
+                  max={2}
+                  valueLabelDisplay={"off"}
+                  marks={marks}
+                  // getAriaValueText={valuetext}
+                />
+              </div>
+            </Grid>
+
+            <Grid item xs={12}>
+              Picking cards from chapters:{" "}
+              <i style={{ color: "blue" }}>
+                {" "}
+                {getCheckedCardsCardgroupNames()}{" "}
+              </i>{" "}
+              <br />
+              with difficulty{" "}
+              <i style={{ color: "blue" }}> {difficultyToString()} </i>
+            </Grid>
+
+            <Grid item xs={12}>
+              <b style={{ color: "blue" }}>
+                {" "}
+                <Loading
+                  alternative={
+                    collective_deck_cards.length
+                      ? collective_deck_cards.length
+                      : "0"
+                  }
+                  style={{ textAlign: "left", display: "inline   " }}
+                  size="12px"
+                  color="primary"
+                />{" "}
+              </b>{" "}
+              cards from collective deck matching your requirements
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                color="secondary"
+                id="outlined-number"
+                label="Number of random flashcards to study"
+                type="number"
+                required
+                value={numberOfFlashcards}
+                onChange={(e) => setNumberOfFlashcards(e.target.value)}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                onClick={handleClose}
+                fullWidth
+                color="primary"
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                type="submit"
+                fullWidth
+                style={{
+                  backgroundColor: true ? "green" : "grey",
+                  color: "white",
+                }}
+              >
+                Create your deck
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+    </Dialog>
+  );
+};
+
+export default CreateFlashCardDeckDialog;

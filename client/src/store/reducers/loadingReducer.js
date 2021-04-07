@@ -1,22 +1,20 @@
-
-import { SET_LOADING, STOP_LOADING } from '../actionTypes';
+import { SET_LOADING, STOP_LOADING } from "../actionTypes";
 
 const initState = {
-    loading: false
-}
+  loading: false,
+};
 
 const loadingReducer = (state = initState, action) => {
+  switch (action.type) {
+    case SET_LOADING:
+      console.log("laading", action);
+      return {
+        loading: action.payload,
+      };
+    default:
+      console.log("default alert");
+      return state;
+  }
+};
 
-    switch(action.type){
-        case SET_LOADING:
-            console.log("laading", action)
-            return {
-                loading: action.payload
-            }               
-        default:
-            console.log("default alert")
-            return state
-    }
-}
-
-export default loadingReducer
+export default loadingReducer;

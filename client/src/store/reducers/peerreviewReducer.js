@@ -1,33 +1,29 @@
-import { CREATE_PEERREVIEW, LOAD_PEERREVIEWS } from "../actionTypes"
-
-
+import { CREATE_PEERREVIEW, LOAD_PEERREVIEWS } from "../actionTypes";
 
 const initState = {
-    peerreviews: [
-       
-    ]
-}
+  peerreviews: [],
+};
 
 const peerreviewReducer = (state = initState, action) => {
-    switch(action.type) {
-        case CREATE_PEERREVIEW:        
-            return { 
-                ...state,
-                peerreviews: [...state.peerreviews, action.payload]
-            }
-        case LOAD_PEERREVIEWS:
-            console.log("got peerreviews", action.payload)
-            console.log({...state, peerreviews: action.payload})
-            return {
-                ...state, 
-                peerreviews: action.payload
-            }
-            // return state;   
-            // return state;       
-        
-        default:
-            return state;
-    }
-}
+  switch (action.type) {
+    case CREATE_PEERREVIEW:
+      return {
+        ...state,
+        peerreviews: [...state.peerreviews, action.payload],
+      };
+    case LOAD_PEERREVIEWS:
+      console.log("got peerreviews", action.payload);
+      console.log({ ...state, peerreviews: action.payload });
+      return {
+        ...state,
+        peerreviews: action.payload,
+      };
+    // return state;
+    // return state;
 
-export default peerreviewReducer
+    default:
+      return state;
+  }
+};
+
+export default peerreviewReducer;
