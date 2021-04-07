@@ -24,6 +24,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+import pymysql
+
 app = Flask(__name__, static_folder="build", static_url_path="/")
 CORS(app, supports_credentials=True) # Support credentials to allow sessions in blueprints
 
@@ -33,8 +35,22 @@ manager = Manager(app)
 
 manager.add_command("db", MigrateCommand)
 
+db_user = os.environ.get("DB_USER")
+db_pass = os.environ.get("DB_USER")
+db_host = os.environ.get("DB_USER")
+db_name = os.environ.get("DB_NAME")
+
+DB_USER = "root"
+DB_HOST = "localhost" 
+DB_PASS = ""
+DB_NAME = "ttk4145"
+
+# conn = "mysql://{0}@{1}/{2}".format(db_user,  db_host, db_name)
+ 
+conn = "mysql+pymysql://root:password@localhost/ttk4145"
+
 if os.environ.get("FLASK_DEBUG"):
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = conn #"sqlite:///db.db"
 else:
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("POSTGRES_URI")
 
@@ -64,7 +80,7 @@ app.register_blueprint(userFlashcardDeckBlueprint)
 @app.route("/init")
 def init():   
     db.create_all()
-    return jsonify("init")
+    return jsonify(conn)
 
 
 # @app.route("/<a>")
@@ -84,6 +100,6 @@ def init():
 
 
 if __name__ == "__main__":
-    manager.run()
+    # manager.run()
     app.run(debug=True)
     

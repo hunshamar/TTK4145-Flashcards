@@ -204,10 +204,13 @@ def delete_flashcard(cid):
     # return card.to_dict()
 
 def get_user_flashcards_from_cardgroup(cgid, uid):
-    cards = Flashcard.query.filter_by(cardgroup_id=cgid, user_id=uid)
+    cards = Flashcard.query.filter_by(cardgroup_id=cgid, user_id=uid).order_by(Flashcard.id).all()
+    
+    print ([i.front for i in cards])
+
     if (not cards):
-        raise Exception(f"cards from cardgroup not found")
-    return [i.to_dict() for i in cards]
+        print("no cards in cardgroup for user")
+    return [i.public_to_dict() for i in cards]
 
 def get_cardgroup_delivery_status(cgid):
     #add error stuff

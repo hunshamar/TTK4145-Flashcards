@@ -1,11 +1,11 @@
 
 import axios from 'axios';
-import { SET_ALERT, CREATE_CARD, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARDS, LOAD_CARD, UPDATE_CARDS, SET_LOADING, CLEAR_CARDS } from '../actionTypes';
+import { SET_ALERT, CREATE_CARD, DELETE_CARD, DELETE_CARD_ERROR, LOAD_CARDS, LOAD_CARD, UPDATE_CARDS, SET_LOADING, CLEAR_CARDS, EDIT_CARD } from '../actionTypes';
 import { refreshTokens } from './authActions';
 
 export const addCard = (card) => async( dispatch, getState) => {
     await refreshTokens()
-    
+
     axios.post("/api/currentuser/flashcards", {
             front: card.front,
             back: card.back,
@@ -61,8 +61,7 @@ export const editCard = (card) => async( dispatch, getState) => {
                 throw new Error(res.data.error)
             }
             const changedCard = res.data
-            dispatch({type: DELETE_CARD, payload: card})
-            dispatch({type: CREATE_CARD, payload: changedCard})
+            dispatch({type: EDIT_CARD, payload: changedCard})
 
             let alert = {severity: "success", text: "successfully changed card"}
             dispatch({type: SET_ALERT, payload: alert})
