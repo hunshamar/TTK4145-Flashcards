@@ -1,28 +1,21 @@
+import DateFnsUtils from "@date-io/date-fns";
 import {
   Button,
-  Grid,
-  TextField,
   Dialog,
-  Typography,
+  Grid,
   makeStyles,
+  TextField,
+  Typography,
 } from "@material-ui/core";
-import DateFnsUtils from "@date-io/date-fns";
-
 import {
-  MuiPickersUtilsProvider,
   KeyboardDatePicker,
+  MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
-
-import React, { useState } from "react";
-
-import { addCardgroup } from "../../store/actions/cardgroupActions";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import ConfirmDialog from "./confirmDialog";
-import { useSelector } from "react-redux";
-import CardgroupSelect from "../submodules/cardgroupselect";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { createPeerreviews } from "../../store/actions/peerreviewActions";
 import Loading from "../notifications/loading";
+import CardgroupSelect from "../submodules/cardgroupselect";
 
 const useStyles = makeStyles((theme) => ({
   dialog: {

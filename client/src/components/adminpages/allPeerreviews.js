@@ -1,23 +1,19 @@
-import { PageWrapper } from "../../static/wrappers";
-import { useDispatch, useSelector } from "react-redux";
-import userReducer from "../../store/reducers/userReducer";
-import { useEffect } from "react";
-import { getUsersStatus } from "../../store/actions/userActions";
-import { DataGrid } from "@material-ui/data-grid";
-import CardgroupSelect from "../submodules/cardgroupselect";
-import { useState } from "react";
 import { Typography } from "@material-ui/core";
+import { DataGrid } from "@material-ui/data-grid";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { PageWrapper } from "../../static/wrappers";
 import { getCardgroupPeerreviews } from "../../store/actions/peerreviewActions";
 import { dateJSONToString } from "../../utils/datehandling";
-import RateCard from "../submodules/rateCard";
 import Loading from "../notifications/loading";
+import CardgroupSelect from "../submodules/cardgroupselect";
 
 const AllPeerreviews = () => {
   const dispatch = useDispatch();
   // const users = useSelector(state => state.userReducer.users)
   const peerreviews = useSelector(
     (state) => state.peerreviewReducer.peerreviews
-  );  
+  );
 
   const [cardGroupId, setCardGroupId] = useState(0);
 

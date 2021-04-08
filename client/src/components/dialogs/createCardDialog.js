@@ -1,25 +1,18 @@
 import {
+  Box,
   Button,
-  Grid,
-  TextField,
   Dialog,
-  Typography,
+  Grid,
   makeStyles,
-  Input,
-  InputAdornment,
-  IconButton,
-  Tooltip,
+  Typography,
 } from "@material-ui/core";
-import React, { useState, useEffect } from "react";
-
-import { useDispatch } from "react-redux";
-import { addCard, editCard } from "../../store/actions/cardActions";
-import UploadImage from "../submodules/uploadImage";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import HTMLTextField from "../submodules/HTMLTextField";
+import { addCard, editCard } from "../../store/actions/cardActions";
 import FlashcardStudy from "../submodules/flashcardStudy";
-import { Box } from "@material-ui/core";
+import HTMLTextField from "../submodules/HTMLTextField";
 
 const useStyles = makeStyles((theme) => ({
   dialog: {

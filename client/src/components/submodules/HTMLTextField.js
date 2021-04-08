@@ -1,18 +1,13 @@
-import { useRef, useState } from "react";
 import {
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
   IconButton,
   InputAdornment,
   TextField,
   Tooltip,
 } from "@material-ui/core";
-import KeyboardTabIcon from "@material-ui/icons/KeyboardTab";
 import FormatIndentIncreaseIcon from "@material-ui/icons/FormatIndentIncrease";
+import KeyboardTabIcon from "@material-ui/icons/KeyboardTab";
+import { useRef, useState } from "react";
 
-import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 const HTMLTextField = ({
   onChange,
   value,

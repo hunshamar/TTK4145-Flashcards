@@ -1,8 +1,5 @@
-import { Divider, Grid, Typography, Button } from "@material-ui/core";
-
-import { useState, useEffect } from "react";
-
-import DOMPurify from "dompurify";
+import { Button, Divider, Grid, Typography } from "@material-ui/core";
+import { useEffect, useState } from "react";
 import DivHTMLSanatized from "./divHTMLSanitized";
 
 const FlashcardStudy = ({

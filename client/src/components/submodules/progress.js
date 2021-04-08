@@ -1,8 +1,8 @@
 import {
   Grid,
-  Typography,
   LinearProgress,
   makeStyles,
+  Typography,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({

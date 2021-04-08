@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
-import { Alert } from "@material-ui/lab/";
-import { useSelector } from "react-redux";
 import Snackbar from "@material-ui/core/Snackbar";
-import { useDispatch } from "react-redux";
+import { Alert } from "@material-ui/lab/";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { CLEAR_ALERT } from "../../store/actionTypes";
 
 const Alerter = () => {

@@ -1,16 +1,10 @@
-import { PageWrapper } from "../../static/wrappers";
-import { Divider, Grid, makeStyles } from "@material-ui/core";
-import { Typography } from "@material-ui/core";
-import { Button } from "@material-ui/core";
-import GroupView from "../submodules/groupview";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { loadCardgroups } from "../../store/actions/cardgroupActions";
-import { useEffect } from "react";
+import { Button, Grid, makeStyles, Typography } from "@material-ui/core";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { useState } from "react";
-import CreatePeerreview from "../dialogs/createPeerreview";
+import { PageWrapper } from "../../static/wrappers";
 import { getUserPeerreviews } from "../../store/actions/peerreviewActions";
+import CreatePeerreview from "../dialogs/createPeerreview";
 import PeerreviewView from "../submodules/peerReviewView";
 
 const useStyles = makeStyles((theme) => ({

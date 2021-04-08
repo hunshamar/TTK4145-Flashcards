@@ -9,8 +9,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PageWrapper } from "../../static/wrappers";
 import {
-  getCardreviewDeck,
   addCardsToDeck,
+  getCardreviewDeck,
 } from "../../store/actions/studyActions";
 
 const SpacedRepetition = () => {

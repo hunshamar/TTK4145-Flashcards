@@ -1,21 +1,13 @@
 import {
-  IconButton,
-  Dialog,
-  Divider,
-  makeStyles,
-  Tooltip,
-  Typography,
-  Grid,
-  Box,
-  Checkbox,
   Button,
+  Checkbox,
+  Divider,
+  Grid,
+  makeStyles,
   Popover,
+  Typography,
 } from "@material-ui/core";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import DivHTMLSanatized from "../submodules/divHTMLSanitized";
-import FlashcardStudy from "../submodules/flashcardStudy";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 
 const useStyles = makeStyles((theme) => ({
   dialog: {

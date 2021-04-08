@@ -1,21 +1,20 @@
-import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Redirect, NavLink, Link, useHistory } from "react-router-dom";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Brightness4Icon from "@material-ui/icons/Brightness4";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { AppBar, Menu, MenuItem } from "@material-ui/core";
-import PersonIcon from "@material-ui/icons/Person";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import { makeStyles } from "@material-ui/core/styles";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import Brightness4Icon from "@material-ui/icons/Brightness4";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import PersonIcon from "@material-ui/icons/Person";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signOut } from "../../store/actions/authActions";
+import { Link, NavLink, useHistory } from "react-router-dom";
 import { NavBarWrapper } from "../../static/wrappers";
+import { signOut } from "../../store/actions/authActions";
 
 const useStyles = makeStyles((theme) => ({
   link: {

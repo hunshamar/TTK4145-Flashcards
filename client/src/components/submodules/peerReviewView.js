@@ -1,10 +1,7 @@
 import { CardActionArea, Divider, Grid, Typography } from "@material-ui/core";
-import { useState } from "react";
-import { Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
-import loadingReducer from "../../store/reducers/loadingReducer";
-import Loading from "../notifications/loading";
 import { dateJSONToString } from "../../utils/datehandling";
+import Loading from "../notifications/loading";
 
 const PeerreviewView = ({ peerreviews, showDueDate, onClick }) => {
   const loading = useSelector((state) => state.loadingReducer.loading);

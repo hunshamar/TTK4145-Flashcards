@@ -1,36 +1,27 @@
 import {
+  Box,
   Button,
-  Card,
-  Tooltip,
   Grid,
   IconButton,
+  makeStyles,
+  Tooltip,
   Typography,
-  Box,
-  TextField,
 } from "@material-ui/core";
-import Rating from "@material-ui/lab/Rating";
-
-import SaveIcon from "@material-ui/icons/Save";
+import MoodBadIcon from "@material-ui/icons/MoodBad";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-import { makeStyles } from "@material-ui/core";
-import { useState } from "react";
-import MoodBadIcon from "@material-ui/icons/MoodBad";
-import {
-  getRating,
-  saveRating,
-  saveDifficultyRating,
-  saveQualityRating,
-  saveDuplicatesRating,
-} from "../../store/actions/ratingActions";
+import Rating from "@material-ui/lab/Rating";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import ratingReducer from "../../store/reducers/ratingReducer";
-import loadingReducer from "../../store/reducers/loadingReducer";
-import Loading from "../notifications/loading";
-import { SET_ALERT } from "../../store/actionTypes";
+import {
+  saveDifficultyRating,
+  saveDuplicatesRating,
+  saveQualityRating,
+} from "../../store/actions/ratingActions";
 import MarkAsDuplicatedDialog from "../dialogs/markAsDuplicateDialog";
+import Loading from "../notifications/loading";
 import DivHTMLSanatized from "./divHTMLSanitized";
+
 const useStyles = makeStyles((theme) => ({
   duplicateButton: {
     fontSize: "10px",

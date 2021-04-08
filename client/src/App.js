@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
-import Navbar from "./components/layout/navbar";
-import Routes from "./routes";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider } from "@material-ui/core/styles";
-import { theme, darkTheme } from "./static/theme";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
+import Navbar from "./components/layout/navbar";
 import Alerter from "./components/notifications/alerter";
-import Footer from "./components/layout/footer";
+import Routes from "./routes";
+import { darkTheme, theme } from "./static/theme";
 
 // console.log = function () { };
 

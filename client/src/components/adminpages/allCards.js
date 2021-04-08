@@ -1,12 +1,8 @@
-import { PageWrapper } from "../../static/wrappers";
+import { Button, Grid } from "@material-ui/core";
+import { DataGrid } from "@material-ui/data-grid";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import userReducer from "../../store/reducers/userReducer";
-import { useEffect } from "react";
-import { getUsersStatus } from "../../store/actions/userActions";
-import { DataGrid, GridOverlay } from "@material-ui/data-grid";
-import CardgroupSelect from "../submodules/cardgroupselect";
-import { useState } from "react";
-import { Button, Grid, Typography, makeStyles } from "@material-ui/core";
+import { PageWrapper } from "../../static/wrappers";
 import {
   addCardsToCollectiveDeck,
   loadCardgroupFlashcards,
@@ -14,6 +10,7 @@ import {
 } from "../../store/actions/cardActions";
 import CardDialog from "../dialogs/cardDialog";
 import Loading from "../notifications/loading";
+import CardgroupSelect from "../submodules/cardgroupselect";
 
 // const useStyles = makeStyles(theme => ({
 

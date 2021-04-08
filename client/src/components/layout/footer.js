@@ -1,6 +1,6 @@
 import { AppBar, makeStyles } from "@material-ui/core";
-import { NavBarWrapper } from "../../static/wrappers";
 import { Toolbar } from "@material-ui/core/";
+import { NavBarWrapper } from "../../static/wrappers";
 
 const useStyles = makeStyles((theme) => ({
   footer: {

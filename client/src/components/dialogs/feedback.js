@@ -1,14 +1,13 @@
 import {
-  Dialog,
   Button,
-  makeStyles,
+  Dialog,
   IconButton,
+  makeStyles,
   Tooltip,
 } from "@material-ui/core";
-import { useState } from "react";
-import FeedbackIcon from "@material-ui/icons/Feedback";
 import CloseIcon from "@material-ui/icons/Close";
-import MarkAsDuplicatedDialog from "./markAsDuplicateDialog";
+import FeedbackIcon from "@material-ui/icons/Feedback";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   dialog: {

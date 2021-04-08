@@ -1,14 +1,6 @@
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import React, { useEffect } from "react";
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  makeStyles,
-  MenuItem,
-} from "@material-ui/core";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { loadCards } from "../../store/actions/cardActions";
+import { useDispatch, useSelector } from "react-redux";
 import { loadCardgroups } from "../../store/actions/cardgroupActions";
 
 const CardgroupSelect = (props) => {

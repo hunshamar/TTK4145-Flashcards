@@ -1,14 +1,10 @@
-import { Grid, Typography, Divider, Link, Button } from "@material-ui/core";
-
-import { PageWrapper } from "../../static/wrappers";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import { Link as ReactLink } from "react-router-dom";
-import Feedback from "../dialogs/feedback";
+import { Divider, Grid, Link, Typography } from "@material-ui/core";
 import { useState } from "react";
+import { Link as ReactLink } from "react-router-dom";
+import { PageWrapper } from "../../static/wrappers";
+import Feedback from "../dialogs/feedback";
 
 const Home = () => {
-  const [openFeedback, setOpenFeedback] = useState(false);
-
   return (
     <PageWrapper>
       <Grid container spacing={2}>
@@ -66,9 +62,9 @@ const Home = () => {
 
         <Grid item xs={4}>
           <Typography variant="body2" color="textSecondary">
-            <b>Asgeir Hunshamar</b> <br />
-            Creator and developer <br />
-            <a>asgeirhu@stud.ntnu.no</a>
+            <Link color="inherit" href="mailto:asgeirhu@stud.ntnu.no">
+              asgeirhu@stud.ntnu.no
+            </Link>
           </Typography>
         </Grid>
         <Grid item xs={4}>

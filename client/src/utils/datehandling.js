@@ -38,3 +38,6 @@ export const dateJSONToString = (date) => {
     return "Date error";
   }
 };
+
+export const formatTime = (hours, minutes) =>
+  `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`;

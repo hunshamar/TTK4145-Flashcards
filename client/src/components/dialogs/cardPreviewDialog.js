@@ -1,13 +1,6 @@
-import {
-  IconButton,
-  Dialog,
-  Divider,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from "@material-ui/core";
-import FlashcardStudy from "../submodules/flashcardStudy";
+import { Dialog, IconButton, makeStyles, Tooltip } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import FlashcardStudy from "../submodules/flashcardStudy";
 
 const useStyles = makeStyles((theme) => ({
   dialog: {

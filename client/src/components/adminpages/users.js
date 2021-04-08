@@ -1,25 +1,22 @@
-import { PageWrapper } from "../../static/wrappers";
+import {
+  FormControl,
+  Grid,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@material-ui/core";
+import { DataGrid } from "@material-ui/data-grid";
+import SearchIcon from "@material-ui/icons/Search";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import userReducer from "../../store/reducers/userReducer";
-import { useEffect } from "react";
+import { PageWrapper } from "../../static/wrappers";
 import {
   getAllUsers,
   getUsersWithRole,
   searchUsers,
 } from "../../store/actions/userActions";
-import { DataGrid } from "@material-ui/data-grid";
-import SearchIcon from "@material-ui/icons/Search";
-import {
-  FormControl,
-  MenuItem,
-  TextField,
-  Grid,
-  Button,
-  IconButton,
-} from "@material-ui/core";
-import { InputLabel } from "@material-ui/core";
-import { Select } from "@material-ui/core";
-import { useState } from "react";
 import UserDialog from "../dialogs/userDialog";
 
 const Users = (props) => {

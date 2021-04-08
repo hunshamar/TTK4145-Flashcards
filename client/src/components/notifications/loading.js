@@ -1,6 +1,5 @@
 import { CircularProgress, makeStyles } from "@material-ui/core/";
 import { useSelector } from "react-redux";
-import loadingReducer from "../../store/reducers/loadingReducer";
 
 const useStyles = makeStyles((theme) => ({
   loader: {

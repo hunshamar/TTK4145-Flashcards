@@ -1,30 +1,22 @@
+import DateFnsUtils from "@date-io/date-fns";
 import {
   Button,
-  Grid,
-  TextField,
   Dialog,
-  Typography,
+  Grid,
   makeStyles,
+  TextField,
+  Typography,
 } from "@material-ui/core";
-import DateFnsUtils from "@date-io/date-fns";
-
 import {
-  MuiPickersUtilsProvider,
   KeyboardDatePicker,
+  MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
-
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addCardgroup,
   editCardgroup,
 } from "../../store/actions/cardgroupActions";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import ConfirmDialog from "./confirmDialog";
-import { useSelector } from "react-redux";
-import { dateJSONToString } from "../../utils/datehandling";
-import { setDate } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
@@ -49,16 +41,12 @@ const CreateCardGroup = ({ onClose, selectedValue, open, toeditCardgroup }) => {
   const classes = useStyles();
 
   useEffect(() => {
-    console.log("starting");
     if (toeditCardgroup) {
       setTitle(toeditCardgroup.title);
       setNumberOfCards(toeditCardgroup.numberOfCardsDue);
       let d = new Date(toeditCardgroup.dueDate);
       setSelectedDate(d);
-      console.log(
-        "æ",
-        d.getHours() + ":" + String(d.getMinutes()).padStart(2, "0")
-      );
+
       setTime(
         String(d.getHours()).padStart(2, "0") +
           ":" +
@@ -127,8 +115,6 @@ const CreateCardGroup = ({ onClose, selectedValue, open, toeditCardgroup }) => {
       open={open}
       style={{ margin: "100px" }}
     >
-      <ConfirmDialog></ConfirmDialog>
-
       <div style={{ margin: "40px 40px" }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>

@@ -1,15 +1,15 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { CardActionArea, Grid } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { CardActionArea, Grid } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import StyleIcon from "@material-ui/icons/Style";
-import { deleteUserFlashcardDeck } from "../../store/actions/userFlashcardDeckActions";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import { deleteUserFlashcardDeck } from "../../store/actions/userFlashcardDeckActions";
 
 const useStyles = makeStyles({
   root: {

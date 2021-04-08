@@ -1,14 +1,12 @@
-import { PageWrapper } from "../../static/wrappers";
-import { useDispatch, useSelector } from "react-redux";
-import userReducer from "../../store/reducers/userReducer";
-import { useEffect } from "react";
-import { getUsersStatus } from "../../store/actions/userActions";
-import { DataGrid } from "@material-ui/data-grid";
-import CardgroupSelect from "../submodules/cardgroupselect";
-import { useState } from "react";
 import { Typography } from "@material-ui/core";
+import { DataGrid } from "@material-ui/data-grid";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { PageWrapper } from "../../static/wrappers";
+import { getUsersStatus } from "../../store/actions/userActions";
 import { dateJSONToString } from "../../utils/datehandling";
 import Loading from "../notifications/loading";
+import CardgroupSelect from "../submodules/cardgroupselect";
 
 const DeliveryStatus = () => {
   const dispatch = useDispatch();

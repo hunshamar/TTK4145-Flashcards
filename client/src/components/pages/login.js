@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
-import TextField from "@material-ui/core/TextField";
-import axios from "axios";
-import { Button, Icon, Link } from "@material-ui/core";
+import { Button, Link } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
-import { useDispatch } from "react-redux";
-import { PageWrapper } from "../../static/wrappers";
-import { CLEAR_LOADING, SET_ALERT, SET_LOADING } from "../../store/actionTypes";
-import Loading from "../notifications/loading";
+import TextField from "@material-ui/core/TextField";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
-import { endLoading, startLoading } from "../../store/actions/loadingActions";
+import axios from "axios";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Redirect } from "react-router-dom";
+import { PageWrapper } from "../../static/wrappers";
 import { errorAlert } from "../../store/actions/alertActions";
+import { endLoading, startLoading } from "../../store/actions/loadingActions";
+import { SET_ALERT } from "../../store/actionTypes";
+import Loading from "../notifications/loading";
 
 const StyledLink = styled(Link)({
   color: "black",

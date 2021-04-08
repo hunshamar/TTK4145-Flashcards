@@ -1,8 +1,6 @@
 import { Button, Dialog } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addAdmin, removeAdmin } from "../../store/actions/userActions";
-import { useEffect } from "react";
-import userReducer from "../../store/reducers/userReducer";
 
 const UserDialog = (props) => {
   const { onClose, selectedValue, open, user } = props;

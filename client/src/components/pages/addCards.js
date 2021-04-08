@@ -1,13 +1,11 @@
+import { Button, Grid, makeStyles, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import GroupView from "../submodules/groupview";
-import { loadCardgroups } from "../../store/actions/cardgroupActions";
-import { Typography, Button, Grid, makeStyles } from "@material-ui/core";
-import { PageWrapper } from "../../static/wrappers";
-import CreateCardGroup from "../dialogs/createCardGroup";
-import { adminOnly } from "../../store/actions/authActions";
-import authReducer from "../../store/reducers/authReducer";
 import { useHistory } from "react-router-dom";
+import { PageWrapper } from "../../static/wrappers";
+import { loadCardgroups } from "../../store/actions/cardgroupActions";
+import CreateCardGroup from "../dialogs/createCardGroup";
+import GroupView from "../submodules/groupview";
 
 const useStyles = makeStyles((theme) => ({
   addButton: {

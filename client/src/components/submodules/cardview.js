@@ -1,24 +1,20 @@
-import { useState } from "react";
 import {
   Card,
-  Divider,
   IconButton,
   makeStyles,
   Tooltip,
   Typography,
 } from "@material-ui/core";
+import { Grid } from "@material-ui/core/";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Grid } from "@material-ui/core/";
 import { deleteCard } from "../../store/actions/cardActions";
-import loadingReducer from "../../store/reducers/loadingReducer";
-import Loading from "../notifications/loading";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 import CardPreviewDialog from "../dialogs/cardPreviewDialog";
-import FlashcardStudy from "./flashcardStudy";
 import CreateCardDialog from "../dialogs/createCardDialog";
+import Loading from "../notifications/loading";
+import FlashcardStudy from "./flashcardStudy";
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -1,8 +1,4 @@
-import { Button, Dialog, Box } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
-import { addAdmin, removeAdmin } from "../../store/actions/userActions";
-import { useEffect } from "react";
-import userReducer from "../../store/reducers/userReducer";
+import { Box, Dialog } from "@material-ui/core";
 import CardView from "../submodules/cardview";
 
 const CardDialog = (props) => {

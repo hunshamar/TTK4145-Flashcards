@@ -1,4 +1,4 @@
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const AdminPage = () => {
   const history = useHistory();

@@ -1,12 +1,12 @@
 import { Button, Divider, Grid, Typography } from "@material-ui/core";
-import { PageWrapper } from "../../static/wrappers";
 import AddIcon from "@material-ui/icons/Add";
-import React, { useState, useEffect } from "react";
-import CreateFlashCardDeckDialog from "../dialogs/createFlashcardDeckDialog";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { PageWrapper } from "../../static/wrappers";
 import { getUserFlashcardDecks } from "../../store/actions/userFlashcardDeckActions";
-import UserDecksView from "../submodules/userDecksView";
+import CreateFlashCardDeckDialog from "../dialogs/createFlashcardDeckDialog";
 import Loading from "../notifications/loading";
+import UserDecksView from "../submodules/userDecksView";
 
 const UserDecksPage = () => {
   const [open, setOpen] = useState(false);

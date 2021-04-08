@@ -1,23 +1,19 @@
 import {
+  Box,
   Divider,
   Grid,
-  Typography,
-  TextField,
-  Box,
-  Link,
-  InputAdornment,
-  Tooltip,
   IconButton,
-  withStyles,
+  InputAdornment,
+  Link,
+  Tooltip,
+  Typography,
 } from "@material-ui/core";
-import { PageWrapper } from "../../static/wrappers";
-import React, { useState } from "react";
-import RotateLeftIcon from "@material-ui/icons/RotateLeft";
-import RotateLeft from "@material-ui/icons/RotateLeft";
 import { styled } from "@material-ui/core/styles";
-import { useRef } from "react";
-import HTMLTextField from "../submodules/HTMLTextField";
+import RotateLeftIcon from "@material-ui/icons/RotateLeft";
+import React, { useRef, useState } from "react";
+import { PageWrapper } from "../../static/wrappers";
 import DivHTMLSanatized from "../submodules/divHTMLSanitized";
+import HTMLTextField from "../submodules/HTMLTextField";
 
 export const TagTitle = styled(Box)({
   fontWeight: "bold",

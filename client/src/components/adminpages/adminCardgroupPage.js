@@ -1,6 +1,5 @@
 import { PageWrapper } from "../../static/wrappers";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { loadCardgroupFlashcards } from "../../store/actions/cardActions";
 import AdmingroupCardView from "../submodules/adminGroupCardView";

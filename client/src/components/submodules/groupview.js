@@ -1,17 +1,8 @@
-import {
-  Box,
-  CardActionArea,
-  Divider,
-  Grid,
-  Typography,
-} from "@material-ui/core";
-import { useState } from "react";
-import { Redirect } from "react-router-dom";
-import { useSelector } from "react-redux";
-import loadingReducer from "../../store/reducers/loadingReducer";
-import Loading from "../notifications/loading";
-import { dateJSONToString } from "../../utils/datehandling";
+import { CardActionArea, Divider, Grid, Typography } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import { useSelector } from "react-redux";
+import { dateJSONToString } from "../../utils/datehandling";
+import Loading from "../notifications/loading";
 
 const GroupView = ({ cardgroups, showDueDate, onClick }) => {
   const loading = useSelector((state) => state.loadingReducer.loading);

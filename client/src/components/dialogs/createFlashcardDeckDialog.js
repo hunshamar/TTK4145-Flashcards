@@ -7,24 +7,18 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { errorAlert } from "../../store/actions/alertActions";
 import {
   clearCardReducer,
   getCollectiveDeckFlashcards,
 } from "../../store/actions/cardActions";
-import {
-  loadCardgroups,
-  loadCardgroupsInCollectiveDeck,
-} from "../../store/actions/cardgroupActions";
+import { loadCardgroupsInCollectiveDeck } from "../../store/actions/cardgroupActions";
 import { createUserFlashcardDeck } from "../../store/actions/userFlashcardDeckActions";
-import { SET_ALERT } from "../../store/actionTypes";
 import { difficultyToRange } from "../../utils/cardhandling";
 import Loading from "../notifications/loading";
 import CardgroupCheck from "../submodules/cardgroupCheck";
-import CardgroupSelect from "../submodules/cardgroupselect";
-import { errorAlert } from "../../store/actions/alertActions";
 
 const useStyles = makeStyles((theme) => ({
   dialog: {

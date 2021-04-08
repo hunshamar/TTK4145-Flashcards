@@ -1,18 +1,3 @@
-import { PageWrapper } from "../../static/wrappers";
-import { useHistory, useLocation, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState } from "react";
-import {
-  answerFlashcard,
-  deleteUserFlashcardDeck,
-  getUserFlashcardDecks,
-} from "../../store/actions/userFlashcardDeckActions";
-import {
-  getNextCardInUserDeck,
-  loadCardgroupFlashcards,
-} from "../../store/actions/cardActions";
-import FlashcardStudy from "../submodules/flashcardStudy";
-import Loading from "../notifications/loading";
 import {
   Box,
   Button,
@@ -21,6 +6,18 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useParams } from "react-router-dom";
+import { PageWrapper } from "../../static/wrappers";
+import { getNextCardInUserDeck } from "../../store/actions/cardActions";
+import {
+  answerFlashcard,
+  deleteUserFlashcardDeck,
+  getUserFlashcardDecks,
+} from "../../store/actions/userFlashcardDeckActions";
+import Loading from "../notifications/loading";
+import FlashcardStudy from "../submodules/flashcardStudy";
 import Progress from "../submodules/progress";
 
 const useStyles = makeStyles((theme) => ({

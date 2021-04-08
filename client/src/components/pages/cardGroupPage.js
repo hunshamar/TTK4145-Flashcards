@@ -1,32 +1,26 @@
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import { loadCardGroupUserFlashcards } from "../../store/actions/cardActions";
-import CardView from "../submodules/cardview";
-import {
-  deleteCardgroup,
-  loadCardgroup,
-} from "../../store/actions/cardgroupActions";
 import {
   Button,
   Divider,
   Grid,
-  LinearProgress,
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import CreateCardDialog from "../dialogs/createCardDialog";
-import { PageWrapper } from "../../static/wrappers";
-import authReducer from "../../store/reducers/authReducer";
-import loadingReducer from "../../store/reducers/loadingReducer";
-import Loading from "../notifications/loading";
-import userReducer from "../../store/reducers/userReducer";
-import { Redirect } from "react-router-dom";
-import { dateJSONToString } from "../../utils/datehandling";
-import Progress from "../submodules/progress";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import CreateCardGroup from "../dialogs/createCardGroup";
-import { SET_ALERT } from "../../store/actionTypes";
+import { PageWrapper } from "../../static/wrappers";
 import { infoAlert } from "../../store/actions/alertActions";
+import { loadCardGroupUserFlashcards } from "../../store/actions/cardActions";
+import {
+  deleteCardgroup,
+  loadCardgroup,
+} from "../../store/actions/cardgroupActions";
+import { dateJSONToString } from "../../utils/datehandling";
+import CreateCardDialog from "../dialogs/createCardDialog";
+import CreateCardGroup from "../dialogs/createCardGroup";
+import Loading from "../notifications/loading";
+import CardView from "../submodules/cardview";
+import Progress from "../submodules/progress";
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -61,7 +55,6 @@ const CardGroupPage = (props) => {
   const cardgroup = useSelector(
     (state) => state.cardgroupReducer.cardgroups[0]
   );
-  const user = useSelector((state) => state.authReducer.loggedInUser);
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const [openEditCardgroup, setOpenEditCardgroup] = useState(false);

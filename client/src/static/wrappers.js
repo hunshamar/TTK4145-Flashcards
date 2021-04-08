@@ -1,7 +1,6 @@
 import { Box, makeStyles, withStyles } from "@material-ui/core";
 
-export const siteWidth = "750px";
-export const wideSiteWidth = "1200px";
+export const siteWidth = "775px";
 
 export const wrappers = makeStyles((theme) => ({
   pageWrapper: {
@@ -27,16 +26,6 @@ export const AdminNavbarWrapper = withStyles({
     marginRight: "auto",
     maxWidth: siteWidth,
     minWidth: siteWidth,
-    marginTop: "50px",
-  },
-})(Box);
-
-export const WidePageWrapper = withStyles({
-  root: {
-    marginLeft: "auto",
-    marginRight: "auto",
-    maxWidth: wideSiteWidth,
-    minWidth: wideSiteWidth,
     marginTop: "50px",
   },
 })(Box);

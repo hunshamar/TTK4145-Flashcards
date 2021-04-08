@@ -1,33 +1,14 @@
-import { useSelector } from "react-redux";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import {
-  loadCards,
-  loadCardgroupFlashcards,
-  loadPeerReviewFlashcards,
-  clearCardReducer,
-} from "../../store/actions/cardActions";
-import RateCard from "../submodules/rateCard";
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
+import { Divider, makeStyles, Typography } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { PageWrapper } from "../../static/wrappers";
-import { loadCardgroup } from "../../store/actions/cardgroupActions";
-import Loading from "../notifications/loading";
-import loadingReducer from "../../store/reducers/loadingReducer";
-import SaveIcon from "@material-ui/icons/Save";
-import CardgroupSelect from "../submodules/cardgroupselect";
+import { clearCardReducer } from "../../store/actions/cardActions";
 import { loadPeerreview } from "../../store/actions/peerreviewActions";
-import Progress from "../submodules/progress";
-import ratingReducer from "../../store/reducers/ratingReducer";
 import { getRatingsInPeerreview } from "../../store/actions/ratingActions";
 import CardPreviewDialog from "../dialogs/cardPreviewDialog";
+import Loading from "../notifications/loading";
+import Progress from "../submodules/progress";
+import RateCard from "../submodules/rateCard";
 
 const useStyles = makeStyles((theme) => ({
   savebutton: {
