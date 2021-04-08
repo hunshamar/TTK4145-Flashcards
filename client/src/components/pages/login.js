@@ -10,6 +10,7 @@ import { CLEAR_LOADING, SET_ALERT, SET_LOADING } from "../../store/actionTypes";
 import Loading from "../notifications/loading";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import { endLoading, startLoading } from "../../store/actions/loadingActions";
+import { errorAlert } from "../../store/actions/alertActions";
 
 const StyledLink = styled(Link)({
   color: "black",
@@ -52,12 +53,10 @@ const ManualLogin = () => {
           }
         })
         .catch((err) => {
-          let alert = { severity: "error", text: err };
-          dispatch({ type: SET_ALERT, payload: alert });
+          dispatch(errorAlert(err));
         });
     } else {
-      let alert = { severity: "error", text: "Missing credentials for login" };
-      dispatch({ type: SET_ALERT, payload: alert });
+      dispatch(errorAlert("Missing credentials for login"));
     }
   };
 
