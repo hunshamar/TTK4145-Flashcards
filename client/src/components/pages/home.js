@@ -28,24 +28,18 @@ const Home = () => {
             flashcards will be selected to be added to the collective deck. You
             will be rewarded for creating original, quality flashcards.
             <br /> <br />
-            Keep flashcards simple. Flashcards can be written as pure text or
-            with HTML syntax. If you are new to HTML,{" "}
-            <ReactLink to="/htmlguide" color="primary">
-              {" "}
-              <Link color="textPrimary">check out this basic guide </Link>
-            </ReactLink>
-            <br /> <br />
-            <span>
+            Keep flashcards simple. Flashcards can be written using markdown.
+            <p>
               You will be able to use the collective deck to study the course
-              material, either a random sample or through spaced repetition,
-              which is recommended.{" "}
-            </span>
-            <Link
-              color="textPrimary"
-              href="https://en.wikipedia.org/wiki/Spaced_repetition"
-            >
-              Read more about spaced repetition here
-            </Link>
+              material, either a random sample or later through
+              <Link
+                color="textPrimary"
+                href="https://en.wikipedia.org/wiki/Spaced_repetition"
+              >
+                {" "}
+                spaced repetition
+              </Link>
+            </p>
             <br /> <br />
             Please submit feedback, suggestions or report bugs with the button
             below
@@ -63,6 +57,8 @@ const Home = () => {
         <Grid item xs={4}>
           <Typography variant="body2" color="textSecondary">
             <Link color="inherit" href="mailto:asgeirhu@stud.ntnu.no">
+              <b>Asgeir Hunshamar</b> <br />
+              Creator and developer <br />
               asgeirhu@stud.ntnu.no
             </Link>
           </Typography>

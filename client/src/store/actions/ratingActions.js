@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
   CREATE_RATING,
+  LOAD_RATING,
   LOAD_RATINGS,
   SET_ALERT,
   SET_LOADING,
@@ -220,5 +221,30 @@ export const getRatingsInPeerreview = (peerreviewid) => async (
     });
 
   dispatch(endLoading());
+  // console.log("async call up in hier", rating)
+};
+
+export const adminGetFlashcardRatings = (cardId) => async (dispatch) => {
+  console.log("the id", cardId);
+
+  await refreshTokens();
+
+  await axios
+    .get(`/api/admin/flashcard/${cardId}/cardratings`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("user_token"),
+      },
+    })
+    .then((res) => {
+      if (res.data.error) {
+        throw new Error(res.data.error);
+      }
+      console.log(res.data);
+      dispatch({ type: LOAD_RATING, payload: res.data });
+    })
+    .catch((err) => {
+      dispatch(errorAlert(err.toString()));
+    });
+
   // console.log("async call up in hier", rating)
 };

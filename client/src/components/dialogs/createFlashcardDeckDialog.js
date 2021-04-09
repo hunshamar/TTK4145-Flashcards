@@ -131,8 +131,9 @@ const CreateFlashCardDeckDialog = ({ onClose, open }) => {
           title,
           nCards: numberOfFlashcards,
         })
-      ).then((successfully_created) => {
-        if (successfully_created) {
+      ).then((successfullyCreated) => {
+        console.log("succc", successfullyCreated);
+        if (successfullyCreated) {
           onClose();
         }
       });

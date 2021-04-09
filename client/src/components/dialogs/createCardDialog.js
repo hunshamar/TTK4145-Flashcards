@@ -3,6 +3,7 @@ import {
   Button,
   Dialog,
   Grid,
+  TextField,
   makeStyles,
   Typography,
 } from "@material-ui/core";
@@ -12,7 +13,6 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { addCard, editCard } from "../../store/actions/cardActions";
 import FlashcardStudy from "../submodules/flashcardStudy";
-import HTMLTextField from "../submodules/HTMLTextField";
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
@@ -22,57 +22,53 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CreateCardDialog = (props) => {
-  const { onClose, selectedValue, open } = props;
+const CreateCardDialog = ({ onClose, open, cardgroupId, toEditCard }) => {
   const dispatch = useDispatch();
-  const classes = useStyles();
-  const cardgroupId = props.cardgroupId;
 
+  const classes = useStyles();
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
   const [preview, setPreview] = useState(false);
 
   useEffect(() => {
-    if (props.card) {
-      console.log("cccc", props.card);
-      setFront(props.card.front);
-      setBack(props.card.back);
+    if (toEditCard) {
+      setFront(toEditCard.front);
+      setBack(toEditCard.back);
     }
-  }, [props.card]);
+  }, [toEditCard]);
 
   const submit = (e) => {
     e.preventDefault();
 
-    if (front && back && (cardgroupId || props.card.id)) {
-      if (props.card) {
-        dispatch(
-          editCard({
-            front: front,
-            back: back,
-            id: props.card.id,
-          })
-        );
-      } else {
-        dispatch(
-          addCard({
-            front: front,
-            back: back,
-            cardgroupid: cardgroupId,
-          })
-        );
-      }
-      setFront("");
-      setBack("");
-      handleClose();
-    } else {
-      alert("fill inn all fields");
-      console.log(front, back, cardgroupId);
+    if (front && back && (cardgroupId || toEditCard)) {
+      (toEditCard
+        ? dispatch(
+            editCard({
+              front: front,
+              back: back,
+              id: toEditCard.id,
+            })
+          )
+        : dispatch(
+            addCard({
+              front: front,
+              back: back,
+              cardgroupid: cardgroupId,
+            })
+          )
+      ).then((success) => {
+        if (success) {
+          handleClose();
+        }
+      });
     }
   };
 
   const handleClose = () => {
     setPreview(false);
-    onClose(selectedValue);
+    onClose();
+    setFront("");
+    setBack("");
   };
 
   return (
@@ -81,81 +77,41 @@ const CreateCardDialog = (props) => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h5">
-              {" "}
-              {props.card
+              {toEditCard
                 ? "Edit Flashcard"
-                : "Create a flashcard. This can be edited later"}{" "}
+                : "Create a flashcard. This can be edited later"}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              {" "}
-              You can write either pure text or use HTML.{" "}
-              <Link to="/htmlguide" target="_blank">
-                HTML Guide
-              </Link>
+              Markdown is supported
               <br />
               Make sure the Card looks good in <i>Preview Flashcard</i> if
-              writing in HTML.
+              writing in Markdown.
             </Typography>
           </Grid>
-          {/* <Grid item xs={12}>
-                    <CardgroupSelect onChange={e => setCardgroupid(e)} />
-                </Grid> */}
           <Grid item xs={12}>
-            <HTMLTextField
-              onChange={setFront}
+            <TextField
+              onChange={(e) => setFront(e.target.value)}
               value={front}
               label="Front (question)"
               fullWidth
               required
+              variant="outlined"
+              color="secondary"
               multiline
               rows={7}
             />
-            {/* 
-                <TextField
-                    onChange={e => setFront(e.target.value)} 
-                    fullWidth 
-                    required
-                    variant="outlined"
-                    color="secondary"
-                    label="Front"
-                    value={front}
-                    // InputProps={{
-                    //     endAdornment: <InputAdornment position="end" style={{margin: "auto 0 15px"}}>
-                    //         <div>
-                    //             <Tooltip title="Preview HTML">
-                    //                 <IconButton onClick={() => setPreviewFront(true)}>
-                    //                     <VisibilityIcon color="secondary" />
-                    //                 </IconButton>
-                    //             </Tooltip>
-                    //         </div>
-                    //     </InputAdornment>,
-                    // }}
-                    multiline
-                    rows={4}
-                    /> */}
           </Grid>
           <Grid item xs={12}>
-            {/* <TextField 
-                        onChange={e => setBack(e.target.value)}
-                        id="asd"
-                        label="Back"
-                        color="secondary"
-                        multiline
-                        rows={4}
-                        defaultValue=""
-                        value={back}
-                        fullWidth
-                        required
-                        variant="outlined"
-                    /> */}
-            <HTMLTextField
-              onChange={setBack}
+            <TextField
+              onChange={(e) => setBack(e.target.value)}
               label="Back (answer)"
               multiline
               rows={7}
               value={back}
               fullWidth
               required
+              variant="outlined"
+              color="secondary"
             />
           </Grid>
 
@@ -170,9 +126,7 @@ const CreateCardDialog = (props) => {
               >
                 <FlashcardStudy flashcard={{ front, back }} revealback={true} />
               </Box>
-            ) : (
-              ""
-            )}
+            ) : null}
             <Button
               fullWidth
               color="secondary"
@@ -203,7 +157,7 @@ const CreateCardDialog = (props) => {
                 color: "white",
               }}
             >
-              Submit {props.card ? "Edit" : ""}
+              Submit {toEditCard ? "Edit" : ""}
             </Button>
           </Grid>
         </Grid>

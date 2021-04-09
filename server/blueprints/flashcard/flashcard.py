@@ -206,7 +206,7 @@ def delete_flashcard(cid):
 def get_user_flashcards_from_cardgroup(cgid, uid):
     cards = Flashcard.query.filter_by(cardgroup_id=cgid, user_id=uid).order_by(Flashcard.id).all()
     
-    print ([i.front for i in cards])
+    print (cgid, uid, [i.front for i in cards])
 
     if (not cards):
         print("no cards in cardgroup for user")
@@ -227,8 +227,8 @@ def get_cardgroup_delivery_status(cgid):
     return status_dicts
 
 
-def edit_flashcard(cardId, newFront, newBack):
-    flashcard = get_flashcard(cardId)
+def edit_flashcard(card_id, new_front, new_back):
+    flashcard = get_flashcard(card_id)
     cardgroup = Cardgroup.query.get(flashcard.cardgroup_id)
     if (not cardgroup):
         raise Exception(f"Error. cardgroup with id {cardgroupid} not found")
@@ -236,10 +236,17 @@ def edit_flashcard(cardId, newFront, newBack):
     if current_gmt_time > cardgroup.due_date:
         raise Exception("Error. Due date exceeded")
 
-    flashcard.front = newFront
-    flashcard.back = newBack
+    flashcard.front = new_front
+    flashcard.back = new_back
     db.session.commit()
     return flashcard.to_dict()
 
 
+def flashcard_get_ratings(card_id):
+    flashcard = get_flashcard(card_id)
+    ratings = flashcard.ratings
 
+    for r in ratings:
+        print("rating", r.to_dict())
+
+    return([r.to_dict() for r in ratings if r.is_complete()])

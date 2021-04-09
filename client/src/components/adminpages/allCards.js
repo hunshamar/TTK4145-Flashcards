@@ -8,7 +8,7 @@ import {
   loadCardgroupFlashcards,
   removeCardsFromCollectiveDeck,
 } from "../../store/actions/cardActions";
-import CardDialog from "../dialogs/cardDialog";
+import AdminCardDialog from "../dialogs/adminCardDialog";
 import Loading from "../notifications/loading";
 import CardgroupSelect from "../submodules/cardgroupselect";
 
@@ -99,7 +99,7 @@ const AllCards = () => {
   console.log("cgid", cardGroupId);
   return (
     <PageWrapper>
-      <CardDialog
+      <AdminCardDialog
         open={openCard}
         onClose={() => setOpenCard(false)}
         card={selectedCard}

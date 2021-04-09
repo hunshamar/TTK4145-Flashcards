@@ -18,7 +18,7 @@ class Cardgroup(db.Model):
     flashcards = db.relationship("Flashcard", cascade="all, delete", backref="cardgroup")
 
 
-    peerreview = db.relationship("Peerreview", cascade="all, delete-orphan", backref="cardgroup")
+    peerreview = db.relationship("Peerreview", cascade="all, delete", backref="cardgroup")
 
     def peer_review_due_date_ended(self):
         

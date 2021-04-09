@@ -65,20 +65,16 @@ def create_flashcard_review(flashcard, order):
     db.session.commit()
     return flashcard_review
     
-def get_next_review(user_id, deck_id):
+def get_deck_cards(user_id, deck_id):
 
+    print("getting deck cards")
     deck = UserFlashcardDeck.query.get(deck_id)
     if deck.user_id != user_id:
         raise Exception("Not your deck")
     
-    review = FlashcardReview.query.filter_by(flashcard_deck=deck.id).order_by(FlashcardReview.order).all()
+    reviews = FlashcardReview.query.filter_by(flashcard_deck=deck.id).order_by(FlashcardReview.order).all()
     
-    if not len(review):
-        return {}
-    
-    to_dict = review[0].flashcard.to_dict()
-
-    return to_dict
+    return [r.flashcard.to_dict() for r in reviews]
 
 def answer_review(correct, flashcard_deck_id, card_id, user_id):
 
@@ -90,16 +86,16 @@ def answer_review(correct, flashcard_deck_id, card_id, user_id):
 
     flashcard_review = flashcard_reviews[0]
 
-    if UserFlashcardDeck.query.get(flashcard_review.flashcard_deck).user_id != user_id:
+    deck = UserFlashcardDeck.query.get(flashcard_review.flashcard_deck)
+    if deck.user_id != user_id:
         raise Exception("Not your card")
     
     if correct:
         flashcard_review.remove_from_user_deck()
-        return "deleted"
     else:
         flashcard_review.move_to_back_of_deck()
-        return "rotated"
-
+    
+    return get_deck_cards(user_id, deck.id)
     
 
 
@@ -123,6 +119,9 @@ def create_user_flashcard_deck(title, user_id, flashcards, number_of_cards):
 
     if number_of_cards > len(got_flashcards):
         raise Exception("Error creating deck. Too many cards")
+
+    if not number_of_cards:
+        raise Exception("Error. Number of flashcards can not be 0")
 
     
 

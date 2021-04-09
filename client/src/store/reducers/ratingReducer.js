@@ -3,6 +3,7 @@ import {
   LOAD_RATINGS,
   UPDATE_DIFFICULTY_RATING,
   UPDATE_QUALITY_RATING,
+  LOAD_RATING,
 } from "../actionTypes";
 
 const initState = {
@@ -95,26 +96,17 @@ const ratingReducer = (state = initState, action) => {
         };
       }
 
-      return {
-        ...state,
-        ratings: state.ratings.map((rating) => {
-          if (rating.id === action.payload.id) {
-            return action.payload;
-          } else {
-            return rating;
-          }
-        }),
-      };
-
-      return {
-        ...state,
-        ratings: [action.payload],
-      };
     case LOAD_RATINGS:
       console.log("got ratings", action.payload);
       return {
         ...state,
         ratings: action.payload,
+      };
+
+    case LOAD_RATING:
+      return {
+        ...state,
+        ratings: [action.payload],
       };
 
     default:

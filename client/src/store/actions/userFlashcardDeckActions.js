@@ -16,9 +16,7 @@ export const createUserFlashcardDeck = ({
   title,
   nCards,
 }) => async (dispatch) => {
-  // dispatch({ type: S   ET_LOADING, payload: true })
-
-  let sucessfully_created = true;
+  let success = false;
 
   await refreshTokens();
   await axios
@@ -39,17 +37,16 @@ export const createUserFlashcardDeck = ({
       if (res.data.error) {
         throw new Error(res.data.error);
       }
-      console.log("res data alll", res.data);
       dispatch({ type: LOAD_USER_FLASHCARD_DECK, payload: res.data });
       dispatch(successAlert("Successfully created flashcard deck"));
+      success = true;
     })
     .catch((err) => {
       dispatch(errorAlert(err.toString()));
     });
 
   dispatch(endLoading());
-
-  return sucessfully_created;
+  return success;
 };
 
 export const deleteUserFlashcardDeck = (id) => async (dispatch) => {
@@ -81,7 +78,7 @@ export const getUserFlashcardDecks = ({ id } = {}) => async (dispatch) => {
   dispatch(startLoading());
 
   await refreshTokens();
-  axios
+  await axios
     .get(`/api/currentuser/user-flashcard-decks${id ? `?id=${id}` : ""}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user_token")}`,
@@ -93,41 +90,6 @@ export const getUserFlashcardDecks = ({ id } = {}) => async (dispatch) => {
       }
       console.log("all decks", res.data);
       dispatch({ type: LOAD_USER_FLASHCARD_DECKS, payload: res.data });
-    })
-    .catch((err) => {
-      dispatch(errorAlert(err.toString()));
-    });
-
-  dispatch(endLoading());
-};
-export const answerFlashcard = ({ deckId, flashcardId, correct }) => async (
-  dispatch
-) => {
-  dispatch(startLoading());
-
-  await refreshTokens();
-  await axios
-    .post(
-      `/api/currentuser/user-flashcard-decks/${deckId}/flashcard/${flashcardId}/answer`,
-      {
-        correct: correct,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("user_token")}`,
-        },
-      }
-    )
-    .then((res) => {
-      if (res.data.error) {
-        throw new Error(res.data.error);
-      }
-      if (res.data.status === "deleted") {
-        dispatch(successAlert("correct: removed card from deck"));
-      }
-      if (res.data.status === "rotated") {
-        dispatch(infoAlert("wrong: removed card to back of deck"));
-      }
     })
     .catch((err) => {
       dispatch(errorAlert(err.toString()));

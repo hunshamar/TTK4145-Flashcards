@@ -20,7 +20,8 @@ import {
 } from "../../store/actions/ratingActions";
 import MarkAsDuplicatedDialog from "../dialogs/markAsDuplicateDialog";
 import Loading from "../notifications/loading";
-import DivHTMLSanatized from "./divHTMLSanitized";
+import ReactMarkdown from "react-markdown";
+import StyledReactMarkdown from "./styledReactMarkdown";
 
 const useStyles = makeStyles((theme) => ({
   duplicateButton: {
@@ -72,7 +73,6 @@ const RateCard = ({ rating, save, previewCard, cardIdToIndex }) => {
 
   const [duplicateRatings, setDuplicateRatings] = useState([]);
   const [openMarkAsDuplicated, setOpenMarkAsDuplicated] = useState(false);
-  const loading = useSelector((state) => state.loadingReducer.loading);
 
   const [quality, setQuality] = useState(0);
   const [hoverQuality, setHoverQuality] = useState(-1);
@@ -126,6 +126,10 @@ const RateCard = ({ rating, save, previewCard, cardIdToIndex }) => {
     dispatch(saveDuplicatesRating(duplicateRatings, rating.id));
   };
 
+  if (!rating.card) {
+    return <Loading />;
+  }
+
   return (
     <Box
       className={openMarkAsDuplicated ? classes.marked : ""}
@@ -148,9 +152,9 @@ const RateCard = ({ rating, save, previewCard, cardIdToIndex }) => {
         <Grid item xs={4}>
           <Typography variant="subtitle2">Question</Typography>
           <Typography variant="body2">
-            <DivHTMLSanatized
+            <StyledReactMarkdown
+              style={{ overflow: "hidden", textAlign: "left" }}
               text={rating.card.front}
-              style={{ overflow: "hidden" }}
             />
           </Typography>
         </Grid>
@@ -163,9 +167,9 @@ const RateCard = ({ rating, save, previewCard, cardIdToIndex }) => {
             <Typography className={classes.body} variant="body2">
               {" "}
               {flipped ? (
-                <DivHTMLSanatized
+                <StyledReactMarkdown
+                  style={{ overflow: "hidden", textAlign: "left" }}
                   text={rating.card.back}
-                  style={{ overflow: "hidden" }}
                 />
               ) : (
                 ""
@@ -211,8 +215,6 @@ const RateCard = ({ rating, save, previewCard, cardIdToIndex }) => {
             />
           </Tooltip>
 
-          {/* {difficulty/2 !== null && <Box ml={2}>{difficultyLabels[hovedDifficulty !== -1 ? hovedDifficulty : difficulty/2]}</Box>}  */}
-
           <Typography variant="body2">Relevance and Quality</Typography>
           <Tooltip title={qualityLabels[hoverQuality]} placement="right">
             <Rating
@@ -228,16 +230,6 @@ const RateCard = ({ rating, save, previewCard, cardIdToIndex }) => {
             />
           </Tooltip>
 
-          {/* <Typography variant="body2">Overall quality</Typography> 
-                        <Rating 
-                            value={quality}
-                            precision={0.5}
-                            size="small"
-                            onChange={(event, newValue) => {
-                                setQuality(newValue);
-                            }}
-                        /> */}
-          {/* <Typography variant="body2">Duplicate Card{duplicateCardIds.length >= 2 ? "s" : ""}: </Typography> */}
           <Box style={{ minHeight: "30px", minWidth: "30px" }}>
             <Typography variant="body2" color="textSecondary">
               {duplicateRatings.map((rating) => (
@@ -279,11 +271,11 @@ const RateCard = ({ rating, save, previewCard, cardIdToIndex }) => {
           </Button>
         </Grid>
 
-        {/* <Grid item xs={2} style={{textAlign: "center"}}>     
-                    <Typography variant="subtitle2">Save Rating</Typography>  
+        {/* <Grid item xs={2} style={{textAlign: "center"}}>
+                    <Typography variant="subtitle2">Save Rating</Typography>
                     <IconButton size="small" color="primary" onClick={submitRating}>
-                        {loading  ? <Loading color="primary" size="24px"  /> : <SaveIcon size="small"/>} 
-                    </IconButton> 
+                        {loading  ? <Loading color="primary" size="24px"  /> : <SaveIcon size="small"/>}
+                    </IconButton>
                 </Grid> */}
       </Grid>
     </Box>

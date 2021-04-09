@@ -112,6 +112,15 @@ def cardgroup_user_flashcardscards(cgid):
     except Exception as e:
         return jsonify({"error": str(e)})
 
+@flashcardBlueprint.route("/api/admin/flashcard/<cid>/cardratings", methods=["GET"])
+@jwt_required
+@admin_only
+def flashcard_ratings_get(cid):
+    try:
+        return jsonify(flashcard_get_ratings(int(cid)))
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
         
 
 

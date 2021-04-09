@@ -14,12 +14,13 @@ import { endLoading, startLoading } from "./loadingActions";
 import { errorAlert, successAlert, infoAlert } from "./alertActions";
 
 export const addCardgroup = (cardgroup) => async (dispatch, getState) => {
+  let success = false;
   await refreshTokens();
 
   console.log("c cardgroup");
   console.log(cardgroup);
 
-  axios
+  await axios
     .post(
       "/api/admin/cardgroups",
       {
@@ -46,20 +47,21 @@ export const addCardgroup = (cardgroup) => async (dispatch, getState) => {
       console.log("was created, ", createdCardgroup);
       dispatch(successAlert("Successfully ceated cardgroup"));
       dispatch({ type: CREATE_CARDGROUP, payload: createdCardgroup });
+      success = true;
     })
     .catch((err) => {
       dispatch(errorAlert(err.toString()));
     });
-
-  console.log("async call up in hier", cardgroup);
+  return success;
 };
 
 export const editCardgroup = (cardgroup) => async (dispatch, getState) => {
+  let success = false;
   await refreshTokens();
 
   console.log("we editing");
 
-  axios
+  await axios
     .put(
       `/api/admin/cardgroups/${cardgroup.id}`,
       {
@@ -84,12 +86,13 @@ export const editCardgroup = (cardgroup) => async (dispatch, getState) => {
 
       dispatch(successAlert("successfully edited cardgroup: "));
       dispatch({ type: EDIT_CARDGROUP, payload: editedCardgroup });
+      success = true;
     })
     .catch((err) => {
       dispatch(errorAlert(err.toString()));
     });
-
-  console.log("async call up in hier", cardgroup);
+  console.log("returning true on edit cardgrup", success);
+  return success;
 };
 
 export const loadCardgroupsInCollectiveDeck = () => async (

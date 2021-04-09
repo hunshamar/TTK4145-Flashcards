@@ -60,19 +60,24 @@ def user_flashcard_decks_post():
 
 
     
-@userFlashcardDeckBlueprint.route("/api/currentuser/user-flashcard-decks/<fcdid>/flashcard", methods=["GET"])
+@userFlashcardDeckBlueprint.route("/api/currentuser/user-flashcard-decks/<fcdid>/flashcards", methods=["GET"])
 @jwt_required
-def user_flashcard_decks_flashcard(fcdid):
+def user_flashcard_decks_flashcards(fcdid):
     try:
 
         deck_id = int(fcdid)
         user_id = get_jwt_identity()
 
-        return jsonify(get_next_review(user_id, deck_id))
+        deck = get_deck_cards(user_id, deck_id)
+
+        return jsonify(deck)
+
 
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
+
+
 @userFlashcardDeckBlueprint.route("/api/currentuser/user-flashcard-decks/<fcdid>/flashcard/<cid>/answer", methods=["POST"])
 @jwt_required
 def user_flashcard_decks_flashcard_answer(fcdid, cid):
@@ -86,7 +91,9 @@ def user_flashcard_decks_flashcard_answer(fcdid, cid):
 
         print(correct, flashcard_deck_id, card_id, user_id)
 
-        return jsonify({"status": answer_review(correct, flashcard_deck_id, card_id, user_id)})
+        updated_deck = answer_review(correct, flashcard_deck_id, card_id, user_id)
+
+        return jsonify(updated_deck)
 
     except Exception as e:
         print(e)

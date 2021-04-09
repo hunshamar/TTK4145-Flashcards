@@ -17,9 +17,10 @@ import { startLoading, endLoading } from "./loadingActions";
 import { errorAlert, successAlert, infoAlert } from "./alertActions";
 
 export const addCard = (card) => async (dispatch, getState) => {
+  let success = false;
   await refreshTokens();
 
-  axios
+  await axios
     .post(
       "/api/currentuser/flashcards",
       {
@@ -45,6 +46,7 @@ export const addCard = (card) => async (dispatch, getState) => {
       dispatch({ type: CREATE_CARD, payload: createdCard });
 
       dispatch(successAlert("Successfully Created card alert"));
+      success = true;
 
       //   let alert = { severity: "success", text: "successfully created card" };
       //   dispatch({ type: SET_ALERT, payload: alert });
@@ -54,14 +56,15 @@ export const addCard = (card) => async (dispatch, getState) => {
       dispatch(errorAlert(err.toString()));
     });
 
-  console.log("async call up in hier", card);
+  return success;
 };
 
 export const editCard = (card) => async (dispatch, getState) => {
+  let success = false;
   await refreshTokens();
   console.log("carddd", card);
 
-  axios
+  await axios
     .put(
       "/api/currentuser/flashcards/" + card.id,
       {
@@ -85,6 +88,7 @@ export const editCard = (card) => async (dispatch, getState) => {
       const changedCard = res.data;
       dispatch({ type: EDIT_CARD, payload: changedCard });
       dispatch(successAlert("successfully changed card"));
+      success = true;
     })
     .catch((err) => {
       console.log("This is an error yes plz");
@@ -93,7 +97,7 @@ export const editCard = (card) => async (dispatch, getState) => {
       dispatch({ type: SET_ALERT, payload: alert });
     });
 
-  console.log("async call up in hier", card);
+  return success;
 };
 
 export const loadCardGroupUserFlashcards = (cardgroupId) => async (
@@ -181,11 +185,76 @@ export const loadPeerReviewFlashcards = (peerreviewid) => async (
   dispatch(endLoading());
 };
 
-export const getNextCardInUserDeck = (deckId) => async (dispatch, getState) => {
+// export const getNextCardInUserDeck = (deckId) => async (dispatch, getState) => {
+//   dispatch(startLoading());
+//   await refreshTokens();
+//   await axios
+//     .get(`/api/currentuser/user-flashcard-decks/${deckId}/flashcard`, {
+//       headers: {
+//         Authorization: "Bearer " + localStorage.getItem("user_token"),
+//       },
+//     })
+//     .then((response) => {
+//       if (response.data.error) {
+//         throw new Error(response.data.error);
+//       }
+//       const card = response.data;
+//       console.log("response card");
+//       console.log(card);
+//       dispatch({ type: LOAD_CARD, payload: card });
+//     })
+//     .catch((err) => {
+//       dispatch(errorAlert(err.toString()));
+//     });
+
+//   dispatch(endLoading());
+// };
+
+export const answerFlashcard = ({ deckId, flashcardId, correct }) => async (
+  dispatch
+) => {
+  dispatch(startLoading());
+
+  await refreshTokens();
+  await axios
+    .post(
+      `/api/currentuser/user-flashcard-decks/${deckId}/flashcard/${flashcardId}/answer`,
+      {
+        correct: correct,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("user_token")}`,
+        },
+      }
+    )
+    .then((res) => {
+      if (res.data.error) {
+        throw new Error(res.data.error);
+      }
+
+      if (res.data.status === "complete") {
+        return { status: "complete" };
+      }
+
+      const new_deck = res.data;
+      dispatch({ type: LOAD_CARDS, payload: new_deck });
+    })
+    .catch((err) => {
+      dispatch(errorAlert(err.toString()));
+    });
+
+  dispatch(endLoading());
+};
+
+export const getFlashcardsInUserDeck = (deckId) => async (
+  dispatch,
+  getState
+) => {
   dispatch(startLoading());
   await refreshTokens();
   await axios
-    .get(`/api/currentuser/user-flashcard-decks/${deckId}/flashcard`, {
+    .get(`/api/currentuser/user-flashcard-decks/${deckId}/flashcards`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("user_token"),
       },
@@ -197,7 +266,7 @@ export const getNextCardInUserDeck = (deckId) => async (dispatch, getState) => {
       const card = response.data;
       console.log("response card");
       console.log(card);
-      dispatch({ type: LOAD_CARD, payload: card });
+      dispatch({ type: LOAD_CARDS, payload: card });
     })
     .catch((err) => {
       dispatch(errorAlert(err.toString()));

@@ -1,6 +1,7 @@
 import { Button, Divider, Grid, Typography } from "@material-ui/core";
 import { useEffect, useState } from "react";
-import DivHTMLSanatized from "./divHTMLSanitized";
+import ReactMarkdown from "react-markdown";
+import StyledReactMarkdown from "./styledReactMarkdown";
 
 const FlashcardStudy = ({
   flashcard,
@@ -20,16 +21,19 @@ const FlashcardStudy = ({
         <Grid
           item
           xs={12}
-          style={{ textAlign: "center", minHeight: "100px", minWidth: "300px" }}
+          style={{ minHeight: "100px", minWidth: "300px", textAlign: "center" }}
         >
           <Typography variant="caption" color="textSecondary">
             Front:
           </Typography>
           <Typography
             variant="body2"
-            style={{ marginTop: "auto", overflow: "hidden" }}
+            style={{
+              marginTop: "auto",
+              overflow: "hidden",
+            }}
           >
-            <DivHTMLSanatized text={flashcard.front} />
+            <StyledReactMarkdown text={flashcard.front} />
           </Typography>
         </Grid>
         <Grid item xs={12}>
@@ -46,7 +50,7 @@ const FlashcardStudy = ({
                 Back:
               </Typography>
               <Typography variant="body2">
-                <DivHTMLSanatized text={flashcard.back} />
+                <StyledReactMarkdown text={flashcard.back} />
               </Typography>
             </div>
           ) : externalReveal ? (

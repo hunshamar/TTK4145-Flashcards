@@ -14,7 +14,6 @@ const AdminCardGroupPage = (props) => {
     dispatch(loadCardgroupFlashcards(cardgroupId));
   }, [dispatch, cardgroupId]);
 
-  console.log("cards", cards);
   return (
     <PageWrapper>
       <div>

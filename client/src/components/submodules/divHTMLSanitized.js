@@ -1,12 +1,8 @@
 import DOMPurify from "dompurify";
+import ReactMarkdown from "react-markdown";
 
 const DivHTMLSanatized = ({ text, style }) => {
-  return (
-    <div
-      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }}
-      style={style}
-    />
-  );
+  return <ReactMarkdown style={style}>{text}</ReactMarkdown>;
 };
 
 export default DivHTMLSanatized;

@@ -41,7 +41,8 @@ const AddCards = () => {
     setOpen(true);
   };
 
-  const handleClose = (value) => {
+  const handleClose = () => {
+    console.log("closing time");
     setOpen(false);
   };
 

@@ -114,7 +114,7 @@ const CardView = (props) => {
       <CreateCardDialog
         open={openEdit}
         onClose={() => setOpenEdit(false)}
-        card={editCard}
+        toEditCard={editCard}
       />
 
       {cardItems.length ? (

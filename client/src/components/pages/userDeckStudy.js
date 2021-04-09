@@ -10,9 +10,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { PageWrapper } from "../../static/wrappers";
-import { getNextCardInUserDeck } from "../../store/actions/cardActions";
 import {
   answerFlashcard,
+  getFlashcardsInUserDeck,
+} from "../../store/actions/cardActions";
+import {
   deleteUserFlashcardDeck,
   getUserFlashcardDecks,
 } from "../../store/actions/userFlashcardDeckActions";
@@ -49,8 +51,9 @@ const useStyles = makeStyles((theme) => ({
 const UserDeckStudy = () => {
   const classes = useStyles();
   const params = useParams();
-  const id = params.id;
+  const id = parseInt(params.id);
 
+  const flashcards = useSelector((state) => state.cardReducer.cards);
   const flashcard = useSelector((state) => state.cardReducer.cards)[0];
   const userDeck = useSelector(
     (state) => state.userFlashcardDeckReducer.decks
@@ -58,64 +61,48 @@ const UserDeckStudy = () => {
 
   const dispatch = useDispatch();
   const [reveal, setReveal] = useState(false);
+  const [done, setDone] = useState(false);
   const history = useHistory();
 
-  // const handleKeyPress = (e) => {
-  //     if (!reveal && e.code == "Space"){
-  //         setReveal(true)
-  //     }
-  //     if (reveal && e.code === "Digit1"){
-  //         console.log("ferdig")
-  //         handleWrong()
-  //     }
-  //     if (reveal && e.code === "Digit2"){
-  //         console.log("for i dag")
-  //         handleCorrect()
-  //     }
-  // }
-
-  const handleCorrect = () => {
+  const handleAnswer = (isCorrect) => {
     dispatch(
-      answerFlashcard({ deckId: id, flashcardId: flashcard.id, correct: true })
-    )
-      .then(() => {
-        dispatch(getNextCardInUserDeck(id));
+      answerFlashcard({
+        deckId: id,
+        flashcardId: flashcard.id,
+        correct: isCorrect,
       })
-      .then(() => {
-        dispatch(getUserFlashcardDecks({ id: id }));
-        setReveal(false);
-      });
+    ).then(() => {
+      setReveal(false);
+    });
   };
-
-  const handleWrong = () => {
-    dispatch(
-      answerFlashcard({ deckId: id, flashcardId: flashcard.id, correct: false })
-    )
-      .then(() => {
-        dispatch(getNextCardInUserDeck(id));
-        setReveal(false);
-      })
-      .then(() => {
-        dispatch(getUserFlashcardDecks({ id: id }));
-        setReveal(false);
-      });
-  };
-
-  // useEffect(() => {
-  //     document.addEventListener("keydown", handleKeyPress, false);
-  // }, [reveal])
 
   useEffect(() => {
-    dispatch(getNextCardInUserDeck(id));
+    dispatch(getFlashcardsInUserDeck(id));
     dispatch(getUserFlashcardDecks({ id: id }));
   }, []);
 
   useEffect(() => {
-    if (userDeck && userDeck.nFlashcards === 0) {
-      dispatch(deleteUserFlashcardDeck(id));
-      history.push("/user-decks");
+    if (!flashcards.length) {
+      dispatch(getUserFlashcardDecks({ id: id }));
+    }
+  }, [flashcards]);
+
+  useEffect(() => {
+    console.log(id);
+    console.log("ud", userDeck);
+    if (userDeck && !userDeck.nFlashcards && userDeck.id === id) {
+      setDone(true);
     }
   }, [userDeck]);
+
+  const handleEnd = () => {
+    dispatch(deleteUserFlashcardDeck(id));
+    history.push("/user-decks");
+  };
+
+  if (done) {
+    return <PageWrapper>Deck done</PageWrapper>;
+  }
 
   return (
     <PageWrapper>
@@ -135,7 +122,7 @@ const UserDeckStudy = () => {
           {userDeck ? (
             <Typography variant="h4" color="textSecondary">
               <Progress
-                x={userDeck.nFlashcardsOriginally - userDeck.nFlashcards}
+                x={userDeck.nFlashcardsOriginally - flashcards.length}
                 y={userDeck.nFlashcardsOriginally}
                 body="Study progress"
               />
@@ -182,7 +169,7 @@ const UserDeckStudy = () => {
                 <Button
                   fullWidth
                   variant="contained"
-                  onClick={handleWrong}
+                  onClick={() => handleAnswer(false)}
                   className={classes.wrongButton}
                 >
                   wrong (move card to back of Deck)
@@ -192,7 +179,7 @@ const UserDeckStudy = () => {
                 <Button
                   fullWidth
                   variant="contained"
-                  onClick={handleCorrect}
+                  onClick={() => handleAnswer(true)}
                   className={classes.correctButton}
                 >
                   Correct (remove card from deck)

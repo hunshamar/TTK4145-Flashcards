@@ -117,19 +117,6 @@ def cardrating_delete(cid):
 
 
 
-## remove
-@cardratingBlueprint.route("/api/cardratings")
-# @jwt_required
-def ratings():    
-    try: 
-
-        sleep(DELAY_S)
-        return jsonify(get_all_ratings())
-
-
-    except Exception as e:
-        print(e)
-        return(jsonify({"error": str(e)})) 
 
 
 @cardratingBlueprint.route("/api/currentuser/cardrating/<rid>/duplicates", methods=["PATCH"])

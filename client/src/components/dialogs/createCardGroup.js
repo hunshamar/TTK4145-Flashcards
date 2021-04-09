@@ -17,6 +17,7 @@ import {
   addCardgroup,
   editCardgroup,
 } from "../../store/actions/cardgroupActions";
+import { formatTime } from "../../utils/datehandling";
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
@@ -26,17 +27,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CreateCardGroup = ({ onClose, selectedValue, open, toeditCardgroup }) => {
+const CreateCardGroup = ({ onClose, open, toeditCardgroup }) => {
   const dispatch = useDispatch();
 
   const [selectedDate, setSelectedDate] = React.useState(null);
   const [title, setTitle] = useState("");
   const [numberOfCards, setNumberOfCards] = useState(null);
   const [time, setTime] = useState("23:59");
-  const formSubmitCallback = useSelector(
-    (state) => state.alertReducer.severity
-  );
-  const newStatus = useSelector((state) => state.alertReducer.newAlert);
 
   const classes = useStyles();
 
@@ -47,27 +44,9 @@ const CreateCardGroup = ({ onClose, selectedValue, open, toeditCardgroup }) => {
       let d = new Date(toeditCardgroup.dueDate);
       setSelectedDate(d);
 
-      setTime(
-        String(d.getHours()).padStart(2, "0") +
-          ":" +
-          String(d.getMinutes()).padStart(2, "0")
-      );
+      setTime(formatTime(d.getHours(), d.getMinutes()));
     }
-  }, [open]);
-
-  // remove
-  console.log(selectedDate);
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-  useEffect(() => {
-    console.log("stformSubmitCallback");
-    if (formSubmitCallback === "success") {
-      handleClose();
-    }
-  }, [newStatus]);
+  }, [open, toeditCardgroup]);
 
   const submit = (e) => {
     e.preventDefault();
@@ -77,26 +56,28 @@ const CreateCardGroup = ({ onClose, selectedValue, open, toeditCardgroup }) => {
     dueDate.setHours(time.split(":")[0]);
 
     if (title && selectedDate && numberOfCards && time) {
-      if (toeditCardgroup) {
-        dispatch(
-          editCardgroup({
-            id: toeditCardgroup.id,
-            title: title,
-            dueDate: dueDate,
-            numberOfCardsDue: numberOfCards,
-          })
-        );
-      } else {
-        dispatch(
-          addCardgroup({
-            title: title,
-            dueDate: dueDate,
-            numberOfCardsDue: numberOfCards,
-          })
-        );
-      }
-    } else {
-      alert("Fill inn all fields");
+      (toeditCardgroup
+        ? dispatch(
+            editCardgroup({
+              id: toeditCardgroup.id,
+              title: title,
+              dueDate: dueDate,
+              numberOfCardsDue: numberOfCards,
+            })
+          )
+        : dispatch(
+            addCardgroup({
+              title: title,
+              dueDate: dueDate,
+              numberOfCardsDue: numberOfCards,
+            })
+          )
+      ).then((success) => {
+        if (success) {
+          console.log("closed");
+          handleClose();
+        }
+      });
     }
   };
 
@@ -105,7 +86,7 @@ const CreateCardGroup = ({ onClose, selectedValue, open, toeditCardgroup }) => {
     setTitle("");
     setNumberOfCards(0);
     setTime("23:59");
-    onClose(selectedValue);
+    onClose();
   };
 
   return (
@@ -167,7 +148,7 @@ const CreateCardGroup = ({ onClose, selectedValue, open, toeditCardgroup }) => {
                   id="date-picker-inline"
                   label="Due date for delivery"
                   value={selectedDate}
-                  onChange={handleDateChange}
+                  onChange={(date) => setSelectedDate(date)}
                   onClick={console.log("close")}
                   color="secondary"
                   autoOk
