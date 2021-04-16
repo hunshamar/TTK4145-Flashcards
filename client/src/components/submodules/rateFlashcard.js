@@ -62,7 +62,7 @@ const qualityLabels = {
   5: "Excellent+",
 };
 
-const RateCard = ({ rating, save, previewCard, cardIdToIndex }) => {
+const RateFlashcard = ({ rating, save, previewCard, cardIdToIndex }) => {
   const classes = useStyles();
   const [flipped, setFlipped] = useState(false);
 
@@ -282,4 +282,4 @@ const RateCard = ({ rating, save, previewCard, cardIdToIndex }) => {
   );
 };
 
-export default RateCard;
+export default RateFlashcard;

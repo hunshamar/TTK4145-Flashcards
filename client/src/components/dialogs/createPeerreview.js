@@ -13,7 +13,11 @@ import {
 } from "@material-ui/pickers";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createPeerreviews } from "../../store/actions/peerreviewActions";
+import {
+  createPeerreviews,
+  editPeerReview,
+} from "../../store/actions/peerreviewActions";
+import { formatTime } from "../../utils/datehandling";
 import Loading from "../notifications/loading";
 import CardgroupSelect from "../submodules/cardgroupselect";
 
@@ -25,9 +29,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CreatePeerreview = (props) => {
-  const { onClose, selectedValue, open } = props;
+const CreatePeerreview = ({
+  onClose,
+  selectedValue,
+  open,
+  toEditPeerreview,
+}) => {
   const dispatch = useDispatch();
+  const editmode = toEditPeerreview && toEditPeerreview.cardgroup;
+
+  useEffect(() => {
+    console.log("ppp", toEditPeerreview);
+    if (editmode) {
+      console.log("groipid", toEditPeerreview.cardgroup.id);
+      setGroupId(toEditPeerreview.cardgroup.id);
+      setNumberOfReviews(toEditPeerreview.cardgroup.numberOfRatingsDue);
+      let d = new Date(toEditPeerreview.cardgroup.peerReviewDueDate);
+      setSelectedDate(d);
+      setTime(formatTime(d.getHours(), d.getMinutes()));
+    }
+  }, [open, toEditPeerreview]);
 
   const [selectedDate, setSelectedDate] = React.useState(null);
   const [numberOfReviews, setNumberOfReviews] = useState(0);
@@ -37,7 +58,7 @@ const CreatePeerreview = (props) => {
   );
   const newStatus = useSelector((state) => state.alertReducer.newAlert);
 
-  const [groupId, setGroupId] = useState(0);
+  const [groupId, setGroupId] = useState(null);
 
   const classes = useStyles();
 
@@ -52,24 +73,50 @@ const CreatePeerreview = (props) => {
     }
   }, [newStatus]);
 
+  //   e.preventDefault();
+
+  //   if (groupId && selectedDate && numberOfReviews && time) {
+  //     console.log("herfra");
+
+  //     dispatch(createPeerreviews({  }));
+  //   } else {
+  //   }
+  // };
+
   const submit = (e) => {
     e.preventDefault();
+    let dueDate = selectedDate;
+
+    dueDate.setMinutes(time.split(":")[1]);
+    dueDate.setHours(time.split(":")[0]);
 
     if (groupId && selectedDate && numberOfReviews && time) {
-      console.log("herfra");
-      let dueDate = selectedDate;
-
-      dueDate.setMinutes(time.split(":")[1]);
-      dueDate.setHours(time.split(":")[0]);
-
-      dispatch(createPeerreviews({ groupId, dueDate, numberOfReviews }));
-    } else {
+      (editmode
+        ? dispatch(
+            editPeerReview({
+              groupId,
+              dueDate,
+            })
+          )
+        : dispatch(
+            createPeerreviews({
+              groupId,
+              dueDate,
+              numberOfReviews,
+            })
+          )
+      ).then((success) => {
+        if (success) {
+          console.log("closed");
+          handleClose();
+        }
+      });
     }
   };
 
   const handleClose = () => {
     setSelectedDate(null);
-    setGroupId(0);
+    setGroupId(null);
     setNumberOfReviews(0);
     setTime("23:59");
     onClose(selectedValue);
@@ -81,14 +128,16 @@ const CreatePeerreview = (props) => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h6" align="left">
-              {" "}
-              Add Peer Review Session for Students{" "}
+              {editmode
+                ? "Edit Existing Peer  Reviews"
+                : "Add Peer Review Session for Students"}
             </Typography>
             <Typography variant="body2" align="left" color="textSecondary">
-              {" "}
-              This will generate peer review sessions for all students for the
-              choosen cardgroup. Each student will get n number of cards to rate
-              before the due date.
+              {editmode
+                ? "Can only change due date in edit mode. Delete peer review and create new one if you wish to change number of flashcards per student."
+                : ` This will generate peer review sessions for all students for the
+                choosen cardgroup. Each student will get n number of cards to rate
+                before the due date.`}
             </Typography>
           </Grid>
         </Grid>
@@ -97,7 +146,11 @@ const CreatePeerreview = (props) => {
           <Grid container spacing={2}>
             <Grid item xs={12}></Grid>
             <Grid item xs={12}>
-              <CardgroupSelect onChange={setGroupId} />
+              <CardgroupSelect
+                onChange={setGroupId}
+                id={groupId}
+                disabled={editmode}
+              />
             </Grid>
 
             <Grid item xs={12}>
@@ -105,6 +158,8 @@ const CreatePeerreview = (props) => {
                 fullWidth
                 color="secondary"
                 id="outlined-number"
+                disabled={editmode}
+                value={numberOfReviews}
                 label="Number of flashcards to review pr student"
                 type="number"
                 required
@@ -144,6 +199,7 @@ const CreatePeerreview = (props) => {
                 label=""
                 type="time"
                 variant="outlined"
+                value={time}
                 onChange={(e) => setTime(e.target.value)}
                 defaultValue="23:59"
                 color="secondary"
@@ -179,7 +235,7 @@ const CreatePeerreview = (props) => {
                   color: "white",
                 }}
               >
-                Submit
+                {editmode ? "Submit edit" : "submit"}
                 <Loading
                   style={{ marginLeft: "10px", height: "26px" }}
                   size={24}

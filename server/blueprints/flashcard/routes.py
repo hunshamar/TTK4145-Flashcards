@@ -127,10 +127,6 @@ def flashcard_ratings_get(cid):
 ##############################################################################
 
 # temp
-@flashcardBlueprint.route("/api/initcards", methods=["GET"])
-def cards_init():
-    init_cards()
-    return jsonify({"success": "true"})
 
 
 # # temp, expand

@@ -21,6 +21,7 @@ import {
 import Loading from "../notifications/loading";
 import FlashcardStudy from "../submodules/flashcardStudy";
 import Progress from "../submodules/progress";
+import UserDeckResult from "../submodules/userDeckResult";
 
 const useStyles = makeStyles((theme) => ({
   correctButton: {
@@ -100,16 +101,15 @@ const UserDeckStudy = () => {
     history.push("/user-decks");
   };
 
-  if (done) {
-    return <PageWrapper>Deck done</PageWrapper>;
-  }
-
   return (
     <PageWrapper>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h4" gutterBottom>
-            Flashcard study from deck:<i> {userDeck ? userDeck.title : ""}</i>
+            {done
+              ? "Flashcard study results for deck:"
+              : "Flashcard study from deck:"}
+            <i> {userDeck ? userDeck.title : ""}</i>
           </Typography>
         </Grid>
         <Grid item xs={6}>
@@ -136,7 +136,9 @@ const UserDeckStudy = () => {
         </Grid>
       </Grid>
 
-      {flashcard ? (
+      {done ? (
+        <UserDeckResult userdeck={userDeck} handleEnd={handleEnd} />
+      ) : flashcard ? (
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Box

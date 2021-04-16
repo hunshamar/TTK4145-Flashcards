@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { PageWrapper } from "../../static/wrappers";
 import { getUserPeerreviews } from "../../store/actions/peerreviewActions";
 import CreatePeerreview from "../dialogs/createPeerreview";
-import PeerreviewView from "../submodules/peerReviewView";
+import PeerreviewList from "../submodules/peerreviewList";
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -27,7 +27,7 @@ const PeerReview = () => {
   const peerreviews = useSelector(
     (state) => state.peerreviewReducer.peerreviews
   );
-  const isAdmin = useSelector((state) => state.authReducer.isAdmin);
+  const isAdmin = useSelector((state) => state.authReducer.adminMode);
   const [cardgroups, setCardgroups] = useState([]);
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const PeerReview = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <PeerreviewView peerreviews={peerreviews} onClick={handleRedirect} />
+          <PeerreviewList peerreviews={peerreviews} onClick={handleRedirect} />
         </Grid>
       </Grid>
     </PageWrapper>

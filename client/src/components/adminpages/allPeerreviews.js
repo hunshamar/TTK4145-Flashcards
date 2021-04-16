@@ -49,7 +49,7 @@ const AllPeerreviews = () => {
   return (
     <PageWrapper>
       <div style={{ marginBottom: "15px" }}>
-        <CardgroupSelect onChange={setCardGroupId} showFirst />
+        <CardgroupSelect onChange={setCardGroupId} showFirst id={cardGroupId} />
       </div>
 
       {loading ? (

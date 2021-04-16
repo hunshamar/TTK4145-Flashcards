@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { PageWrapper } from "../../static/wrappers";
 import { loadCardgroups } from "../../store/actions/cardgroupActions";
 import CreateCardGroup from "../dialogs/createCardGroup";
-import GroupView from "../submodules/groupview";
+import CardgroupList from "../submodules/cardgroupList";
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -24,7 +24,7 @@ const AddCards = () => {
   const dispatch = useDispatch();
 
   const cardgroups = useSelector((state) => state.cardgroupReducer.cardgroups);
-  const isAdmin = useSelector((state) => state.authReducer.isAdmin);
+  const isAdmin = useSelector((state) => state.authReducer.adminMode);
 
   useEffect(() => {
     dispatch(loadCardgroups());
@@ -81,7 +81,7 @@ const AddCards = () => {
           )}
         </Grid>
         <Grid item xs={12}>
-          <GroupView
+          <CardgroupList
             cardgroups={cardgroups}
             showDueDate
             onClick={handleRedirectToGroup}

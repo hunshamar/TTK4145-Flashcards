@@ -6,7 +6,7 @@ import { PageWrapper } from "../../static/wrappers";
 import { getUserFlashcardDecks } from "../../store/actions/userFlashcardDeckActions";
 import CreateFlashCardDeckDialog from "../dialogs/createFlashcardDeckDialog";
 import Loading from "../notifications/loading";
-import UserDecksView from "../submodules/userDecksView";
+import UserDeckList from "../submodules/userDecksList";
 
 const UserDecksPage = () => {
   const [open, setOpen] = useState(false);
@@ -55,7 +55,7 @@ const UserDecksPage = () => {
 
         <Grid item xs={12}>
           {userDecks.length ? (
-            <Loading alternative={<UserDecksView decks={userDecks} />} />
+            <Loading alternative={<UserDeckList decks={userDecks} />} />
           ) : (
             <Typography variant="body2" color="textPrimary">
               Could not find any decks for user. Create new decks with the

@@ -156,37 +156,37 @@ export const saveRating = (rating, ratingId) => async (dispatch, getState) => {
   dispatch(endLoading());
 };
 
-export const getRating = (cardId) => async (dispatch, getState) => {
-  // await refreshTokens()
+// export const getRating = (cardId) => async (dispatch, getState) => {
+//   // await refreshTokens()
 
-  await axios
-    .get("/api/currentuser/cardrating/" + cardId, {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("user_token"),
-      },
-    })
-    .then((res) => {
-      if (res.data.error) {
-        throw new Error(res.data.error);
-      }
-      console.log("returned");
-      console.log(res.data);
+//   await axios
+//     .get("/api/currentuser/cardrating/" + cardId, {
+//       headers: {
+//         Authorization: "Bearer " + localStorage.getItem("user_token"),
+//       },
+//     })
+//     .then((res) => {
+//       if (res.data.error) {
+//         throw new Error(res.data.error);
+//       }
+//       console.log("returned");
+//       console.log(res.data);
 
-      if (res.data.status !== "no rating") {
-        const foundRating = res.data;
+//       if (res.data.status !== "no rating") {
+//         const foundRating = res.data;
 
-        console.log("was found, ", foundRating);
-        // let alert = {severity: "success", text: "Saved rating on card: "+cardNumber}
-        // dispatch({type: SET_ALERT, payload: alert})
-        dispatch({ type: CREATE_RATING, payload: foundRating });
-      }
-    })
-    .catch((err) => {
-      dispatch(errorAlert(err.toString()));
-    });
+//         console.log("was found, ", foundRating);
+//         // let alert = {severity: "success", text: "Saved rating on card: "+cardNumber}
+//         // dispatch({type: SET_ALERT, payload: alert})
+//         dispatch({ type: CREATE_RATING, payload: foundRating });
+//       }
+//     })
+//     .catch((err) => {
+//       dispatch(errorAlert(err.toString()));
+//     });
 
-  // console.log("async call up in hier", rating)
-};
+// console.log("async call up in hier", rating)
+// };
 
 export const getRatingsInPeerreview = (peerreviewid) => async (
   dispatch,
@@ -240,7 +240,7 @@ export const adminGetFlashcardRatings = (cardId) => async (dispatch) => {
         throw new Error(res.data.error);
       }
       console.log(res.data);
-      dispatch({ type: LOAD_RATING, payload: res.data });
+      dispatch({ type: LOAD_RATINGS, payload: res.data });
     })
     .catch((err) => {
       dispatch(errorAlert(err.toString()));

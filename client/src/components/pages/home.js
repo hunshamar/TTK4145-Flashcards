@@ -31,16 +31,15 @@ const Home = () => {
             Keep flashcards simple. Flashcards can be written using markdown.
             <p>
               You will be able to use the collective deck to study the course
-              material, either a random sample or later through
+              material, either a random sample or in the future through
               <Link
                 color="textPrimary"
                 href="https://en.wikipedia.org/wiki/Spaced_repetition"
               >
-                {" "}
                 spaced repetition
               </Link>
             </p>
-            <br /> <br />
+            <br />
             Please submit feedback, suggestions or report bugs with the button
             below
             <div style={{ margin: "40px 50px 0px" }}>

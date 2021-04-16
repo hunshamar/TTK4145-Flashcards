@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CardView = (props) => {
+const FlashcardList = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [editCard, setEditCard] = useState({});
@@ -133,4 +133,4 @@ const CardView = (props) => {
   );
 };
 
-export default CardView;
+export default FlashcardList;

@@ -7,6 +7,7 @@ export const SET_ALERT = "SET_ALERT";
 export const CLEAR_ALERT = "CLEAR_ALERT";
 
 /* Authentication actions */
+export const SET_USERMODE = "SET_USERMODE";
 export const LOG_IN_CALLBACK = "LOG_IN_CALLBACK";
 export const LOG_OUT = "LOG_OUT";
 export const LOG_IN_STATUS = "LOG_IN_STATUS";

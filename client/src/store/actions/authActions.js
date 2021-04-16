@@ -1,7 +1,16 @@
 import axios from "axios";
-import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT } from "../actionTypes";
+import {
+  LOG_IN_CALLBACK,
+  LOG_IN_STATUS,
+  LOG_OUT,
+  SET_USERMODE,
+} from "../actionTypes";
 import { startLoading, endLoading } from "./loadingActions";
 import { errorAlert, successAlert, infoAlert } from "./alertActions";
+
+export const setUserModeAction = (userMode) => async (dispatch) => {
+  dispatch({ type: SET_USERMODE, payload: userMode });
+};
 
 export const signInCallack = () => async (dispatch) => {
   dispatch(startLoading());
@@ -53,7 +62,7 @@ export const checkLogInStatus = () => async (dispatch, getState) => {
         let payload = {
           loggedIn: true,
           loggedInUser: res.data,
-          isAdmin: res.data.role == "Admin",
+          isAdmin: res.data.role === "Admin",
         };
         dispatch({ type: LOG_IN_STATUS, payload });
       })

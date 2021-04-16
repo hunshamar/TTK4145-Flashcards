@@ -19,7 +19,7 @@ import { dateJSONToString } from "../../utils/datehandling";
 import CreateCardDialog from "../dialogs/createCardDialog";
 import CreateCardGroup from "../dialogs/createCardGroup";
 import Loading from "../notifications/loading";
-import CardView from "../submodules/cardview";
+import FlashcardList from "../submodules/flashcardList";
 import Progress from "../submodules/progress";
 
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +49,7 @@ const CardGroupPage = (props) => {
 
   const classes = useStyles();
 
-  const isAdmin = useSelector((state) => state.authReducer.isAdmin);
+  const isAdmin = useSelector((state) => state.authReducer.adminMode);
 
   const cards = useSelector((state) => state.cardReducer.cards);
   const cardgroup = useSelector(
@@ -79,12 +79,11 @@ const CardGroupPage = (props) => {
 
   const history = useHistory();
   const handleDelete = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete cardgroup with all cards?"
-      )
-    ) {
-      dispatch(deleteCardgroup(cardgroup));
+    const name = window.prompt(
+      "Are you sure you want to delete cardgroup with all cards? If so write the name of the cardgroup below"
+    );
+    if (name) {
+      dispatch(deleteCardgroup(cardgroup, name));
       history.push("/addcards");
     }
   };
@@ -136,7 +135,7 @@ const CardGroupPage = (props) => {
               </Typography>
 
               <div style={{ marginTop: "40px" }}>
-                <CardView cards={cards} />
+                <FlashcardList cards={cards} />
               </div>
             </Grid>
 

@@ -1,4 +1,4 @@
-import { AppBar, Menu, MenuItem } from "@material-ui/core";
+import { AppBar, Menu, MenuItem, Switch } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -9,12 +9,13 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import PersonIcon from "@material-ui/icons/Person";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useHistory } from "react-router-dom";
 import { NavBarWrapper } from "../../static/wrappers";
-import { signOut } from "../../store/actions/authActions";
+import { signOut, setUserModeAction } from "../../store/actions/authActions";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -34,14 +35,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UserMenu = (props) => {
+  const isAdmin = useSelector((state) => state.authReducer.isAdmin);
   const classes = useStyles();
   const user = useSelector((state) => state.authReducer.loggedInUser);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
   const dispatch = useDispatch();
+  const [userMode, setUserMode] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const toggleUserMode = () => {
+    let newUserMode = !userMode;
+    setUserMode(newUserMode);
+    dispatch(setUserModeAction(newUserMode));
   };
 
   const handleClose = () => {
@@ -86,6 +95,14 @@ const UserMenu = (props) => {
               <PersonIcon /> My Profile
             </MenuItem>
           </Link>
+          {isAdmin ? (
+            <MenuItem onClick={toggleUserMode}>
+              <SupervisedUserCircleIcon />
+              User Mode
+              <Switch checked={userMode} color="primary" label="toggle admin" />
+            </MenuItem>
+          ) : null}
+
           <MenuItem onClick={handleMode}>
             <Brightness4Icon />
             Toggle Dark Mode
@@ -109,7 +126,7 @@ const UserMenu = (props) => {
 const Navbar = (props) => {
   const classes = useStyles();
   const loggedIn = useSelector((state) => state.authReducer.loggedIn);
-  const isAdmin = useSelector((state) => state.authReducer.isAdmin);
+  const isAdmin = useSelector((state) => state.authReducer.adminMode);
 
   const history = useHistory();
 

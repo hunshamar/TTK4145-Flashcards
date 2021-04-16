@@ -1,9 +1,16 @@
-import { Button, Grid } from "@material-ui/core";
+import {
+  Button,
+  FormControlLabel,
+  Grid,
+  Switch,
+  TextField,
+} from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PageWrapper } from "../../static/wrappers";
 import {
+  loadCardgroupFlashcardsWithMinRating,
   addCardsToCollectiveDeck,
   loadCardgroupFlashcards,
   removeCardsFromCollectiveDeck,
@@ -12,39 +19,43 @@ import AdminCardDialog from "../dialogs/adminCardDialog";
 import Loading from "../notifications/loading";
 import CardgroupSelect from "../submodules/cardgroupselect";
 
-// const useStyles = makeStyles(theme => ({
-
-// }))
-
 const AllCards = () => {
-  // const classes = useStyles()
   const dispatch = useDispatch();
   const cards = useSelector((state) => state.cardReducer.cards);
   const [openCard, setOpenCard] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
+  const [onlyShowQualityCards, setOnlyShowQualityCards] = useState(false);
 
   const loading = useSelector((state) => state.loadingReducer.loading);
 
   const [cardGroupId, setCardGroupId] = useState(0);
+  const [minRating, setMinRating] = useState(6.5);
 
   useEffect(() => {
-    dispatch(loadCardgroupFlashcards(cardGroupId));
-    console.log("status");
-  }, [dispatch, cardGroupId]);
-
-  console.log("cards");
-  console.log(cards);
+    if (onlyShowQualityCards) {
+      let removeDuplicates = true;
+      dispatch(
+        loadCardgroupFlashcardsWithMinRating(
+          cardGroupId,
+          minRating,
+          removeDuplicates
+        )
+      );
+    } else {
+      dispatch(loadCardgroupFlashcards(cardGroupId));
+    }
+  }, [dispatch, cardGroupId, onlyShowQualityCards, minRating]);
 
   const columns = [
     { field: "id", headerName: "id", width: 65 },
     { field: "username", headerName: "Username", width: 130 },
-    { field: "front", headerName: "Front", width: 100 },
-    { field: "back", headerName: "Back", width: 100 },
     { field: "nRatings", headerName: "n_ratings", width: 120 },
     { field: "averageRating", headerName: "rating avg", width: 120 },
     { field: "averageDifficulty", headerName: "difficulty avg", width: 120 },
     { field: "duplicates", headerName: "duplicate ids", width: 140 },
     { field: "collectiveDeckId", headerName: "Collective Deck", width: 110 },
+    { field: "front", headerName: "Front", width: 100 },
+    { field: "back", headerName: "Back", width: 100 },
   ];
 
   let rows = [];
@@ -68,17 +79,14 @@ const AllCards = () => {
   }
 
   const handleClick = (e, a) => {
-    // e.preventdefault()
     a.preventDefault();
-
-    console.log("print", e.row);
     setSelectedCard(e.row);
     setOpenCard(true);
   };
 
   const addToCollectiveDeck = () => {
     const cardIdArr = selectionModel.map((id) => {
-      return { id: id };
+      return { id };
     });
     dispatch(addCardsToCollectiveDeck(cardIdArr));
     setSelectionModel([]);
@@ -86,7 +94,7 @@ const AllCards = () => {
 
   const removeFromCollectiveDeck = () => {
     const cardIdArr = selectionModel.map((id) => {
-      return { id: id };
+      return { id };
     });
     dispatch(removeCardsFromCollectiveDeck(cardIdArr));
     setSelectionModel([]);
@@ -107,7 +115,38 @@ const AllCards = () => {
 
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <CardgroupSelect onChange={setCardGroupId} showFirst />
+          <CardgroupSelect
+            onChange={setCardGroupId}
+            showFirst
+            id={cardGroupId}
+          />
+        </Grid>
+
+        <Grid item xs={10}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={onlyShowQualityCards}
+                onChange={() => setOnlyShowQualityCards(!onlyShowQualityCards)}
+                color="primary"
+              />
+            }
+            label={`Only Show Flashcards with Rating higher than ${minRating} (only duplicate cards with highest ratings are selected)`}
+          />
+        </Grid>
+        <Grid item xs={2}>
+          <TextField
+            fullWidth
+            color="secondary"
+            id="outlined-number"
+            label="Rating >="
+            type="number"
+            InputProps={{ minRating: { min: 1, max: 10, step: 0.1 } }}
+            value={minRating}
+            required
+            onChange={(e) => setMinRating(e.target.value)}
+            variant="outlined"
+          />
         </Grid>
         <Grid item xs={6}>
           <Button
@@ -160,28 +199,3 @@ const AllCards = () => {
 };
 
 export default AllCards;
-
-// import {useDispatch, useSelector} from "react-redux"
-// import { useEffect } from 'react';
-// import { loadCards, loadCardgroupFlashcards } from '../../store/actions/cardActions';
-// import CardView from '../submodules/cardview';
-// import {PageWrapper} from "../../static/wrappers"
-
-// const AllCards = props => {
-
-//     const cards = useSelector(state => state.cardReducer.cards)
-
-//     const dispatch = useDispatch();
-
-//     useEffect(() => {
-//         dispatch(loadCards())
-//     }, [dispatch])
-
-//     return(
-//         <PageWrapper>
-//             <CardView cards={cards}/>
-//         </PageWrapper>
-//     )
-// }
-
-// export default AllCards

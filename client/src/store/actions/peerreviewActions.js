@@ -11,11 +11,76 @@ import { refreshTokens } from "./authActions";
 import { startLoading, endLoading } from "./loadingActions";
 import { errorAlert, successAlert, infoAlert } from "./alertActions";
 
+export const editPeerReview = ({ groupId, dueDate }) => async (
+  dispatch,
+  getState
+) => {
+  let success = false;
+  dispatch(startLoading());
+  await refreshTokens();
+  await axios
+    .put(
+      "/api/admin/peerreviews",
+      {
+        groupId: groupId,
+        dueDate: dueDate,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("user_token"),
+        },
+      }
+    )
+    .then((res) => {
+      if (res.data.error) {
+        throw new Error(res.data.error);
+      }
+      success = res.data.status === "success";
+      if (success) {
+        dispatch(getUserPeerreviews());
+        dispatch(successAlert("successfully created peerreviews"));
+      }
+    })
+    .catch((err) => {
+      dispatch(errorAlert(err.toString()));
+    });
+  dispatch(endLoading());
+  return success;
+};
+
+export const deletePeerreview = (cardgroupId) => async (dispatch) => {
+  await axios
+    .delete(`/api/admin/cardgroup/${cardgroupId}/peerreview`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("user_token"),
+      },
+    })
+
+    .then((res) => {
+      if (res.data.error) {
+        throw new Error(res.data.error);
+      }
+
+      if (res.data.status === "success") {
+        dispatch(getUserPeerreviews());
+        dispatch(
+          successAlert("successfully deleted peerreviews and all ratings")
+        );
+      }
+    })
+    .catch((err) => {
+      dispatch(errorAlert(err.toString()));
+    });
+
+  dispatch(endLoading());
+};
+
 export const createPeerreviews = ({
   groupId,
   dueDate,
   numberOfReviews,
 }) => async (dispatch, getState) => {
+  let success = false;
   dispatch(startLoading());
   await refreshTokens();
   await axios
@@ -36,8 +101,8 @@ export const createPeerreviews = ({
       if (res.data.error) {
         throw new Error(res.data.error);
       }
-
-      if (res.data.status === "success") {
+      success = res.data.status === "success";
+      if (success) {
         dispatch(getUserPeerreviews());
         dispatch(successAlert("successfully created peerreviews"));
       }
@@ -47,6 +112,7 @@ export const createPeerreviews = ({
     });
 
   dispatch(endLoading());
+  return success;
 };
 
 export const getUserPeerreviews = () => async (dispatch, getState) => {
@@ -66,11 +132,6 @@ export const getUserPeerreviews = () => async (dispatch, getState) => {
       }
       console.log("returned");
       console.log(res.data);
-
-      if (res.data.error) {
-        console.log("error");
-        throw new Error(res.data.error);
-      }
 
       const peerReviews = res.data;
       console.log("was found, ", peerReviews);

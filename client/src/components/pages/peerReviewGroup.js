@@ -8,7 +8,7 @@ import { getRatingsInPeerreview } from "../../store/actions/ratingActions";
 import CardPreviewDialog from "../dialogs/cardPreviewDialog";
 import Loading from "../notifications/loading";
 import Progress from "../submodules/progress";
-import RateCard from "../submodules/rateCard";
+import RateFlashcard from "../submodules/rateFlashcard";
 
 const useStyles = makeStyles((theme) => ({
   savebutton: {
@@ -132,7 +132,7 @@ const PeerReviewGroup = (props) => {
         {ratings.length ? (
           ratings.map((rating, i) => (
             <React.Fragment>
-              <RateCard
+              <RateFlashcard
                 key={rating.id}
                 rating={rating}
                 index={i + 1}

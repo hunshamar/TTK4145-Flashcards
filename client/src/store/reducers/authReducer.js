@@ -1,9 +1,15 @@
-import { LOG_IN_CALLBACK, LOG_IN_STATUS, LOG_OUT } from "../actionTypes";
+import {
+  LOG_IN_CALLBACK,
+  LOG_IN_STATUS,
+  LOG_OUT,
+  SET_USERMODE,
+} from "../actionTypes";
 
 const initState = {
   loggedIn: false,
   loggedInUser: {},
   isAdmin: false,
+  adminMode: false,
 };
 
 const authReducer = (state = initState, action) => {
@@ -14,6 +20,13 @@ const authReducer = (state = initState, action) => {
         ...state,
         loggedIn: action.payload.loggedIn,
         isAdmin: action.payload.isAdmin,
+        adminMode: action.payload.isAdmin,
+      };
+
+    case SET_USERMODE: // only avaliable for admin, to view page in user mode
+      return {
+        ...state,
+        adminMode: !action.payload,
       };
 
     case LOG_OUT:
@@ -34,6 +47,7 @@ const authReducer = (state = initState, action) => {
         loggedIn: action.payload.loggedIn,
         loggedInUser: action.payload.loggedInUser,
         isAdmin: action.payload.isAdmin,
+        adminMode: action.payload.isAdmin,
       };
 
     default:

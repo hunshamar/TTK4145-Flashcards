@@ -169,17 +169,23 @@ export const loadCardgroup = (groupId) => async (dispatch) => {
   dispatch(endLoading());
 };
 
-export const deleteCardgroup = (cardgroup) => async (dispatch, getState) => {
+export const deleteCardgroup = (cardgroup, name) => async (
+  dispatch,
+  getState
+) => {
   await refreshTokens();
   console.log("and action");
   console.log(cardgroup.id);
 
   await axios
-    .delete("/api/admin/cardgroups/" + cardgroup.id, {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("user_token"),
-      },
-    })
+    .delete(
+      "/api/admin/cardgroups/" + cardgroup.id + "?cardgroupname=" + name,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("user_token"),
+        },
+      }
+    )
     .then((res) => {
       console.log("to be deleted");
       if (res.data.error) {

@@ -109,7 +109,7 @@ const UserDeck = ({ cardDeck }) => {
   );
 };
 
-const UserDecksView = ({ decks }) => {
+const UserDeckList = ({ decks }) => {
   return (
     <Grid container spacing={2}>
       {decks.map((deck) => (
@@ -121,4 +121,4 @@ const UserDecksView = ({ decks }) => {
   );
 };
 
-export default UserDecksView;
+export default UserDeckList;

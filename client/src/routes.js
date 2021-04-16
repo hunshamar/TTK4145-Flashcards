@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import CardGroupPage from "./components/pages/cardGroupPage";
 import { makeStyles } from "@material-ui/core";
 import UserProfile from "./components/pages/userProfile.js.js";
-import AdminCardGroupPage from "./components/adminpages/adminCardgroupPage";
 import Users from "./components/adminpages/users";
 import AdminNavbar from "./components/layout/adminNavbar";
 import AdminPage from "./components/adminpages/adminPage";
@@ -42,7 +41,7 @@ const FML = () => {
 const Routes = () => {
   const classes = useStyles();
   const loggedIn = useSelector((state) => state.authReducer.loggedIn);
-  const isAdmin = useSelector((state) => state.authReducer.isAdmin);
+  const isAdmin = useSelector((state) => state.authReducer.adminMode);
   const dispatch = useDispatch();
 
   useEffect(() => {

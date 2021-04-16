@@ -4,7 +4,7 @@ import { PageWrapper } from "../../static/wrappers";
 
 const UserProfile = () => {
   const loggedInuser = useSelector((state) => state.authReducer.loggedInUser);
-  const isAdmin = useSelector((state) => state.authReducer.isAdmin);
+  const isAdmin = useSelector((state) => state.authReducer.adminMode);
   // const dispatch = useDispatch();
 
   return (

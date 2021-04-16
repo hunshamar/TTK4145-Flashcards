@@ -1,3 +1,5 @@
+from dummy_db import init_dummy_db, clear_dummy_db
+import pymysql
 from flask import Flask, jsonify, request, session
 from flask_sqlalchemy import SQLAlchemy
 from blueprints.user.routes import userBlueprint, jwt
@@ -19,15 +21,15 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
-#key stuff
+# key stuff
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
-import pymysql
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
-CORS(app, supports_credentials=True) # Support credentials to allow sessions in blueprints
+# Support credentials to allow sessions in blueprints
+CORS(app, supports_credentials=True)
 
 # Migration
 migrate = Migrate(app, db, compare_type=True)
@@ -41,19 +43,18 @@ db_host = os.environ.get("DB_USER")
 db_name = os.environ.get("DB_NAME")
 
 DB_USER = "root"
-DB_HOST = "localhost" 
+DB_HOST = "localhost"
 DB_PASS = ""
 DB_NAME = "ttk4145"
 
 # conn = "mysql://{0}@{1}/{2}".format(db_user,  db_host, db_name)
- 
+
 conn = "mysql+pymysql://root:password@localhost/ttk4145"
 
 if os.environ.get("FLASK_DEBUG"):
-    app.config["SQLALCHEMY_DATABASE_URI"] = conn #"sqlite:///db.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = conn  # "sqlite:///db.db"
 else:
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("POSTGRES_URI")
-
 
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -77,10 +78,23 @@ app.register_blueprint(peerreviewBlueprint)
 app.register_blueprint(collectiveDeckBlueprint)
 app.register_blueprint(userFlashcardDeckBlueprint)
 
+
 @app.route("/init")
-def init():   
+def init():
     db.create_all()
     return jsonify(conn)
+
+
+@app.route("/1")
+def dummy_db_init():
+    init_dummy_db()
+    return jsonify("inited")
+
+
+@app.route("/2")
+def dummy_db_clear():
+    clear_dummy_db()
+    return jsonify("cleared")
 
 
 # @app.route("/<a>")
@@ -92,14 +106,11 @@ def init():
 #     return app.send_static_file('index.html')
 
 
-
 # @app.route("/")
 # def react_index():
 #     return app.send_static_file("index.html")
 
 
-
 if __name__ == "__main__":
     # manager.run()
     app.run(debug=True)
-    

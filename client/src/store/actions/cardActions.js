@@ -128,6 +128,42 @@ export const loadCardGroupUserFlashcards = (cardgroupId) => async (
     });
 };
 
+export const loadCardgroupFlashcardsWithMinRating = (
+  cardgroupId,
+  minRating,
+  removeduplicates
+) => async (dispatch, getState) => {
+  dispatch(startLoading());
+
+  console.log("idd", cardgroupId);
+
+  if (!cardgroupId) {
+    dispatch({ type: LOAD_CARDS, payload: [] });
+    dispatch(endLoading());
+  } else {
+    await refreshTokens();
+    await axios
+      .get(
+        `/api/admin/cardgroup/${cardgroupId}/flashcards?minrating=${minRating}&removeduplicates=${removeduplicates}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("user_token")}`,
+          },
+        }
+      )
+      .then((response) => {
+        const cards = response.data;
+        console.log("lmlmlml");
+        console.log(cards);
+        dispatch({ type: LOAD_CARDS, payload: cards });
+      })
+      .catch((err) => {
+        dispatch(errorAlert(err.toString()));
+      });
+    dispatch(endLoading());
+  }
+};
+
 export const loadCardgroupFlashcards = (cardgroupId) => async (
   dispatch,
   getState

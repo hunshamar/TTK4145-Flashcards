@@ -23,6 +23,7 @@ const userFlashcardDeckReducer = (state = initState, action) => {
         decks: [...state.decks, action.payload],
       };
     case DELETE_USER_FLASHCARD_DECK:
+      console.log("deleted deck", action.payload, state.decks);
       return {
         ...state,
         decks: state.decks.filter((deck) => deck.id !== action.payload.id),

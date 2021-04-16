@@ -32,10 +32,11 @@ const CreateCardDialog = ({ onClose, open, cardgroupId, toEditCard }) => {
 
   useEffect(() => {
     if (toEditCard) {
+      console.log("are editing");
       setFront(toEditCard.front);
       setBack(toEditCard.back);
     }
-  }, [toEditCard]);
+  }, [toEditCard, open]);
 
   const submit = (e) => {
     e.preventDefault();

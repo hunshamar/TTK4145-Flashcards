@@ -16,7 +16,6 @@ import {
 } from "../../store/actions/cardActions";
 import { loadCardgroupsInCollectiveDeck } from "../../store/actions/cardgroupActions";
 import { createUserFlashcardDeck } from "../../store/actions/userFlashcardDeckActions";
-import { difficultyToRange } from "../../utils/cardhandling";
 import Loading from "../notifications/loading";
 import CardgroupCheck from "../submodules/cardgroupCheck";
 
@@ -32,15 +31,18 @@ const useStyles = makeStyles((theme) => ({
 const marks = [
   {
     value: 0,
+    difficultyRange: [0, 4],
     label: "easy",
   },
   {
     value: 1,
     label: "normal",
+    difficultyRange: [4, 7],
   },
   {
     value: 2,
     label: "hard",
+    difficultyRange: [7, 10],
   },
 ];
 
@@ -81,9 +83,19 @@ const CreateFlashCardDeckDialog = ({ onClose, open }) => {
       .join(", ");
   };
 
+  const difficultyToRange = () => {
+    console.log("diff", difficulty[0], difficulty[1]);
+    const rangeList = marks
+      .filter((m) => m.value >= difficulty[0] && m.value <= difficulty[1])
+      .map((mark) => mark.difficultyRange);
+
+    return [rangeList[0][0], rangeList[rangeList.length - 1][1]];
+  };
+
   useEffect(() => {
     if (checkedCardgroups.length) {
       const [difficultyMin, difficultyMax] = difficultyToRange(difficulty);
+      console.log(difficultyToRange(difficulty));
       console.log(
         `%c ${difficultyMin}, ${difficultyMax}`,
         "background: #222; color: red"
@@ -107,8 +119,6 @@ const CreateFlashCardDeckDialog = ({ onClose, open }) => {
       dispatch(clearCardReducer());
     }
   }, [collective_deck_cards, checkedCardgroups]);
-
-  difficultyToString();
 
   console.log(getCheckedCardsCardgroupNames());
 

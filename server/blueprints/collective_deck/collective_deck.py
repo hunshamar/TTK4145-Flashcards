@@ -7,6 +7,7 @@ from ..flashcard.flashcard import Flashcard
 from ..cardgroup.cardgroup import Cardgroup
 import random
 
+
 class CollectiveDeck(db.Model):
     __tablename__ = "collective_deck"
 
@@ -17,14 +18,13 @@ class CollectiveDeck(db.Model):
     def get_cardgroups(self):
         cardgroup_ids = {f.cardgroup_id for f in self.flashcards}
         cardgroups = (Cardgroup.query
-            .filter(Cardgroup.id.in_(cardgroup_ids))
-            .order_by(Cardgroup.id)
-        )
+                      .filter(Cardgroup.id.in_(cardgroup_ids))
+                      .order_by(Cardgroup.id)
+                      )
         return cardgroups
 
     def to_dict(self):
 
-        
         return {
             "id": self.id,
             "flashcards": [f.to_dict() for f in self.flashcards]
@@ -36,6 +36,7 @@ def get_cardgroups_in_collective_deck():
     cardgroups = collective_deck.get_cardgroups()
     return [c.to_dict() for c in cardgroups]
 
+
 def create_collective_deck():
 
     collective_deck = CollectiveDeck()
@@ -43,8 +44,9 @@ def create_collective_deck():
     db.session.commit()
     return collective_deck
 
+
 def get_collective_deck():
-    collective_decks =  CollectiveDeck.query.all()
+    collective_decks = CollectiveDeck.query.all()
 
     if len(collective_decks) > 1:
         raise Exception("More than one collective deck found")
@@ -52,7 +54,7 @@ def get_collective_deck():
         return create_collective_deck()
     else:
         return collective_decks[0]
-    
+
 # def get_collective_deck():
 #     # collective_decks =  CollectiveDeck.query.all()
 #     # if len(collective_decks) > 1:
@@ -61,6 +63,7 @@ def get_collective_deck():
 #     #     raise Exception("No collective deck found")
 #     # else:
 #     #     return collective_decks[0]
+
 
 def add_to_collective_deck(flashcards):
 
@@ -74,18 +77,23 @@ def add_to_collective_deck(flashcards):
 
     for f in got_flashcards:
         if not f.peerreview_due_date_ended():
-            raise Exception("One or more of selected cards. Peer review due date not ended")
+            raise Exception(
+                "One or more of selected cards. Peer review due date not ended")
+
+        if not f.get_n_ratings():
+            raise Exception(
+                "One or more of selected cards. No ratings on card")
 
         if f not in collective_deck.flashcards:
             collective_deck.flashcards.append(f)
             changed_cards.append(f)
 
-
     db.session.commit()
 
     return [f.to_dict() for f in changed_cards]
 
-def get_random_collective_deck_flashcards(difficulty_min, difficulty_max, cardgroup_ids, n_cards,id_only):
+
+def get_random_collective_deck_flashcards(difficulty_min, difficulty_max, cardgroup_ids, n_cards, id_only):
 
     queries = [
         Flashcard.average_difficulty >= difficulty_min,
@@ -105,10 +113,9 @@ def get_random_collective_deck_flashcards(difficulty_min, difficulty_max, cardgr
             raise Exception("Error, number of cards exceeds...")
         flashcards = flashcards[:n_cards]
 
-
     if id_only:
-        return [{"id": f.id } for f in flashcards]
-    else:    
+        return [{"id": f.id} for f in flashcards]
+    else:
         return [f.to_dict() for f in flashcards]
 
 
@@ -123,7 +130,8 @@ def remove_from_collective_deck(flashcards):
 
     for f in got_flashcards:
         if not f.peerreview_due_date_ended():
-            raise Exception("One or more of selected cards. Peer review due date not ended")
+            raise Exception(
+                "One or more of selected cards. Peer review due date not ended")
 
         if f in collective_deck.flashcards:
             collective_deck.flashcards.remove(f)
@@ -132,4 +140,3 @@ def remove_from_collective_deck(flashcards):
     db.session.commit()
 
     return [f.to_dict() for f in changed_cards]
-

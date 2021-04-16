@@ -25,20 +25,22 @@ const CardgroupSelect = (props) => {
       ))
   );
 
-  const [group, setGroup] = React.useState("");
-
   useEffect(() => {
     if (props.showFirst && cardgroups.length) {
-      setGroup(cardgroups[0].id);
       if (props.onChange) {
         props.onChange(cardgroups[0].id);
       }
     }
   }, [cardgroups]);
 
+  useEffect(() => {
+    if (props.id) {
+      props.onChange(props.id);
+    }
+  }, [props.id]);
+
   const handleChange = (event) => {
     // console.log("evt", event.target.value)
-    setGroup(event.target.value);
     if (props.onChange) {
       props.onChange(event.target.value);
     }
@@ -54,7 +56,8 @@ const CardgroupSelect = (props) => {
         color="secondary"
         labelId="demo-simple-select-outlined-label"
         id="demo-simple-select-outlined"
-        value={group}
+        value={props.id}
+        disabled={props.disabled}
         onChange={handleChange}
         label="group"
       >

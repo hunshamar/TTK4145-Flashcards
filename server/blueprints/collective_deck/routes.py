@@ -1,6 +1,5 @@
 
 
-
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
@@ -24,12 +23,11 @@ def collective_deck_get():
 def collective_deck_get_flashcards():
     try:
 
-        difficulty_min =  request.args.get("difficulty-min", default=0)
-        difficulty_max =  request.args.get("difficulty-max", default=10)
+        difficulty_min = request.args.get("difficulty-min", default=0)
+        difficulty_max = request.args.get("difficulty-max", default=10)
         cardgroup_ids = request.args.get("cardgroup-id", default="all")
-        n_cards       = request.args.get("ncards", default="all")
-        id_only       = request.args.get("id-only", default=False)
-
+        n_cards = request.args.get("ncards", default="all")
+        id_only = request.args.get("id-only", default=False)
 
         if cardgroup_ids != "all":
             cardgroup_ids = [int(s) for s in cardgroup_ids.split(',')]
@@ -54,6 +52,7 @@ def flashcards_add_to_collective_deck():
         print(e)
         return jsonify({"error": str(e)})
 
+
 @collectiveDeckBlueprint.route("/api/admin/collective-deck/flashcards", methods=["DELETE"])
 @jwt_required
 @admin_only
@@ -67,6 +66,7 @@ def flashcards_remove_from_collective_deck():
         print(e)
         return jsonify({"error": str(e)})
 
+
 @collectiveDeckBlueprint.route("/api/collective-deck/cardgroups", methods=["GET"])
 def collective_deck_cardgroups():
     print("hø")
@@ -79,4 +79,3 @@ def collective_deck_cardgroups():
 
 
 get_cardgroups_in_collective_deck
-    
