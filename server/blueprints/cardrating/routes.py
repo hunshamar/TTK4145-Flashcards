@@ -122,10 +122,10 @@ def cardrating_add_duplicte(rid):
         return(jsonify({"error": str(e)}))
 
 
-@cardratingBlueprint.route("/api/delratings")
-# @jwt_required
-def del_all_ratings():
-    sleep(DELAY_S)
-    delete_all_cardratings()
+# @cardratingBlueprint.route("/api/delratings")
+# # @jwt_required
+# def del_all_ratings():
+#     sleep(DELAY_S)
+#     delete_all_cardratings()
 
-    return "success"
+#     return "success"

@@ -32,6 +32,8 @@ def cardgroups(cgid):
 
 
 @cardgroupBlueprint.route("/api/admin/cardgroups/<cgid>", methods=["PUT"])
+@jwt_required
+@admin_only
 def cardgroups_edit(cgid):
     sleep(DELAY_S)
     try:

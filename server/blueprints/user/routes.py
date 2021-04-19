@@ -91,7 +91,7 @@ def get_current_user():
         return jsonify({"error": str(e)})
 
 
-@userBlueprint.route("/api/admin/users/", methods=["GET"])
+@userBlueprint.route("/api/admin/users", methods=["GET"])
 @jwt_required
 @admin_only
 def users_all():

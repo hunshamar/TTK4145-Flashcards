@@ -113,6 +113,15 @@ def get_peer_review(pid):
 #
 
 
+def get_ratings_in_peerreview(prid):
+    ratings = Cardrating.query.filter_by(peerreview_id=prid).order_by(Cardrating.id).all()
+
+    return [r.to_dict() for r in ratings]
+
+
+    
+
+
 def delete_all_peerreviews_in_cardgroup(cgid):
     peerreview = Peerreview.query.filter_by(cardgroup_id=cgid).all()
     for p in peerreview:

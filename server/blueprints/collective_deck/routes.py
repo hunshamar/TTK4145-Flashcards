@@ -18,8 +18,7 @@ def collective_deck_get():
 
 
 @collectiveDeckBlueprint.route("/api/collective-deck/flashcards", methods=["GET"])
-# @jwt_required
-# @admin_only
+@jwt_required
 def collective_deck_get_flashcards():
     try:
 
@@ -68,6 +67,7 @@ def flashcards_remove_from_collective_deck():
 
 
 @collectiveDeckBlueprint.route("/api/collective-deck/cardgroups", methods=["GET"])
+@jwt_required
 def collective_deck_cardgroups():
     print("hø")
     try:

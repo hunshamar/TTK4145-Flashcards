@@ -129,18 +129,16 @@ def peerreview_get_flashcards(pid):
 
 @peerreviewBlueprint.route("/api/currentuser/peerreview/<prid>/cardratings", methods=["GET"])
 @jwt_required
-def get_ratings_in_peerreview(prid):
+def peerreview_get_ratings(prid):
     print("på an igjen")
 
     try:
         uid = get_jwt_identity()
-        peerreview = Peerreview.query.get(
-            int(prid))  # make function, check user
 
         print("getting ratings")
-        print(peerreview.get_ratings())
+        # print(get_ratings_in_peerreview(int(prid)))
         print("her var dei")
-        return jsonify(peerreview.get_ratings())
+        return jsonify(get_ratings_in_peerreview(int(prid)))
 
     except Exception as e:
         print(e)
