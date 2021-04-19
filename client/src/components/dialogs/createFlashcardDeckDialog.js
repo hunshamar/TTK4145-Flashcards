@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
   dialog: {
     "& .MuiDialog-paperScrollPaper": {
       maxHeight: "100vh",
+      margin: "10px",
       maxWidth: "500px",
     },
   },
@@ -151,12 +152,7 @@ const CreateFlashCardDeckDialog = ({ onClose, open }) => {
   };
 
   return (
-    <Dialog
-      onClose={handleClose}
-      className={classes.dialog}
-      open={open}
-      style={{ margin: "100px" }}
-    >
+    <Dialog onClose={handleClose} className={classes.dialog} open={open}>
       <div style={{ margin: "40px 40px" }}>
         <form onSubmit={submitDeck}>
           <Grid container spacing={2}>
@@ -264,6 +260,7 @@ const CreateFlashCardDeckDialog = ({ onClose, open }) => {
                 onClick={handleClose}
                 fullWidth
                 color="primary"
+                style={{ height: "100%" }}
               >
                 Cancel
               </Button>
@@ -275,6 +272,7 @@ const CreateFlashCardDeckDialog = ({ onClose, open }) => {
                 style={{
                   backgroundColor: true ? "green" : "grey",
                   color: "white",
+                  height: "100%",
                 }}
               >
                 Create your deck

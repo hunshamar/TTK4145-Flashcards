@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
   dialog: {
     "& .MuiDialog-paperScrollPaper": {
       maxHeight: "100vh",
+      margin: "10px",
     },
   },
 }));
@@ -74,7 +75,7 @@ const CreateCardDialog = ({ onClose, open, cardgroupId, toEditCard }) => {
 
   return (
     <Dialog onClose={handleClose} className={classes.dialog} open={open}>
-      <form onSubmit={submit} style={{ margin: "40px" }}>
+      <form onSubmit={submit} style={{ padding: "40px" }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h5">
@@ -145,6 +146,7 @@ const CreateCardDialog = ({ onClose, open, cardgroupId, toEditCard }) => {
               onClick={handleClose}
               fullWidth
               color="primary"
+              style={{ height: "100%" }}
             >
               Cancel
             </Button>
@@ -156,6 +158,7 @@ const CreateCardDialog = ({ onClose, open, cardgroupId, toEditCard }) => {
               style={{
                 backgroundColor: front && back ? "green" : "grey",
                 color: "white",
+                height: "100%",
               }}
             >
               Submit {toEditCard ? "Edit" : ""}

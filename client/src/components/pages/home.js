@@ -31,7 +31,7 @@ const Home = () => {
             Keep flashcards simple. Flashcards can be written using markdown.
             <p>
               You will be able to use the collective deck to study the course
-              material, either a random sample or in the future through
+              material, either a random sample or in the future through{" "}
               <Link
                 color="textPrimary"
                 href="https://en.wikipedia.org/wiki/Spaced_repetition"
@@ -55,9 +55,9 @@ const Home = () => {
 
         <Grid item xs={4}>
           <Typography variant="body2" color="textSecondary">
+            <b>Asgeir Hunshamar</b> <br />
+            Creator and developer <br />
             <Link color="inherit" href="mailto:asgeirhu@stud.ntnu.no">
-              <b>Asgeir Hunshamar</b> <br />
-              Creator and developer <br />
               asgeirhu@stud.ntnu.no
             </Link>
           </Typography>

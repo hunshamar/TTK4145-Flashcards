@@ -11,7 +11,7 @@ from ..collective_deck.collective_deck import CollectiveDeck, get_collective_dec
 class FlashcardReview(db.Model):
     __tablename__ = "flashcard_review"
     id = db.Column(db.Integer, primary_key=True)
-    order = db.Column(db.Integer)
+    order = db.Column(db.Integer) #todo: rename order index
     flashcard_deck = db.Column(
         db.Integer, db.ForeignKey('user_flashcard_deck.id'))
 
@@ -38,13 +38,16 @@ class UserFlashcardDeck(db.Model):
     # title = db.Column(db.String(256))
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(256))
-    flashcard_reviews = db.relationship(
-        "FlashcardReview", backref="user_flashcard_deck", cascade="all,delete", lazy='subquery')
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+
     n_flashcards_originally = db.Column(db.Integer)
 
     correct_answers = db.Column(db.Integer)
     wrong_answers = db.Column(db.Integer)
+
+
+    flashcard_reviews = db.relationship(
+        "FlashcardReview", backref="user_flashcard_deck", cascade="all,delete", lazy='subquery')
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     def to_dict(self):
         return {

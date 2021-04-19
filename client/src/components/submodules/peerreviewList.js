@@ -15,6 +15,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import { useState } from "react";
 import CreatePeerreview from "../dialogs/createPeerreview";
 import { deletePeerreview } from "../../store/actions/peerreviewActions";
+import { errorAlert } from "../../store/actions/alertActions";
 const useStyles = makeStyles((theme) => ({
   root: {
     // padding: theme.spacing(3, 2),
@@ -32,12 +33,18 @@ const PeerreviewList = ({ peerreviews, showDueDate, onClick }) => {
   const dispatch = useDispatch();
 
   const deleteThisPeerReview = (peerreview) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this peerreview and all ratings associated with it?"
-      )
-    ) {
+    console.log("asd", peerreview);
+
+    const name = window.prompt(
+      "Are you sure you want to delete this peerreview and all ratings accociated with it? If so write the name of the cardgroup below"
+    );
+
+    console.log(name);
+    console.log(peerreview.cardgroup.title);
+    if (name === peerreview.cardgroup.title) {
       dispatch(deletePeerreview(peerreview.cardgroup.id));
+    } else {
+      dispatch(errorAlert("error deleting peerreview"));
     }
   };
 

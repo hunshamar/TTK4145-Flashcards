@@ -22,8 +22,8 @@ class Flashcard(db.Model):
     front = db.Column(db.String(2048))
     back = db.Column(db.String(2048))
 
-    average_rating = db.Column(db.Float)
-    average_difficulty = db.Column(db.Float)
+    average_rating = db.Column(db.Float) ## rename to average quality_rating
+    average_difficulty = db.Column(db.Float) ## rename to average difficulty_rating
 
     # children
     ratings = db.relationship(

@@ -51,14 +51,14 @@ def admin_only(f):
 #         return jsonify({"error": str(e)})
 
 
-@userBlueprint.route("/api/manualaddadmin/<uid>", methods=["GET"])
-def manual_add_admin_get(uid):
-    try:
-        admin_user = make_admin(int(uid))
-        return jsonify(admin_user)
-    except Exception as e:
-        print(e)
-        return jsonify({"error": str(e)})
+# @userBlueprint.route("/api/manualaddadmin/<uid>", methods=["GET"])
+# def manual_add_admin_get(uid):
+#     try:
+#         admin_user = make_admin(int(uid))
+#         return jsonify(admin_user)
+#     except Exception as e:
+#         print(e)
+#         return jsonify({"error": str(e)})
 
 
 @userBlueprint.route("/api/admin/<uid>", methods=["POST", "DELETE"])
@@ -188,25 +188,25 @@ def user_data():
                 print("sha1 error")
                 return(jsonify("Bad authenticity token"))
 
-        if request.method == "POST":  # Alternative login
+        # if request.method == "POST":  # Alternative login
 
-            userdata = request.json
-            username = userdata["username"]
-            email = userdata["email"]
-            name = userdata["name"]
+        #     userdata = request.json
+        #     username = userdata["username"]
+        #     email = userdata["email"]
+        #     name = userdata["name"]
 
-            if user_registered(email, username):
-                print("added to session exists", session.get("userdata"))
+        #     if user_registered(email, username):
+        #         print("added to session exists", session.get("userdata"))
 
-            elif username_registered(username) or email_registered(email):
-                raise Exception(
-                    "duplicate. Username and email must either belong to a existing user or be unique")
+        #     elif username_registered(username) or email_registered(email):
+        #         raise Exception(
+        #             "duplicate. Username and email must either belong to a existing user or be unique")
 
-            else:
-                print("added to session new", session.get("userdata"))
+        #     else:
+        #         print("added to session new", session.get("userdata"))
 
-            session["userdata"] = userdata
-            return jsonify({"status": "success"})
+        #     session["userdata"] = userdata
+        #     return jsonify({"status": "success"})
 
     except Exception as e:
         print(e)

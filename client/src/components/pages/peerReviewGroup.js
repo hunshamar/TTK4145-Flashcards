@@ -54,7 +54,6 @@ const PeerReviewGroup = (props) => {
   }, [loading]);
 
   useEffect(() => {
-    console.log("tiss");
     console.log(ratings);
   }, [ratings]);
 
@@ -128,7 +127,6 @@ const PeerReviewGroup = (props) => {
           style={{ width: "300px", marginLeft: "auto", marginBottom: "30px" }}
         />
         <Divider />
-
         {ratings.length ? (
           ratings.map((rating, i) => (
             <React.Fragment>
@@ -145,6 +143,15 @@ const PeerReviewGroup = (props) => {
         ) : (
           <div>empty</div>
         )}
+
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <Typography variant="h5" color="textSecondary">
+            Ratings are saved automatically
+          </Typography>
+          <Typography variant="body" color="textSecondary">
+            check the progress bar at the top of the page
+          </Typography>
+        </div>
       </PageWrapper>
     );
   }

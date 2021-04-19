@@ -90,8 +90,6 @@ const cardReducer = (state = initState, action) => {
       };
     // return state;
     case "CLEAR_CARDS":
-      console.log("faen");
-
       return {
         cards: [],
       };

@@ -47,7 +47,7 @@ const AdminNavbar = (props) => {
   return (
     <AdminNavbarWrapper>
       <Typography variant="h4" style={{ flexGrow: 0 }}>
-        Amin Page
+        Admin Page
       </Typography>
 
       <Toolbar style={{ padding: 0 }}>

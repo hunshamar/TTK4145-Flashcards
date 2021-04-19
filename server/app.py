@@ -1,6 +1,6 @@
 from dummy_db import init_dummy_db, clear_dummy_db
 import pymysql
-from flask import Flask, jsonify, request, session
+from flask import Flask, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from blueprints.user.routes import userBlueprint, jwt
 from blueprints.flashcard.routes import flashcardBlueprint
@@ -37,24 +37,13 @@ manager = Manager(app)
 
 manager.add_command("db", MigrateCommand)
 
-db_user = os.environ.get("DB_USER")
-db_pass = os.environ.get("DB_USER")
-db_host = os.environ.get("DB_USER")
-db_name = os.environ.get("DB_NAME")
 
-DB_USER = "root"
-DB_HOST = "localhost"
-DB_PASS = ""
-DB_NAME = "ttk4145"
-
-# conn = "mysql://{0}@{1}/{2}".format(db_user,  db_host, db_name)
-
-conn = "mysql+pymysql://root:password@localhost/ttk4145"
 
 if os.environ.get("FLASK_DEBUG"):
+    conn = f"mysql+pymysql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASS')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
     app.config["SQLALCHEMY_DATABASE_URI"] = conn  # "sqlite:///db.db"
 else:
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("POSTGRES_URI")
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
 
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -82,35 +71,35 @@ app.register_blueprint(userFlashcardDeckBlueprint)
 @app.route("/init")
 def init():
     db.create_all()
-    return jsonify(conn)
+    return jsonify("success init")
 
 
-@app.route("/1")
-def dummy_db_init():
-    init_dummy_db()
-    return jsonify("inited")
+# @app.route("/1")
+# def dummy_db_init():
+#     init_dummy_db()
+#     return jsonify("inited")
 
 
-@app.route("/2")
-def dummy_db_clear():
-    clear_dummy_db()
-    return jsonify("cleared")
+# @app.route("/2")
+# def dummy_db_clear():
+#     clear_dummy_db()
+#     return jsonify("cleared")
 
 
-# @app.route("/<a>")
-# def react_routes(a):
-#     return app.send_static_file("index.html")
+@app.route("/<a>")
+def react_routes(a):
+    return app.send_static_file("index.html")
 
-# @app.errorhandler(404)
-# def not_found(e):
-#     return app.send_static_file('index.html')
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
 
 
-# @app.route("/")
-# def react_index():
-#     return app.send_static_file("index.html")
+@app.route("/")
+def react_index():
+    return app.send_static_file("index.html")
 
 
 if __name__ == "__main__":
-    # manager.run()
+    manager.run()
     app.run(debug=True)

@@ -85,34 +85,25 @@ const RateFlashcard = ({ rating, save, previewCard, cardIdToIndex }) => {
     state.ratingReducer.ratings.filter((rat) => rat.id !== rating.id)
   );
 
-  console.log("ææ");
-  console.log(rating_state);
-  console.log(otherRatings);
-
   useEffect(() => {
     if (rating_state.savedatestring) {
       setDifficulty(rating_state.difficulty);
       setQuality(rating_state.quality_rating);
       setSaveDate(rating_state.savedatestring);
-      console.log("rard", rating_state);
       setDuplicateRatings(rating_state.duplicates);
     }
   }, [rating_state]);
 
-  useEffect(() => {
-    console.log("dup", duplicateRatings);
-  }, [duplicateRatings]);
+  useEffect(() => {}, [duplicateRatings]);
 
   useEffect(() => {
     if (difficulty && difficulty != rating.difficulty) {
-      console.log("save thi sdiff");
       dispatch(saveDifficultyRating(difficulty, rating.id));
     }
   }, [difficulty]);
 
   useEffect(() => {
     if (quality && quality != rating.quality_rating) {
-      console.log("save this quality");
       dispatch(saveQualityRating(quality, rating.id));
     }
   }, [quality]);

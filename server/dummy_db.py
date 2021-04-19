@@ -9,7 +9,7 @@ from datetime import datetime, timezone, timedelta
 from random import randrange
 
 
-N_USERS = 100
+N_USERS = 10
 
 
 users = [
@@ -35,7 +35,7 @@ cardgroups = [
         "number_of_cards_due": 3,
     },
     {
-        "title": "Second Example Cargroup ",
+        "title": "Second Example Cargroup",
         "due_date": one_hour_earlier_than_now,
         "peerreview_due_date": one_week_later_than_now,
         "ratings_per_student": 20,

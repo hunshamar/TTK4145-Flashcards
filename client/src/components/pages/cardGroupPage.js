@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { PageWrapper } from "../../static/wrappers";
-import { infoAlert } from "../../store/actions/alertActions";
+import { errorAlert, infoAlert } from "../../store/actions/alertActions";
 import { loadCardGroupUserFlashcards } from "../../store/actions/cardActions";
 import {
   deleteCardgroup,
@@ -78,13 +78,20 @@ const CardGroupPage = (props) => {
   };
 
   const history = useHistory();
+
   const handleDelete = () => {
     const name = window.prompt(
       "Are you sure you want to delete cardgroup with all cards? If so write the name of the cardgroup below"
     );
-    if (name) {
+
+    console.log("hier");
+    console.log(name);
+    console.log(cardgroup.title);
+    if (name === cardgroup.title) {
       dispatch(deleteCardgroup(cardgroup, name));
       history.push("/addcards");
+    } else {
+      dispatch(errorAlert("error deleting cardgroup"));
     }
   };
 

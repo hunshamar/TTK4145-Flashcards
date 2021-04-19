@@ -1,5 +1,7 @@
 import { Box, makeStyles, withStyles } from "@material-ui/core";
 
+import { isMobile } from "react-device-detect";
+
 export const siteWidth = "775px";
 
 export const wrappers = makeStyles((theme) => ({
@@ -17,6 +19,7 @@ export const PageWrapper = withStyles({
     maxWidth: siteWidth,
     minWidth: siteWidth,
     marginTop: "50px",
+    minHeight: isMobile ? "100vh" : "100px",
   },
 })(Box);
 

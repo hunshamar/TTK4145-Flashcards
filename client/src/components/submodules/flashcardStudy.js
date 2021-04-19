@@ -21,7 +21,7 @@ const FlashcardStudy = ({
         <Grid
           item
           xs={12}
-          style={{ minHeight: "100px", minWidth: "300px", textAlign: "center" }}
+          style={{ minHeight: "100px", width: "100%", textAlign: "center" }}
         >
           <Typography variant="caption" color="textSecondary">
             Front:
@@ -42,7 +42,7 @@ const FlashcardStudy = ({
         <Grid
           item
           xs={12}
-          style={{ textAlign: "center", minHeight: "100px", minWidth: "300px" }}
+          style={{ textAlign: "center", minHeight: "100px", width: "100%" }}
         >
           {revealback || reveal ? (
             <div>

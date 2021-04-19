@@ -24,7 +24,7 @@ class Cardrating(db.Model):
     # member variables
     id = db.Column(db.Integer, primary_key=True)
     index = db.Column(db.Integer)  # unique for each peer review
-    difficulty = db.Column(db.Integer)
+    difficulty = db.Column(db.Integer) # todo: rename to difficulty rating
     quality_rating = db.Column(db.Integer)
     savedatestring = db.Column(db.String(128))
     # duplicate_card_ids = db.Column(db.String(1028)) # json array of card duplicates ids

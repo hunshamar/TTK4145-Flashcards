@@ -40,7 +40,7 @@ const CheckCard = ({ rating, isDuplicate, editDuplicates }) => {
   }, [checked]);
 
   return (
-    <div>
+    <div onClick={() => setChecked(!checked)}>
       <Grid container spacing={2}>
         <Grid item xs={9} className={classes.root}>
           <Typography variant="body2">
@@ -96,8 +96,6 @@ const MarkAsDuplicatedDialog = ({
   };
 
   const classes = useStyles();
-
-  console.log(otherRatings);
 
   return (
     <Popover
