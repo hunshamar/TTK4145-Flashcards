@@ -17,6 +17,8 @@ const StyledLink = styled(Link)({
   padding: "20px",
 });
 
+const hideAlternativeLogin = true;
+
 const ManualLogin = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -147,12 +149,14 @@ function Login() {
       </Button>{" "}
       <br />
       <div style={{ padding: "10px" }}>
-        <StyledLink
-          href="#"
-          onClick={(e) => setAlternativeLogin(!AlternativeLogin)}
-        >
-          Alternative login
-        </StyledLink>
+        {!hideAlternativeLogin ? (
+          <StyledLink
+            href="#"
+            onClick={(e) => setAlternativeLogin(!AlternativeLogin)}
+          >
+            Alternative login
+          </StyledLink>
+        ) : null}
         <StyledLink target="_blank" href="https://s.ntnu.no/glemt">
           Forgot Password
         </StyledLink>

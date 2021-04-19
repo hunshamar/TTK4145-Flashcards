@@ -13,8 +13,8 @@ import { errorAlert, successAlert, infoAlert } from "./alertActions";
 
 export const getAllUsers = () => async (dispatch) => {
   await refreshTokens();
-  axios
-    .get("/api/admin/users", {
+  await axios
+    .get("/api/admin/users/all", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user_token")}`,
       },
