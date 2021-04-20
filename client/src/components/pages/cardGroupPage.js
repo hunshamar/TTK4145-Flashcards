@@ -81,7 +81,7 @@ const CardGroupPage = (props) => {
 
   const handleDelete = () => {
     const name = window.prompt(
-      "Are you sure you want to delete cardgroup with all cards? If so write the name of the cardgroup below"
+      "Are you sure you want to  group with all cards? If so write the name of the cardgroup below"
     );
 
     console.log("hier");
@@ -177,7 +177,7 @@ const CardGroupPage = (props) => {
                     variant="contained"
                     onClick={handleDelete}
                   >
-                    Delete cardgroup and all cards
+                    Delete card group and all cards
                   </Button>
                   <Button
                     fullWidth

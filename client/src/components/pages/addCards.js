@@ -62,8 +62,8 @@ const AddCards = () => {
             Create Flashcards
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            Each Flashcardgroup has a set number of flashcardscards to submit
-            and a due date. Click a flashcardgroup to create new flashcards.
+            Each flashcard group has a set number of flashcards to submit and a
+            due date. Click a flashcard group to create new flashcards.
           </Typography>
         </Grid>
         <Grid item xs={4}>

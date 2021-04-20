@@ -86,7 +86,7 @@ const CreateCardDialog = ({ onClose, open, cardgroupId, toEditCard }) => {
             <Typography variant="body2" color="textSecondary">
               Markdown is supported
               <br />
-              Make sure the Card looks good in <i>Preview Flashcard</i> if
+              Make sure the flashcard looks good in <i>Preview Flashcard</i> if
               writing in Markdown.
             </Typography>
           </Grid>

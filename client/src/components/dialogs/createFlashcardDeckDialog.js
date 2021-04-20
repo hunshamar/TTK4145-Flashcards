@@ -183,7 +183,7 @@ const CreateFlashCardDeckDialog = ({ onClose, open }) => {
             <Grid item xs={12}>
               <Typography variant="subtitle2">
                 {" "}
-                Select one or more cardgroups to study{" "}
+                Select one or more flashcard groups to study{" "}
               </Typography>
               <div style={{ padding: "10px 20px" }}>
                 <CardgroupCheck

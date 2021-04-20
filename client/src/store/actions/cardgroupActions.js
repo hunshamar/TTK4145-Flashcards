@@ -103,14 +103,18 @@ export const loadCardgroupsInCollectiveDeck = () => async (
   await refreshTokens();
 
   await axios
-    .get("/api/collective-deck/cardgroups")
+    .get("/api/collective-deck/cardgroups", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("user_token"),
+      },
+    })
     .then((res) => {
       if (res.data.error) {
         console.log("error");
         throw new Error(res.data.error);
       }
       const cardgroups = res.data;
-      console.log("mah cardgroups");
+      console.log("mah cardgroups in collective deck");
 
       console.log(cardgroups);
       dispatch({ type: LOAD_CARDGROUPS, payload: cardgroups });

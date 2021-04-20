@@ -49,7 +49,7 @@ const CardgroupSelect = (props) => {
   return (
     <FormControl fullWidth variant="outlined">
       <InputLabel id="demo-simple-select-outlined-label">
-        Choose Cardgroup
+        Choose card group
       </InputLabel>
       <Select
         required
