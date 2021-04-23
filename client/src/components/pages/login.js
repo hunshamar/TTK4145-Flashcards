@@ -116,7 +116,7 @@ const ManualLogin = () => {
 function Login() {
   const [AlternativeLogin, setAlternativeLogin] = useState(false);
   const dispatch = useDispatch();
-  let loading = false;
+
   const feideLogin = async () => {
     dispatch(startLoading());
     await axios

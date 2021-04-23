@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Route, Switch } from "react-router-dom";
-import { Redirect } from "react-router-dom";
+import { BrowserRouter as Redirect, Route, Switch } from "react-router-dom";
 
 import AddCards from "./components/pages/addCards";
 import Login from "./components/pages/login";
@@ -24,7 +23,6 @@ import AllPeerreviews from "./components/adminpages/allPeerreviews";
 import SpacedRepetition from "./components/pages/spacedRepetition";
 import UserDecksPage from "./components/pages/userDecksPage";
 import UserDeckStudy from "./components/pages/userDeckStudy";
-import NotFound from "./components/pages/notFound";
 
 const useStyles = makeStyles((theme) => ({
   // pages: {
@@ -59,7 +57,6 @@ const Routes = () => {
       <Switch>
         <Route path="/" exact component={loggedIn ? Home : Login} />
         <Route path="/loginfunc" exact component={logInFunc} />
-        <Route path="/404" exact component={NotFound} />
 
         {loggedIn ? (
           <React.Fragment>
@@ -111,11 +108,13 @@ const Routes = () => {
                   )}
                 />
               </React.Fragment>
-            ) : null}
+            ) : (
+              <React.Fragment></React.Fragment>
+            )}
           </React.Fragment>
-        ) : null}
-
-        <Redirect to="/404" />
+        ) : (
+          <div></div>
+        )}
       </Switch>
     </div>
   );
