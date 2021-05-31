@@ -26,19 +26,6 @@ def user_flashcard_decks_get():
         print("no id", id)
         return jsonify(get_user_flashcard_decks(int(user_id)))
 
-@userFlashcardDeckBlueprint.route("/api/currentuser/user-flashcard-decks/<ufdid>", methods=["DELETE"])
-@jwt_required
-def user_flashcard_decks_delete(ufdid):
-    try:
-
-        user_id = get_jwt_identity()
-
-        return jsonify(delete_user_flashcard_deck(user_id, int(ufdid)))
-
-
-    except Exception as e:
-        print(e)
-        return jsonify({"error": str(e)})
 
 @userFlashcardDeckBlueprint.route("/api/currentuser/user-flashcard-decks", methods=["POST"])
 @jwt_required
@@ -58,6 +45,20 @@ def user_flashcard_decks_post():
         print(e)
         return jsonify({"error": str(e)})
 
+
+@userFlashcardDeckBlueprint.route("/api/currentuser/user-flashcard-decks/<ufdid>", methods=["DELETE"])
+@jwt_required
+def user_flashcard_decks_delete(ufdid):
+    try:
+
+        user_id = get_jwt_identity()
+
+        return jsonify(delete_user_flashcard_deck(user_id, int(ufdid)))
+
+
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)})
 
     
 @userFlashcardDeckBlueprint.route("/api/currentuser/user-flashcard-decks/<fcdid>/flashcards", methods=["GET"])

@@ -35,30 +35,6 @@ def admin_only(f):
     return wrapper
 
 
-# @userBlueprint.route("/api/manualaddadmin/", methods=["POST"])
-# @password_protected
-# def manual_add_admin():
-#     try:
-#         email = request.json["email"]
-#         username = request.json["username"]
-#         if not (username and email):
-#             raise Exception("Missing credentials for username and or email")
-
-#         admin_user = make_admin(getUserId(email, username))
-#         return jsonify(admin_user)
-#     except Exception as e:
-#         print(e)
-#         return jsonify({"error": str(e)})
-
-
-# @userBlueprint.route("/api/manualaddadmin/<uid>", methods=["GET"])
-# def manual_add_admin_get(uid):
-#     try:
-#         admin_user = make_admin(int(uid))
-#         return jsonify(admin_user)
-#     except Exception as e:
-#         print(e)
-#         return jsonify({"error": str(e)})
 
 
 @userBlueprint.route("/api/admin/<uid>", methods=["POST", "DELETE"])
@@ -127,6 +103,9 @@ def users_search(role, searchphrase):
         return jsonify({"error": str(e)})
 
 
+
+# get feide API key from external API using API KEY
+# Return valid login url to clien
 @userBlueprint.route("/api/login/url", methods=["GET"])
 def login_token():
     try:
@@ -149,7 +128,9 @@ def login_token():
         print(e)
         return jsonify({"error": str(e)})
 
-
+# receive userdata and sha1 encrypted login token
+# if token valid, store userdata in Flask Session
+# Return redirect to flashcard application
 @userBlueprint.route("/api/login/userdata", methods=["POST", "GET"])
 def user_data():
 
@@ -188,31 +169,34 @@ def user_data():
                 print("sha1 error")
                 return(jsonify("Bad authenticity token"))
 
-        # if request.method == "POST":  # Alternative login
+        if request.method == "POST":  # Alternative login DO NOT USE ON PRODUCTION BUILD
 
-        #     userdata = request.json
-        #     username = userdata["username"]
-        #     email = userdata["email"]
-        #     name = userdata["name"]
+            userdata = request.json
+            username = userdata["username"]
+            email = userdata["email"]
+            name = userdata["name"]
 
-        #     if user_registered(email, username):
-        #         print("added to session exists", session.get("userdata"))
+            if user_registered(email, username):
+                print("added to session exists", session.get("userdata"))
 
-        #     elif username_registered(username) or email_registered(email):
-        #         raise Exception(
-        #             "duplicate. Username and email must either belong to a existing user or be unique")
+            elif username_registered(username) or email_registered(email):
+                raise Exception(
+                    "duplicate. Username and email must either belong to a existing user or be unique")
 
-        #     else:
-        #         print("added to session new", session.get("userdata"))
+            else:
+                print("added to session new", session.get("userdata"))
 
-        #     session["userdata"] = userdata
-        #     return jsonify({"status": "success"})
+            session["userdata"] = userdata
+            return jsonify({"status": "success"})
 
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
 
 
+# check session for userdata
+# if user with userdata does not exist, register user
+# Return generated jwt access and refresh tokens 
 @userBlueprint.route("/api/login/callback", methods=["GET"])
 def login_callback():
     sleep(DELAY_S)

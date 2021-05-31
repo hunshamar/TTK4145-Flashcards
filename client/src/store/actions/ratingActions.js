@@ -120,41 +120,41 @@ export const saveDuplicatesRating = (duplicates, ratingId) => async (
   dispatch(endLoading());
 };
 
-export const saveRating = (rating, ratingId) => async (dispatch, getState) => {
-  dispatch(startLoading());
-  await refreshTokens();
-  await axios
-    .put(
-      "/api/currentuser/cardrating/" + ratingId,
-      {
-        difficulty: rating.difficulty,
-        quality: rating.quality,
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("user_token"),
-        },
-      }
-    )
-    .then((res) => {
-      if (res.data.error) {
-        throw new Error(res.data.error);
-      }
-      console.log("returned");
-      console.log(res.data);
+// export const saveRating = (rating, ratingId) => async (dispatch, getState) => {
+//   dispatch(startLoading());
+//   await refreshTokens();
+//   await axios
+//     .put(
+//       "/api/currentuser/cardrating/" + ratingId,
+//       {
+//         difficulty: rating.difficulty,
+//         quality: rating.quality,
+//       },
+//       {
+//         headers: {
+//           Authorization: "Bearer " + localStorage.getItem("user_token"),
+//         },
+//       }
+//     )
+//     .then((res) => {
+//       if (res.data.error) {
+//         throw new Error(res.data.error);
+//       }
+//       console.log("returned");
+//       console.log(res.data);
 
-      const createdRating = res.data;
+//       const createdRating = res.data;
 
-      console.log("was created, ", createdRating);
-      dispatch({ type: CREATE_RATING, payload: createdRating });
-    })
-    .catch((err) => {
-      dispatch(errorAlert(err.toString()));
-    });
+//       console.log("was created, ", createdRating);
+//       dispatch({ type: CREATE_RATING, payload: createdRating });
+//     })
+//     .catch((err) => {
+//       dispatch(errorAlert(err.toString()));
+//     });
 
-  console.log("async call up in hier", rating);
-  dispatch(endLoading());
-};
+//   console.log("async call up in hier", rating);
+//   dispatch(endLoading());
+// };
 
 // export const getRating = (cardId) => async (dispatch, getState) => {
 //   // await refreshTokens()

@@ -103,8 +103,6 @@ export const editCard = (card) => async (dispatch, getState) => {
 export const loadCardGroupUserFlashcards = (cardgroupId) => async (
   dispatch
 ) => {
-  //   dispatch(startLoading())
-  //   dispatch(startLoading());
   await refreshTokens();
   console.log("cardgroupid", cardgroupId);
 
@@ -220,31 +218,6 @@ export const loadPeerReviewFlashcards = (peerreviewid) => async (
 
   dispatch(endLoading());
 };
-
-// export const getNextCardInUserDeck = (deckId) => async (dispatch, getState) => {
-//   dispatch(startLoading());
-//   await refreshTokens();
-//   await axios
-//     .get(`/api/currentuser/user-flashcard-decks/${deckId}/flashcard`, {
-//       headers: {
-//         Authorization: "Bearer " + localStorage.getItem("user_token"),
-//       },
-//     })
-//     .then((response) => {
-//       if (response.data.error) {
-//         throw new Error(response.data.error);
-//       }
-//       const card = response.data;
-//       console.log("response card");
-//       console.log(card);
-//       dispatch({ type: LOAD_CARD, payload: card });
-//     })
-//     .catch((err) => {
-//       dispatch(errorAlert(err.toString()));
-//     });
-
-//   dispatch(endLoading());
-// };
 
 export const answerFlashcard = ({ deckId, flashcardId, correct }) => async (
   dispatch

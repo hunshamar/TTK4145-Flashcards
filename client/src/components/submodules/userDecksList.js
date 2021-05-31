@@ -85,9 +85,30 @@ const UserDeck = ({ cardDeck }) => {
           <Typography className={classes.title} gutterBottom variant="h6">
             {cardDeck.title}
           </Typography>
-          <div className={classes.iconContainer}>
-            <StyleIcon fontSize="large" color="inherit" />
-          </div>
+
+          {cardDeck.title.includes("**") ? (
+            <div>
+              <Typography
+                style={{ display: "inline", color: "green" }}
+                variant="h6"
+              >
+                {cardDeck.correctAnswers}
+              </Typography>
+              <Typography style={{ display: "inline" }} variant="h6">
+                /
+              </Typography>
+              <Typography
+                style={{ display: "inline", color: "red" }}
+                variant="h6"
+              >
+                {cardDeck.wrongAnswers}
+              </Typography>
+            </div>
+          ) : (
+            <div className={classes.iconContainer}>
+              <StyleIcon fontSize="large" color="inherit" />
+            </div>
+          )}
         </CardContent>
         <CardContent>
           <Typography variant="subtitle1" color="textSecondary" gutterBottom>
@@ -112,11 +133,15 @@ const UserDeck = ({ cardDeck }) => {
 const UserDeckList = ({ decks }) => {
   return (
     <Grid container spacing={2}>
-      {decks.map((deck) => (
-        <Grid item xs={4}>
-          <UserDeck cardDeck={deck} />
-        </Grid>
-      ))}
+      {decks.map((deck) =>
+        deck.title.includes("**") ? (
+          <Grid item xs={4}>
+            <UserDeck cardDeck={deck} />
+          </Grid>
+        ) : (
+          ""
+        )
+      )}
     </Grid>
   );
 };

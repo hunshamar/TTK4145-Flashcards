@@ -13,3 +13,4 @@ class InvalidToken(db.Model):
     def is_invalid(self, jti):
         q = self.query.filter_by(jti=jti).first()
         return bool(q)
+

@@ -7,8 +7,6 @@ from blueprints.flashcard.routes import flashcardBlueprint
 from blueprints.cardgroup.routes import cardgroupBlueprint
 from blueprints.cardrating.routes import cardratingBlueprint
 from blueprints.peerreview.routes import peerreviewBlueprint
-from blueprints.cardreview_deck.routes import cardreviewDeckBlueprint
-from blueprints.cardreview.routes import cardreviewBlueprint
 from blueprints.collective_deck.routes import collectiveDeckBlueprint
 from blueprints.user_flashcard_deck.routes import userFlashcardDeckBlueprint
 
@@ -38,13 +36,17 @@ manager = Manager(app)
 manager.add_command("db", MigrateCommand)
 
 
+### mySQL
+# connection = f"mysql+pymysql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASS')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
 
-if os.environ.get("FLASK_DEBUG"):
-    conn = f"mysql+pymysql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASS')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
-    app.config["SQLALCHEMY_DATABASE_URI"] = conn  # "sqlite:///db.db"
-else:
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+### SQLite
+connection = "sqlite:///db.db"
 
+### PostgrSQL
+# connection = os.environ.get("DATABASE_URL")
+
+
+app.config["SQLALCHEMY_DATABASE_URI"] = connection
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
@@ -62,8 +64,6 @@ app.register_blueprint(flashcardBlueprint)
 app.register_blueprint(cardgroupBlueprint)
 app.register_blueprint(cardratingBlueprint)
 app.register_blueprint(peerreviewBlueprint)
-# app.register_blueprint(cardreviewDeckBlueprint)
-# app.register_blueprint(cardreviewBlueprint)
 app.register_blueprint(collectiveDeckBlueprint)
 app.register_blueprint(userFlashcardDeckBlueprint)
 
@@ -74,16 +74,16 @@ def init():
     return jsonify("success init")
 
 
-# @app.route("/1")
-# def dummy_db_init():
-#     init_dummy_db()
-#     return jsonify("inited")
+@app.route("/1")
+def dummy_db_init():
+    init_dummy_db()
+    return jsonify("inited")
 
 
-# @app.route("/2")
-# def dummy_db_clear():
-#     clear_dummy_db()
-#     return jsonify("cleared")
+@app.route("/2")
+def dummy_db_clear():
+    clear_dummy_db()
+    return jsonify("cleared")
 
 
 @app.route("/<a>")

@@ -7,8 +7,6 @@ import Alerter from "./components/notifications/alerter";
 import Routes from "./routes";
 import { darkTheme, theme } from "./static/theme";
 
-console.log = function () {};
-
 const App = () => {
   const [darkMode, setDarkMode] = React.useState(false);
 

@@ -5,7 +5,6 @@ import datetime
 # import parents
 from ..flashcard.flashcard import Flashcard, get_flashcard
 from ..user.user import User, get_user
-# from ..peerreview.peerreview import Peerreview
 
 
 duplicate_ratings = db.Table("duplicate_ratings",
@@ -15,8 +14,6 @@ duplicate_ratings = db.Table("duplicate_ratings",
                                  "cardrating.id"), primary_key=True)
                              )
 
-# class DuplicateRatings(db.Model):
-#     __tablename__ = "duplicate_ratings"
 
 
 class Cardrating(db.Model):
@@ -27,7 +24,6 @@ class Cardrating(db.Model):
     difficulty = db.Column(db.Integer) # todo: rename to difficulty rating
     quality_rating = db.Column(db.Integer)
     savedatestring = db.Column(db.String(128))
-    # duplicate_card_ids = db.Column(db.String(1028)) # json array of card duplicates ids
 
     def is_complete(self):
         return self.difficulty and self.quality_rating
@@ -67,14 +63,6 @@ class Cardrating(db.Model):
             "card": Flashcard.query.get(self.card_id).public_to_dict(),
             "duplicates": [d.to_duplicate_dict() for d in self.duplicates]
         }
-    # Constructor
-    # def __init__(self, difficulty, quality_rating, card, user):
-    #     print(f"Creating rating difficulty '{difficulty}' quality '{quality_rating}' card: '{card.id} by user {user.username}")
-    #     self.difficulty = difficulty
-    #     self.quality_rating = quality_rating
-    #     self.card = card
-    #     self.user = user
-    #     self.savedatestring = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def index_peerreview_id_to_rating_id(index, peerreview_id):
@@ -94,11 +82,6 @@ def remove_duplicate(rating, duplicate_rating):
     rating.duplicates.remove(duplicate_rating)
     duplicate_rating.duplicates.remove(rating)
 
-    # # if not status1.id:
-    # #     print("duplicate rating not in rating")
-    # # if not status2.id:
-    # #     print("rating not in duplicate rating")
-
     rating.savedatestring = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     duplicate_rating.savedatestring = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -113,14 +96,11 @@ def add_duplicate(rating, duplicate_rating):
 
 def edit_duplicates(user_id, rating_id, duplicates):
 
-    print("duplicates")
-
     rating = Cardrating.query.get(rating_id)
     peerreview = rating.peerreview
 
     current_gmt_time = datetime.datetime.now(
         datetime.timezone.utc).replace(tzinfo=None)
-    print("curryy", current_gmt_time)
 
     if current_gmt_time > peerreview.cardgroup.peer_review_due_date:
         raise Exception("Error. Due date for rating exceeded")
@@ -202,7 +182,6 @@ def save_quality_rating(user_id, rating_id, quality_rating):
 
     # Avg ratings already exists, i.e. average rating must be calculated again
     if rating.flashcard.average_rating:
-        print("recalcualte...")
         rating.flashcard.calculate_average_rating()
 
     return rating
@@ -210,7 +189,6 @@ def save_quality_rating(user_id, rating_id, quality_rating):
 
 def save_rating(user_id, rating_id, difficulty, quality_rating):
 
-    # flashcard = get_flashcard(flashcard_id)
     rating = Cardrating.query.get(rating_id)
 
     peerreview = rating.peerreview
@@ -220,14 +198,6 @@ def save_rating(user_id, rating_id, difficulty, quality_rating):
     if current_gmt_time > peerreview.cardgroup.peer_review_due_date:
         raise Exception("Error. Due date for rating exceeded")
 
-    # if not duplicate_card_ids:
-    #     duplicate_card_ids = None
-
-    # if not(user_id, flashcard_id and difficulty and quality_rating):
-    #     raise Exception("Missing parameter for addRating function")
-
-    # if (difficulty < 1 or difficulty > 10) or (quality_rating < 1 or quality_rating > 10):
-    #     raise Exception("Error: Rating must be between 1 and 10")
 
     if rating.peerreview.user_id != user_id:
         raise Exception("Other users rating error")
@@ -239,37 +209,11 @@ def save_rating(user_id, rating_id, difficulty, quality_rating):
         rating.quality_rating = quality_rating
 
     rating.savedatestring = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    # rating.duplicate_card_ids = duplicate_card_ids
-    # rating.card_duplicates.clear()
-
-    # print(peerreview.to_dict())
-    # print("no rating")
-
-    # rating = Cardrating(difficulty=difficulty, quality_rating=quality_rating, flashcard=flashcard, user=user, duplicate_card_ids=duplicate_card_ids)
-    # rating.card_duplicates.append(duplicate)
-    # rating.card_duplicates.clear()
-
-    # rating.peerreview_id = peerreview.id
-    # # rating.card_duplicates = mylist
-    # rating.savedatestring = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    # db.session.add(rating)
 
     db.session.commit()
 
     return rating.to_dict()
 
-
-# def get_rating(user_id, flashcard_id):
-#     print(f"user_id {user_id} flashcard_id {flashcard_id}")
-
-#     flashcard = Flashcard.query.get(flashcard_id)
-
-#     peerreview = Peerreview.query.filter_by(cardgroup_id=, user_id=user_id)
-
-#     rating = Cardrating.query.filter_by(
-#         card_id=flashcard_id, user_id=user_id).first()
-#     print("get reting", rating)
-#     return rating
 
 
 def get_all_ratings():

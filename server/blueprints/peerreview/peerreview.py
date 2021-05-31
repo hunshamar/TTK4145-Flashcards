@@ -15,13 +15,6 @@ from ..cardrating.cardrating import Cardrating
 
 MAX_NUMBER_OF_REVIEWS = 40
 
-# peer_review_cards = db.Table('peer_review_cards',
-#                              db.Column('id', db.Integer, primary_key=True),
-#                              db.Column('flashcard_id', db.Integer,
-#                                        db.ForeignKey('flashcard.id')),
-#                              db.Column('peerreview_id', db.Integer,
-#                                        db.ForeignKey('peerreview.id'))
-#                              )
 
 
 class Peerreview(db.Model):
@@ -45,8 +38,6 @@ class Peerreview(db.Model):
 
     def to_dict(self):
 
-        print("asdfgh")
-        print(len([r for r in self.ratings if r.is_complete()]))
 
         return {
             "id": self.id,
@@ -134,31 +125,31 @@ def pick_random_cards(cardids, number_of_users, ratings_per_student):
 
     users_cards = []
     for n in range(number_of_users):
-        users_cards.append([])
+        users_cards.append([]) # Create a 3d list of flashcards
 
-    cards = cardids.copy()
-    random.shuffle(cards)
+    cards = cardids.copy() # shallow copy of cardid parameter
+    random.shuffle(cards) 
     for u in range(number_of_users):
-        # not enough cards to draw from ?
+        # not enough cards left to draw from ?
         if (len(cards) < ratings_per_student):
 
-            # take all remaining cards
+            # draw all remaining cards
             users_cards[u] += cards
 
-            # create new random cards
+            # add new random cards
             cards = cardids.copy()
+        
             random.shuffle(cards)
 
             # fill remaining cards
             for n in range(ratings_per_student - len(users_cards[u])):
                 for i, c in enumerate(cards):
-                    if c not in users_cards[u]:
+                    if c not in users_cards[u]: # make sure new card not already drawn
                         users_cards[u].append(cards.pop(i))
                         break
 
         else:
             for n in range(ratings_per_student):
-
                 for i, c in enumerate(cards):
                     if c not in users_cards[u]:
                         users_cards[u].append(cards.pop(i))
@@ -209,24 +200,19 @@ def add_peer_reviews_for_all_students(cardgroup_id, due_date, ratings_per_studen
     for c in cards:
         card_ids.append(c.id)
 
-    print("1")
     peer_review_user_card_ids = pick_random_cards(
         card_ids, len(users), ratings_per_student)
 
-    print("2")
     for index, user in enumerate(users):
 
         if(Peerreview.query.filter_by(user_id=user.id, cardgroup_id=cardgroup.id)).first():
             print(
                 "Peer review already exists for this group, for this student with id", user.id)
         else:
-            # print("create peer review")
-            print("3")
             peerreview = Peerreview(
                 cardgroup, user)
 
             peerreview.add_ratings(peer_review_user_card_ids[index])
-            print("4")
 
     print("added to sesh")
     db.session.commit()
@@ -260,16 +246,3 @@ def get_peer_review_cards(pid):
         raise Exception("Peer review not found with id", pid)
     return peerreview.get_flashcards()
 
-
-def getRatingsInPeerreview(pid, uid):
-    # flashcards = Peerreview.query.get(pid).flashcards
-    # print("getting")
-
-    # ratings = []
-    # for f in flashcards:
-    #     print("flsahcard", f.front)
-    #     rating = Cardrating.query.filter_by(user_id=uid, card_id=f.id).first()
-    #     if rating:
-    #         ratings.append(rating)
-
-    return [r.to_dict() for r in ratings]

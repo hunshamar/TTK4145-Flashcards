@@ -24,7 +24,6 @@ class FlashcardReview(db.Model):
         last_order = FlashcardReview.query.filter_by(
             flashcard_deck=self.flashcard_deck).order_by(FlashcardReview.order.desc()).first().order
         self.order = last_order + 1
-        print("order", last_order)
         db.session.commit()
 
     def remove_from_user_deck(self):

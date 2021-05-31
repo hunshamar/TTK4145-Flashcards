@@ -44,9 +44,6 @@ class User(db.Model):
 def add_user(username, email, name):
     user = User(username, email, name)
 
-    if username == "asgeirhu":
-        user.role = "Admin"
-
     db.session.add(user)
     db.session.commit()
     return user.to_dict
@@ -60,6 +57,13 @@ def delete_user(username):
 
 def make_admin(id):
     user = get_user(id)
+    user.role = "Admin"
+    print("updated", user.to_dict())
+    db.session.commit()
+    return user.to_dict()
+
+def make_admin_username(username):
+    user = User.query.filter_by(username=username).first()
     user.role = "Admin"
     print("updated", user.to_dict())
     db.session.commit()

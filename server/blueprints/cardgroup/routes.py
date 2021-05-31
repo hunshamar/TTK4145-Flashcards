@@ -31,6 +31,30 @@ def cardgroups(cgid):
         return jsonify({"error": str(e)})
 
 
+@cardgroupBlueprint.route("/api/admin/cardgroups", methods=["POST"])
+@jwt_required
+@admin_only
+def cardgroups_add():
+    sleep(DELAY_S)
+    try:
+        title = request.json["title"]
+        number_of_cards_due = request.json["numberOfCardsDue"]
+        due_date = request.json["dueDate"]  # GMT!
+        due_date_python_format = datetime.datetime.strptime(
+            due_date, '%Y-%m-%dT%H:%M:%S.%fZ')
+
+        if not (title or number_of_cards_due or due_date):
+            raise Exception("Invalid form for cardgroup")
+
+        cardgroup = add_cardgroup(
+            title, due_date_python_format, number_of_cards_due)
+        return jsonify(cardgroup.to_dict())
+    except Exception as e:
+        print(e)
+        return {"error": str(e)}
+
+
+
 @cardgroupBlueprint.route("/api/admin/cardgroups/<cgid>", methods=["PUT"])
 @jwt_required
 @admin_only
@@ -58,36 +82,12 @@ def cardgroups_edit(cgid):
         return jsonify({"error": str(e)})
 
 
-@cardgroupBlueprint.route("/api/admin/cardgroups", methods=["POST"])
-@jwt_required
-@admin_only
-def cardgroups_add():
-    sleep(DELAY_S)
-    try:
-        title = request.json["title"]
-        number_of_cards_due = request.json["numberOfCardsDue"]
-        due_date = request.json["dueDate"]  # GMT!
-        due_date_python_format = datetime.datetime.strptime(
-            due_date, '%Y-%m-%dT%H:%M:%S.%fZ')
-
-        if not (title or number_of_cards_due or due_date):
-            raise Exception("Invalid form for cardgroup")
-
-        cardgroup = add_cardgroup(
-            title, due_date_python_format, number_of_cards_due)
-        return jsonify(cardgroup.to_dict())
-    except Exception as e:
-        print(e)
-        return {"error": str(e)}
-
 
 @cardgroupBlueprint.route("/api/admin/cardgroups/<cgid>", methods=["DELETE"])
 @jwt_required
 @admin_only
 def cardgroups_delete(cgid):
     sleep(DELAY_S)
-    print(cgid, "is deleted yes")
-    # return jsonify({"error": "here"})
     try:
 
         delete_cardgroup(cgid)

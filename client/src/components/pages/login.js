@@ -17,7 +17,7 @@ const StyledLink = styled(Link)({
   padding: "20px",
 });
 
-const hideAlternativeLogin = true;
+const hideAlternativeLogin = false;
 
 const ManualLogin = () => {
   const [username, setUsername] = useState("");

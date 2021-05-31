@@ -1,7 +1,6 @@
 from db import db
 import datetime as datetime
 
-# from ..flashcard.flashcard import Flashcard
 
 from ..flashcard.flashcard import Flashcard
 from ..cardgroup.cardgroup import Cardgroup
@@ -11,7 +10,6 @@ import random
 class CollectiveDeck(db.Model):
     __tablename__ = "collective_deck"
 
-    # title = db.Column(db.String(256))
     id = db.Column(db.Integer, primary_key=True)
     flashcards = db.relationship("Flashcard", backref="collective_deck")
 
@@ -55,14 +53,6 @@ def get_collective_deck():
     else:
         return collective_decks[0]
 
-# def get_collective_deck():
-#     # collective_decks =  CollectiveDeck.query.all()
-#     # if len(collective_decks) > 1:
-#     #     raise Exception("More than one collective deck found")
-#     # if not len(collective_decks):
-#     #     raise Exception("No collective deck found")
-#     # else:
-#     #     return collective_decks[0]
 
 
 def add_to_collective_deck(flashcards):

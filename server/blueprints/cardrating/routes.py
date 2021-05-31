@@ -17,7 +17,6 @@ def cardrating_save_difficulty(rid):
     try:
         difficulty_rating = request.json["difficulty"]
 
-        print("dif", difficulty_rating)
 
         uid = uid = get_jwt_identity()
 
@@ -35,65 +34,11 @@ def cardrating_save_quality(rid):
     try:
         quality_rating = request.json["quality"]
 
-        print("qq", quality_rating)
 
         uid = uid = get_jwt_identity()
 
         rating = save_quality_rating(uid, rid, quality_rating)
         return jsonify(rating.to_dict())
-
-    except Exception as e:
-        print(e)
-        return(jsonify({"error": str(e)}))
-
-
-@cardratingBlueprint.route("/api/currentuser/cardrating/<rid>", methods=["PUT"])
-@jwt_required
-def cardrating_add(rid):
-    try:
-        difficulty_rating = request.json["difficulty"]
-        quality_rating = request.json["quality"]
-        # duplicate_card_ids = request.json["duplicateCardIds"]
-        # print("her")
-        # print(duplicate_card_ids)
-
-        print(difficulty_rating, quality_rating)
-
-        uid = uid = get_jwt_identity()
-
-        rating = save_rating(uid, rid, difficulty_rating, quality_rating)
-        return jsonify(rating)
-
-    except Exception as e:
-        print(e)
-        return(jsonify({"error": str(e)}))
-
-# @cardratingBlueprint.route("/api/currentuser/cardrating/<cid>", methods=["GET"])
-# @jwt_required
-# def cardrating_get(cid):
-#     sleep(DELAY_S)
-#     try:
-#         cid = int(cid)
-#         uid = uid = get_jwt_identity()
-#         rating = get_rating(uid, cid)
-#         if rating:
-#             return jsonify(rating.to_dict())
-#         else:
-#             return jsonify({"status":"no rating"})
-#     except Exception as e:
-#         print(e)
-#         return(jsonify({"error": str(e)}))
-
-
-@cardratingBlueprint.route("/api/admin/cardrating/<cid>", methods=["DELETE"])
-@jwt_required
-@admin_only
-def cardrating_delete(cid):
-    sleep(DELAY_S)
-    try:
-        cid = int(cid)
-        ratings = delete_ratings_of_card(cid)
-        return jsonify(ratings)
 
     except Exception as e:
         print(e)
@@ -122,10 +67,4 @@ def cardrating_add_duplicte(rid):
         return(jsonify({"error": str(e)}))
 
 
-# @cardratingBlueprint.route("/api/delratings")
-# # @jwt_required
-# def del_all_ratings():
-#     sleep(DELAY_S)
-#     delete_all_cardratings()
 
-#     return "success"

@@ -18,15 +18,24 @@ from ..values import DELAY_S
 @admin_only
 def flashcards_all():    
     sleep(DELAY_S)
-    return jsonify(get_all_flashcards()) # make safe
+    return jsonify(get_all_flashcards()) 
 
-@flashcardBlueprint.route("/api/flashcards/<cid>", methods=["GET"])
+@flashcardBlueprint.route("/api/admin/flashcards/<cid>", methods=["GET"])
 @jwt_required
 @admin_only
 def flashcards_get(cid):    
     sleep(DELAY_S)
     try:
         return jsonify(get_flashcard(cid).to_dict())
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+@flashcardBlueprint.route("/api/admin/flashcard/<cid>/cardratings", methods=["GET"])
+@jwt_required
+@admin_only
+def flashcard_ratings_get(cid):
+    try:
+        return jsonify(flashcard_get_ratings(int(cid)))
     except Exception as e:
         return jsonify({"error": str(e)})
 
@@ -88,7 +97,7 @@ def flashcard_delete(cid):
     except Exception as e:
         return jsonify({"error": str(e)})   
         
-@flashcardBlueprint.route("/api/admin/cardgroup/<cgid>/deliverystatus", methods=["GET"])
+@flashcardBlueprint.route("/api/admin/cardgroup/<cgid>/deliverystatus", methods=["GET"]) 
 @jwt_required
 @admin_only
 def status(cgid):
@@ -112,30 +121,9 @@ def cardgroup_user_flashcardscards(cgid):
     except Exception as e:
         return jsonify({"error": str(e)})
 
-@flashcardBlueprint.route("/api/admin/flashcard/<cid>/cardratings", methods=["GET"])
-@jwt_required
-@admin_only
-def flashcard_ratings_get(cid):
-    try:
-        return jsonify(flashcard_get_ratings(int(cid)))
-    except Exception as e:
-        return jsonify({"error": str(e)})
+
 
         
-
-
-##############################################################################
-
-# temp
-
-
-# # temp, expand
-# @flashcardBlueprint.route("/api/flashcards/<cid>/averagerating", methods=["GET"])
-# def ratings():
-#     calculateCardAverageRating(cid)
-#     return jsonify({"ratings": "true"})
-
-
 
 
 

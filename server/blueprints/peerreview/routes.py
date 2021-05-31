@@ -10,7 +10,6 @@ import datetime
 peerreviewBlueprint = Blueprint("peerreview", __name__)
 
 
-# @peerreviewBlueprint.route("/api/createpeerreviewsessions", methods=["POST"])
 @peerreviewBlueprint.route("/api/admin/peerreviews", methods=["POST"])
 @jwt_required
 @admin_only
@@ -52,24 +51,6 @@ def peerreview_edit():
         print(e)
         return(jsonify({"error": str(e)}))
 
-# @peerreviewBlueprint.route("/api/addpeerreview", methods=["POST", "GET"])
-# @jwt_required
-# @admin_only
-# def add_peerreview():
-#     try:
-
-
-#         user_id = request.json["useId"]
-#         group_id = request.json["groupId"]
-#         due_date = request.json["dueDate"]
-#         n_reviews = request.json["numberOfReviews"]
-#         addPeerReview(group_id, user_id, due_date, n_reviews)
-
-#         return jsonify({"success": "true"})
-
-#     except Exception as e:
-#         print(e)
-#         return(jsonify({"error": str(e)}))
 
 
 @peerreviewBlueprint.route("/api/admin/peerreviews/<cgid>", methods=["GET"])
@@ -83,25 +64,13 @@ def peerreviews_get_all(cgid):
         print(e)
         return(jsonify({"error": str(e)}))
 
-
-@peerreviewBlueprint.route("/api/currentuser/peerreview/<pid>", methods=["GET"])
+@ peerreviewBlueprint.route("/api/admin/cardgroup/<cgid>/peerreview", methods=["DELETE"]) 
 @jwt_required
-def get_peerreview(pid):
-    try:
+@admin_only
+def delete_peer(cgid):
+    delete_all_peerreviews_in_cardgroup(int(cgid))
+    return jsonify({"status": "success"})
 
-        peer_review = get_peer_review(int(pid))
-
-        if peer_review.user_id != get_jwt_identity():
-            raise Exception(
-                "Getted Peer Review does not belong to current user")
-        else:
-            print("her er peer review", peer_review.to_dict())
-
-        return jsonify(peer_review.to_dict())
-
-    except Exception as e:
-        print(e)
-        return(jsonify({"error": str(e)}))
 
 
 @peerreviewBlueprint.route("/api/currentuser/peerreviews", methods=["GET"])
@@ -115,12 +84,18 @@ def peerreview_get_current_users_reviews():
         print(e)
         return(jsonify({"error": str(e)}))
 
-
-@peerreviewBlueprint.route("/api/peerreview/<pid>/flashcards", methods=["GET"])
+@peerreviewBlueprint.route("/api/currentuser/peerreview/<pid>", methods=["GET"])
 @jwt_required
-def peerreview_get_flashcards(pid):
+def get_peerreview(pid):
     try:
-        return jsonify(get_peer_review_cards(int(pid)))
+
+        peer_review = get_peer_review(int(pid))
+
+        if peer_review.user_id != get_jwt_identity():
+            raise Exception(
+                "Getted Peer Review does not belong to current user")
+
+        return jsonify(peer_review.to_dict())
 
     except Exception as e:
         print(e)
@@ -130,38 +105,16 @@ def peerreview_get_flashcards(pid):
 @peerreviewBlueprint.route("/api/currentuser/peerreview/<prid>/cardratings", methods=["GET"])
 @jwt_required
 def peerreview_get_ratings(prid):
-    print("på an igjen")
 
     try:
         uid = get_jwt_identity()
 
-        print("getting ratings")
-        # print(get_ratings_in_peerreview(int(prid)))
-        print("her var dei")
         return jsonify(get_ratings_in_peerreview(int(prid)))
 
     except Exception as e:
         print(e)
         return(jsonify({"error": str(e)}))
 
-    # try:
-    #     uid = get_jwt_identity()
-    #     return(jsonify(get_ratings_from_peerreview(uid, int(prid))))
-    # except Exception as e:
-    #     print(e)
-    #     return(jsonify({"error": str(e)}))
-
-# @peerreviewBlueprint.route("/api/currentuser/peerreview/<pid>/cardratings", methods=["GET"])
-# @jwt_required
-# def get_ratings_in_peerreview(pid):
-
-#     # return jsonify({"cursed": str(pid)})
 
 
-# temp
-@ peerreviewBlueprint.route("/api/admin/cardgroup/<cgid>/peerreview", methods=["DELETE"])
-@jwt_required
-@admin_only
-def delete_peer(cgid):
-    delete_all_peerreviews_in_cardgroup(int(cgid))
-    return jsonify({"status": "success"})
+

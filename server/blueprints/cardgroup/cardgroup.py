@@ -43,18 +43,13 @@ class Cardgroup(db.Model):
 
     def get_cards_from_ids(self, idarr):
 
-        # print("idarr", idarr)
         fc = [card for card in self.flashcards if card.id in idarr]
 
-        # print([f.id for f in fc])
 
         return fc
 
     def to_dict(self):
 
-        # for i in self.flashcards:
-        #     # d =  i.to_dict()
-        #     print(i.to_dict())
 
         return{
             "id": self.id,
@@ -66,15 +61,6 @@ class Cardgroup(db.Model):
 
             # "flashcards": [i.to_dict() for i in self.flashcards]
         }
-
-    # Constructor
-    # def __init__(self, title, due_date, number_of_cards_due):
-
-    #     print(f"creating cardgroup with title: '{title}' due {due_date} with #cards {number_of_cards_due}")
-    #     self.title = title
-    #     self.due_date = due_date
-    #     self.number_of_cards_due = number_of_cards_due
-
 
 def get_all_cardgroups():
     cardgroups = Cardgroup.query.order_by(Cardgroup.id).all()

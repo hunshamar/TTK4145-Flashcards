@@ -3,7 +3,6 @@ from db import db
 # import parents
 from ..user.user import User, add_user
 from ..cardgroup.cardgroup import Cardgroup, get_cardgroup
-# from  ..collective_deck.collective_deck import get_collective_deck
 import datetime
 import statistics
 
@@ -101,13 +100,6 @@ class Flashcard(db.Model):
             "back": self.back,
             "cardgroup": self.cardgroup_id,
         }
-    # Constructor
-    # def __init__(self, front, back, user, cardgroup):
-    #     print(f"Creating flashcard front '{front}' back '{back}' user '{user.to_dict()}' cardgroup '{cardgroup.to_dict()}'")
-    #     self.front = front
-    #     self.back = back
-    #     self.user = user
-    #     self.cardgroup = cardgroup
 
 
 def get_all_flashcards():
@@ -129,10 +121,6 @@ def calculate_average_rating():
     for flashcard in Flashcard.query.all():
         flashcard.calculate_average_rating()
     db.session.commit()
-
-# def getUserFlashcards():
-#     flashcards = Flashcard.querry.all()
-#     return [i.to_dict() for i in filter(lambda i: i.user_id == uid, flashcards)]
 
 
 def init_cards():
@@ -280,7 +268,6 @@ def has_highest_ratings_of_duplicates(flashcard):
 
 
 def get_flashcards_filtered(cardgroup_id, min_rating, remove_duplicates):
-    print("hellur", cardgroup_id, min_rating, remove_duplicates)
 
     queries = [
         Flashcard.average_rating >= min_rating,
@@ -291,10 +278,7 @@ def get_flashcards_filtered(cardgroup_id, min_rating, remove_duplicates):
         *queries
     ).all()
 
-    print("len", len(flashcards))
-
     filtered_flashcards = [flashcard for flashcard in flashcards if has_highest_ratings_of_duplicates(
         flashcard)]
-    print("len filt", len(filtered_flashcards))
 
     return [f.to_dict() for f in filtered_flashcards]

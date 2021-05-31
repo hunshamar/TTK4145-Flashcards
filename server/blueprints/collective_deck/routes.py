@@ -10,14 +10,7 @@ from ..user.routes import admin_only
 collectiveDeckBlueprint = Blueprint("collective_deck", __name__)
 
 
-@collectiveDeckBlueprint.route("/api/collective-deck", methods=["GET"])
-@jwt_required
-@admin_only
-def collective_deck_get():
-    return jsonify(get_collective_deck().to_dict())
-
-
-@collectiveDeckBlueprint.route("/api/collective-deck/flashcards", methods=["GET"])
+@collectiveDeckBlueprint.route("/api/collective-deck/flashcards", methods=["GET"]) 
 @jwt_required
 def collective_deck_get_flashcards():
     try:
@@ -56,7 +49,6 @@ def flashcards_add_to_collective_deck():
 @jwt_required
 @admin_only
 def flashcards_remove_from_collective_deck():
-    print("hø")
     try:
         flashcards = request.json["flashcards"]
         return jsonify(remove_from_collective_deck(flashcards))
@@ -69,7 +61,6 @@ def flashcards_remove_from_collective_deck():
 @collectiveDeckBlueprint.route("/api/collective-deck/cardgroups", methods=["GET"])
 @jwt_required
 def collective_deck_cardgroups():
-    print("hø")
     try:
         return jsonify(get_cardgroups_in_collective_deck())
 
@@ -78,4 +69,4 @@ def collective_deck_cardgroups():
         return jsonify({"error": str(e)})
 
 
-get_cardgroups_in_collective_deck
+
