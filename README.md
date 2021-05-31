@@ -49,6 +49,8 @@ to clear: `clear_dummy_db()`
 
 
 
+send mail to asgeirhuns@gmail.com for further questions.
+
 
 
 
