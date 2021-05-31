@@ -1,4 +1,4 @@
-# master
+# TTK4145 Flashcards
 
 requirements: node, python3, pip
 
